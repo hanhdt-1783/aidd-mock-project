@@ -1,0 +1,194 @@
+import Image from "next/image";
+import { t, type Language } from "@/lib/i18n/dictionary";
+import AwardsValueBlock from "./awards-value-block";
+
+export type AwardData = {
+  slug: string;
+  /** Image on left of content on lg+ (true) or on right (false). Mobile always stacks image on top. */
+  imageLeft: boolean;
+  imageSrc: string;
+  titleKey:
+    | "awards.section.top-talent.title"
+    | "awards.section.top-project.title"
+    | "awards.section.top-project-leader.title"
+    | "awards.section.best-manager.title"
+    | "awards.section.signature-2025-creator.title"
+    | "awards.section.mvp.title";
+  descriptionKey:
+    | "awards.section.top-talent.description"
+    | "awards.section.top-project.description"
+    | "awards.section.top-project-leader.description"
+    | "awards.section.best-manager.description"
+    | "awards.section.signature-2025-creator.description"
+    | "awards.section.mvp.description";
+  countKey:
+    | "awards.section.top-talent.count"
+    | "awards.section.top-project.count"
+    | "awards.section.top-project-leader.count"
+    | "awards.section.best-manager.count"
+    | "awards.section.signature-2025-creator.count"
+    | "awards.section.mvp.count";
+  countUnitKey:
+    | "awards.section.top-talent.count_unit"
+    | "awards.section.top-project.count_unit"
+    | "awards.section.top-project-leader.count_unit"
+    | "awards.section.best-manager.count_unit"
+    | "awards.section.signature-2025-creator.count_unit"
+    | "awards.section.mvp.count_unit";
+  valueKey:
+    | "awards.section.top-talent.value"
+    | "awards.section.top-project.value"
+    | "awards.section.top-project-leader.value"
+    | "awards.section.best-manager.value"
+    | "awards.section.signature-2025-creator.value"
+    | "awards.section.mvp.value";
+  valueUnitKey:
+    | "awards.section.top-talent.value_unit"
+    | "awards.section.top-project.value_unit"
+    | "awards.section.top-project-leader.value_unit"
+    | "awards.section.best-manager.value_unit"
+    | "awards.section.signature-2025-creator.value_unit"
+    | "awards.section.mvp.value_unit";
+  /** Only for Signature 2025 Creator — second tier prize. */
+  value2Key?: "awards.section.signature-2025-creator.value2";
+  value2UnitKey?: "awards.section.signature-2025-creator.value2_unit";
+  orKey?: "awards.section.signature-2025-creator.or";
+};
+
+type AwardsSectionProps = {
+  lang: Language;
+  award: AwardData;
+};
+
+const DIVIDER_STYLE = {
+  width: "100%",
+  height: 1,
+  backgroundColor: "#2E3940",
+} as const;
+
+export default function AwardsSection({ lang, award }: AwardsSectionProps) {
+  const { slug, imageLeft, imageSrc, titleKey, descriptionKey, countKey, countUnitKey } = award;
+
+  return (
+    <section
+      id={slug}
+      aria-label={t(lang, titleKey)}
+      className="w-full"
+      style={{ scrollMarginTop: 120 }}
+    >
+      {/* Layout: stacked on mobile, side-by-side on lg+; flex-row-reverse flips
+          the image to the right when imageLeft=false. Mobile always stacks
+          image-on-top because flex-col + the image being the first child. */}
+      <div
+        className={`flex flex-col lg:flex-row items-start ${imageLeft ? "" : "lg:flex-row-reverse"}`}
+        style={{ gap: 32 }}
+      >
+        {/* Image */}
+        <div
+          aria-hidden="true"
+          className="shrink-0 w-full aspect-square lg:w-[336px] lg:h-[336px]"
+          style={{
+            borderRadius: 24,
+            border: "0.955px solid #FFEA9E",
+            boxShadow: "0 4px 4px 0 rgba(0,0,0,0.25), 0 0 6px 0 #FAE287",
+            overflow: "hidden",
+            position: "relative",
+            backgroundColor: "#0A1A26",
+          }}
+        >
+          <Image
+            src={imageSrc}
+            alt={t(lang, titleKey)}
+            fill
+            sizes="336px"
+            className="object-cover"
+            unoptimized={imageSrc.endsWith(".svg")}
+          />
+        </div>
+
+        {/* Content */}
+        <div className="flex flex-col" style={{ gap: 32, flex: 1, minWidth: 0 }}>
+          <div className="flex flex-col" style={{ gap: 24 }}>
+            <h2
+              style={{
+                fontFamily: "Montserrat, sans-serif",
+                fontSize: 24,
+                fontWeight: 700,
+                lineHeight: "32px",
+                color: "#FFEA9E",
+                margin: 0,
+              }}
+            >
+              {t(lang, titleKey)}
+            </h2>
+            <p
+              style={{
+                fontFamily: "Montserrat, sans-serif",
+                fontSize: 16,
+                fontWeight: 700,
+                lineHeight: "24px",
+                letterSpacing: "0.5px",
+                color: "#FFFFFF",
+                margin: 0,
+                textAlign: "justify",
+              }}
+            >
+              {t(lang, descriptionKey)}
+            </p>
+          </div>
+
+          <div aria-hidden="true" style={DIVIDER_STYLE} />
+
+          {/* Count row */}
+          <div className="flex items-center" style={{ gap: 16 }}>
+            <span
+              style={{
+                fontFamily: "Montserrat, sans-serif",
+                fontSize: 24,
+                fontWeight: 700,
+                lineHeight: "32px",
+                color: "#FFEA9E",
+              }}
+            >
+              {t(lang, "awards.section.count.label")}
+            </span>
+            <div className="flex items-center" style={{ gap: 8 }}>
+              <span
+                style={{
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 36,
+                  fontWeight: 700,
+                  lineHeight: "44px",
+                  color: "#FFFFFF",
+                }}
+              >
+                {t(lang, countKey)}
+              </span>
+              <span
+                style={{
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  lineHeight: "20px",
+                  letterSpacing: "0.1px",
+                  color: "#FFFFFF",
+                }}
+              >
+                {t(lang, countUnitKey)}
+              </span>
+            </div>
+          </div>
+
+          <div aria-hidden="true" style={DIVIDER_STYLE} />
+
+          <AwardsValueBlock lang={lang} award={award} />
+        </div>
+      </div>
+
+      <div
+        aria-hidden="true"
+        style={{ ...DIVIDER_STYLE, marginTop: 80 }}
+      />
+    </section>
+  );
+}

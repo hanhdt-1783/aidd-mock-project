@@ -9,7 +9,7 @@ The `/` route implements the SAA homepage: header, hero, countdown, awards cards
 | Route | File | Notes |
 |---|---|---|
 | `/` | `app/page.tsx` | Server component; resolves auth + role, passes props to UI |
-| `/awards` | `app/awards/page.tsx` | Stub — "Coming Soon" panel |
+| `/awards` | `app/awards/page.tsx` | Full Awards Information page; **requires auth** (anonymous → `/login`) |
 | `/kudos` | `app/kudos/page.tsx` | Stub — "Coming Soon" panel |
 | `/profile` | `app/profile/page.tsx` | Stub |
 | `/standards` | `app/standards/page.tsx` | Stub |
@@ -82,18 +82,73 @@ Sign-out reuses `signOut` from `app/login/actions.ts`. No new action was created
 
 ---
 
+## Awards Information Page
+
+`app/awards/page.tsx` is a server component that renders the full Awards Information page.
+
+### Auth gate
+
+Anonymous users are redirected to `/login` before any content is rendered:
+
+```ts
+if (!user) redirect("/login");
+```
+
+Role resolution follows the same pattern as `app/page.tsx` — reads `profiles.role` to determine `isAdmin` and forwards it to `HomeHeader`.
+
+### Layout and shared components
+
+| Component | Source | Notes |
+|---|---|---|
+| `HomeHeader` | `app/_components/home/home-header` | `activeNav="awards"` highlights the nav item |
+| `AwardsPageTitle` | `app/_components/awards/awards-page-title` | Page heading block |
+| `AwardsSideMenu` | `app/_components/awards/awards-side-menu` | Sticky left nav; hash sync (see below) |
+| `AwardsList` | `app/_components/awards/awards-list` | Renders 6 award category sections |
+| `AwardsSection` | `app/_components/awards/awards-section` | Single category wrapper |
+| `AwardsValueBlock` | `app/_components/awards/awards-value-block` | Prize detail block within a section |
+| `HomeKudosSection` | `app/_components/home/home-kudos-section` | Shared with homepage |
+| `HomeFooter` | `app/_components/home/home-footer` | Shared with homepage |
+
+### Award categories
+
+Six categories, each identified by a slug used for URL hashing and section IDs:
+
+| Slug | Label |
+|---|---|
+| `top-talent` | Top Talent |
+| `top-project` | Top Project |
+| `top-project-leader` | Top Project Leader |
+| `best-manager` | Best Manager |
+| `signature-2025-creator` | Signature 2025 - Creator |
+| `mvp` | MVP |
+
+### Side-menu hash sync
+
+`AwardsSideMenu` is a client component with two behaviors:
+
+1. **Click → hash:** clicking a menu item calls `window.history.replaceState` to update `#<slug>` without adding a history entry, then smooth-scrolls to the matching section element.
+2. **Scroll → hash:** an `IntersectionObserver` watches each section element; the observed slug in view becomes the active menu item and updates the URL hash.
+3. **Deep-link on load:** on mount, the component seeds `activeSlug` from `window.location.hash`; the browser's native scroll handles the initial scroll position.
+
+Net effect: `/awards#best-manager` lands on that section with the sidebar item highlighted.
+
+---
+
 ## i18n
 
-~60 keys added under the `home.*` family. Key groups:
+~60 keys added under the `home.*` family for the homepage. The Awards Information page adds ~100 keys under the `awards.*` family. Key groups:
 
 | Prefix | Covers |
 |---|---|
 | `home.header.*` | Nav links, account menu labels |
 | `home.hero.*` | Hero section copy |
 | `home.countdown.*` | Countdown labels (days/hours/minutes) |
-| `home.awards.*` | Awards section heading + card labels |
+| `home.awards.*` | Homepage awards section heading + card labels |
 | `home.kudos.*` | Kudos section heading + copy |
 | `home.footer.*` | Footer links and copyright |
 | `home.stub.*` | "Coming Soon" text for stub pages |
+| `awards.meta.*` | Page `<title>` for `/awards` |
+| `awards.menu.*` | Side-menu item labels |
+| `awards.*` | Page heading, section titles, prize details |
 
 All keys exist in both `vi` and `en` in `lib/i18n/dictionary.ts`.
