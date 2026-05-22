@@ -12,8 +12,9 @@ Google OAuth via Supabase SSR. Applies to Next.js 16 (this project's version).
 |---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Supabase project URL. Local: `http://127.0.0.1:54321` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes | Supabase anon/public key |
-| `NEXT_PUBLIC_AUTH_REDIRECT` | Yes | Path to redirect after successful OAuth. E.g. `/dashboard` |
+| `NEXT_PUBLIC_AUTH_REDIRECT` | Yes | Path to redirect after successful OAuth. E.g. `/` |
 | `NEXT_PUBLIC_SITE_URL` | Prod only | Full origin used for OAuth `redirectTo`. Falls back to request `Origin` header in dev |
+| `NEXT_PUBLIC_EVENT_DATETIME` | No | ISO-8601 datetime for the homepage countdown. Missing/invalid renders `-- / -- / --` and hides the "Coming soon" label. See [homepage-saa.md](homepage-saa.md#countdown) |
 
 ### `supabase/.env` (local Supabase only, gitignored)
 
@@ -74,3 +75,11 @@ Cookie-based, no routing changes needed.
 | `actions.ts` | `setLanguage(lang)` server action — writes `lang` cookie, triggers page rerender |
 
 The language switcher UI calls `setLanguage` via `useTransition`. All UI strings flow through `t(lang, key)` — no hard-coded copy in components.
+
+The dictionary covers both the login page (`login.*` keys) and the homepage (`home.*` keys, ~60 entries). Key families: `home.header.*`, `home.hero.*`, `home.countdown.*`, `home.awards.*`, `home.kudos.*`, `home.footer.*`, `home.stub.*`.
+
+---
+
+## Roles (`profiles` table)
+
+After OAuth completes a `profiles` row is auto-created with `role = 'user'`. The homepage account menu shows an **Admin Dashboard** link only when `role = 'admin'`. See [homepage-saa.md](homepage-saa.md#profiles-table--rls) for the full schema and admin-promotion path.

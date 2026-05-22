@@ -1,0 +1,133 @@
+import { t, type Language } from "@/lib/i18n/dictionary";
+import HomeAwardCard, { type AwardCardData } from "./home-award-card";
+
+const AWARDS: AwardCardData[] = [
+  {
+    slug: "top-talent",
+    nameImageSrc: "/home/award-top-talent.png",
+    nameImageWidth: 221,
+    nameImageHeight: 35,
+    titleKey: "home.awards.top-talent.title",
+    descriptionKey: "home.awards.top-talent.description",
+  },
+  {
+    slug: "top-project",
+    nameImageSrc: "/home/award-top-project.png",
+    nameImageWidth: 232,
+    nameImageHeight: 35,
+    titleKey: "home.awards.top-project.title",
+    descriptionKey: "home.awards.top-project.description",
+  },
+  {
+    slug: "top-project-leader",
+    nameImageSrc: "/home/award-top-project-leader.png",
+    nameImageWidth: 232,
+    nameImageHeight: 64,
+    titleKey: "home.awards.top-project-leader.title",
+    descriptionKey: "home.awards.top-project-leader.description",
+  },
+  {
+    slug: "best-manager",
+    nameImageSrc: "/home/award-best-manager.png",
+    nameImageWidth: 232,
+    nameImageHeight: 30,
+    titleKey: "home.awards.best-manager.title",
+    descriptionKey: "home.awards.best-manager.description",
+  },
+  {
+    slug: "signature-2025-creator",
+    nameImageSrc: "/home/award-signature-creator.png",
+    nameImageWidth: 232,
+    nameImageHeight: 54,
+    titleKey: "home.awards.signature-2025-creator.title",
+    descriptionKey: "home.awards.signature-2025-creator.description",
+  },
+  {
+    slug: "mvp",
+    nameImageSrc: "/home/award-mvp.png",
+    nameImageWidth: 116,
+    nameImageHeight: 52,
+    titleKey: "home.awards.mvp.title",
+    descriptionKey: "home.awards.mvp.description",
+  },
+];
+
+type HomeAwardsSectionProps = {
+  lang: Language;
+};
+
+export default function HomeAwardsSection({ lang }: HomeAwardsSectionProps) {
+  return (
+    <section
+      id="awards"
+      aria-label={t(lang, "home.awards.title")}
+      className="w-full"
+      style={{ backgroundColor: "#00101A" }}
+    >
+      <div
+        className="mx-auto flex flex-col"
+        style={{ maxWidth: 1224, gap: 80, padding: "0" }}
+      >
+        {/* Section header */}
+        <div className="flex flex-col" style={{ gap: 16 }}>
+          {/* Caption */}
+          <span
+            style={{
+              fontFamily: "Montserrat, sans-serif",
+              fontSize: 24,
+              fontWeight: 700,
+              lineHeight: "32px",
+              color: "#FFFFFF",
+            }}
+          >
+            {t(lang, "home.awards.caption")}
+          </span>
+
+          {/* Divider line */}
+          <div
+            aria-hidden="true"
+            style={{ height: 1, backgroundColor: "#2E3940", width: "100%" }}
+          />
+
+          {/* Title + description row */}
+          <div className="flex items-center" style={{ gap: 32 }}>
+            <h2
+              style={{
+                fontFamily: "Montserrat, sans-serif",
+                fontSize: 57,
+                fontWeight: 700,
+                lineHeight: "64px",
+                letterSpacing: "-0.25px",
+                color: "#FFEA9E",
+                margin: 0,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {t(lang, "home.awards.title")}
+            </h2>
+            <p
+              style={{
+                fontFamily: "Montserrat, sans-serif",
+                fontSize: 16,
+                fontWeight: 400,
+                lineHeight: "24px",
+                letterSpacing: "0.5px",
+                color: "rgba(255,255,255,0.70)",
+                margin: 0,
+              }}
+            >
+              {t(lang, "home.awards.description")}
+            </p>
+          </div>
+        </div>
+
+        {/* Awards grid — 3 cols desktop, 2 cols tablet, 1 col mobile */}
+        <div className="grid gap-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          {AWARDS.map((award) => (
+            <HomeAwardCard key={award.slug} lang={lang} award={award} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
