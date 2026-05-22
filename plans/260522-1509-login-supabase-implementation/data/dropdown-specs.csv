@@ -1,0 +1,4 @@
+"No","itemId","nameJP","nameTrans","itemName","itemType","itemSubtype","description"
+"A","525:11713","Dropdown-List","Dropdown chọn ngôn ngữ","Dropdown-List","others","dropdown","Dropdown chọn ngôn ngữ. Selected: vùng trên, nền xám đậm, cờ Việt Nam + 'VN'. Option: vùng dưới, nền đen, cờ Anh + 'EN'. Click toggles menu. Selecting EN/VN updates display and closes menu."
+"A.1","I525:11713;362:6085","tiếng Việt","Ngôn ngữ Tiếng Việt","tiếng Việt","others","list_item","Item chọn ngôn ngữ 'VN'. Cờ VN icon + 'VN'. Click chọn Tiếng Việt và đóng dropdown. Hover highlight, selected có nền khác."
+"A.2","I525:11713;362:6128","tiếng Anh","Tuỳ chọn ngôn ngữ 'EN'","tiếng Anh","button","","Người dùng chọn ngôn ngữ 'EN'. Cờ Anh (trái) + 'EN'. 110x56px, nền tối. Click chọn EN và đóng dropdown, update giao diện. Hover đổi nền."

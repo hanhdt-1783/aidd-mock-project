@@ -1,0 +1,18 @@
+Section,TC_ID,Page_Name,Category,Sub_Category,Test_Objective,Steps,Expected_Result
+ACCESSING,45278c06,Login Screen,Check access condition,Unauthenticated user,Visible for unauthenticated,"1. Access Login as unauthenticated. 2. Log out from authed page. 3. Attempt access while authenticated.","1. Login displayed. 2. Redirect to Login after logout. 3. Authenticated user redirected to main app."
+GUI,b9805e65,Login Screen,Check layout,Header section,Logo left position,Inspect logo + resize browser + try interact,Logo at top-left across all sizes; not interactive (click/hover no effect)
+GUI,8415b629,Login Screen,Check layout,Header section,Language control right position,Inspect + resize,Language selector at top-right for all sizes
+GUI,33a1dacf,Login Screen,Check layout,Footer section,Visibility and fixed position,Scroll + hover/click footer,Footer visible & fixed at bottom; remains stationary; not interactive
+GUI,5fbe2a18,Login Screen,Check layout,Hero area,Background artwork presence,Inspect hero,Hero has key visual/background artwork
+GUI,42b82364,Login Screen,Check layout,Hero area,Title and description arrangement,Inspect title + descriptions; try interact,"'ROOT FURTHER' + 'Bắt đầu hành trình của bạn cùng SAA 2025.' + 'Đăng nhập để khám phá!' present, well arranged. Not interactive/selectable."
+GUI,6ae76d15,Login Screen,Check layout,Login button,Visibility and position,Locate LOGIN With Google button,Centered below hero with Google icon visible
+GUI,20d87e28,Login Screen,Check layout,Language dropdown,Opens on language click,Click + hover language selector,Dropdown opens on click; highlight + pointer cursor on hover
+GUI,5f1cbabd,Login Screen,Initialize,Language control,Default language Vietnamese,Observe selector,"Default language 'VN' shown"
+GUI,98e20775,Login Screen,Initialize,Language control,Flag and chevron display,Observe selector,VN flag icon left of 'VN'; down chevron right
+FUNCTION,f62b0c97,Login Screen,Check access condition,Authenticated user,Should be redirected,Access Login as authenticated user,Redirected to main app
+FUNCTION,60bc5bbb,Login Screen,Check component interaction,Login button,On click Google authentication,Click LOGIN With Google,Google authentication flow starts in new tab or popup
+FUNCTION,c18649fa,Login Screen,Check component interaction,Login button,Shadow effect on hover,Hover login button,Shadow/elevated effect while hovered
+FUNCTION,37eae882,Login Screen,Check component interaction,Login button,Disabled with loader during authentication,Click + observe during processing,Button disabled with loading indicator
+FUNCTION,4426635b,Login Screen,Check component interaction,Language control button,Dropdown opens on click,Click language selector,Language dropdown opens
+FUNCTION,cb42461d,Login Screen,Check component interaction,Language control button,Hover highlight and pointer,Hover language selector,Highlighted + pointer cursor
+FUNCTION,e76aa170,Login Screen,Check business logic,Authentication flow,User info returned on success,Click LOGIN With Google + auth with valid Google,User info returned + redirect to main app
