@@ -11,7 +11,7 @@ The `/` route implements the SAA homepage: header, hero, countdown, awards cards
 | `/` | `app/page.tsx` | Server component; resolves auth + role, passes props to UI |
 | `/prelaunch` | `app/prelaunch/page.tsx` | Public standalone countdown page; no auth required |
 | `/awards` | `app/awards/page.tsx` | Full Awards Information page; **requires auth** (anonymous → `/login`) |
-| `/kudos` | `app/kudos/page.tsx` | Stub — "Coming Soon" panel |
+| `/kudos` | `app/kudos/page.tsx` | Full Kudos Live Board; **requires auth** (anonymous → `/login`) |
 | `/profile` | `app/profile/page.tsx` | Stub |
 | `/standards` | `app/standards/page.tsx` | Stub |
 
@@ -44,14 +44,19 @@ Returns `null` for missing/invalid; countdown components check for `null` to cho
 
 ## Profiles Table + RLS
 
-Migration: `supabase/migrations/20260522154800_create_profiles_table.sql`
+Migration: `supabase/migrations/20260522154800_create_profiles_table.sql`; extended by `supabase/migrations/20260523232000_create_kudos_tables.sql`.
 
 ```
 public.profiles
-  id         uuid  PK → auth.users(id) ON DELETE CASCADE
-  role       text  NOT NULL DEFAULT 'user'  CHECK (role IN ('admin', 'user'))
-  created_at timestamptz
-  updated_at timestamptz
+  id           uuid  PK → auth.users(id) ON DELETE CASCADE
+  role         text  NOT NULL DEFAULT 'user'  CHECK (role IN ('admin', 'user'))
+  display_name text
+  avatar_url   text
+  department   text
+  title        text
+  rank_stars   int   DEFAULT 0
+  created_at   timestamptz
+  updated_at   timestamptz
 ```
 
 **RLS:** `profiles_select_own` — authenticated users may `SELECT` their own row only. No UPDATE policy is exposed; self-promotion is not possible.
@@ -177,6 +182,7 @@ Net effect: `/awards#best-manager` lands on that section with the sidebar item h
 | `awards.meta.*` | Page `<title>` for `/awards` |
 | `awards.menu.*` | Side-menu item labels |
 | `awards.*` | Page heading, section titles, prize details |
+| `kudos.*` | Kudos Live Board — board heading, card labels, hashtag/like UI, gift/secret-box copy |
 | `prelaunch.meta.*` | Page `<title>` for `/prelaunch` |
 | `prelaunch.*` | Countdown heading + unit labels (DAYS / HOURS / MINUTES) |
 

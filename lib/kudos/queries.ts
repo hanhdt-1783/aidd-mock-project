@@ -132,7 +132,10 @@ async function hydrateKudosRows(
 }
 
 // Returns array of kudos IDs to intersect, or null when no filters are active.
-async function applyFilters(filters: KudosFilters): Promise<string[] | null> {
+// Exported so the page can resolve once and feed both list fetchers.
+export async function resolveFilteredKudosIds(
+  filters: KudosFilters,
+): Promise<string[] | null> {
   if (!filters.hashtag && !filters.department) return null;
   const supabase = await createClient();
 
@@ -182,12 +185,11 @@ export async function getViewerId(): Promise<string | null> {
 
 export async function listHighlightKudos(
   viewerId: string,
-  filters: KudosFilters,
+  filteredIds: string[] | null,
   limit = 5,
 ): Promise<KudosCard[]> {
   try {
     const supabase = await createClient();
-    const filteredIds = await applyFilters(filters);
     if (filteredIds !== null && filteredIds.length === 0) return [];
 
     let query = supabase
@@ -212,12 +214,11 @@ export async function listHighlightKudos(
 
 export async function listAllKudos(
   viewerId: string,
-  filters: KudosFilters,
+  filteredIds: string[] | null,
   limit = 20,
 ): Promise<KudosCard[]> {
   try {
     const supabase = await createClient();
-    const filteredIds = await applyFilters(filters);
     if (filteredIds !== null && filteredIds.length === 0) return [];
 
     let query = supabase
@@ -253,11 +254,13 @@ export async function getSidebarStats(viewerId: string): Promise<SidebarStats> {
         .from('kudos')
         .select('id', { count: 'exact', head: true })
         .eq('sender_id', viewerId),
+      // supabase-js keys aggregate selects by COLUMN name, not the aggregate name:
+      // `.select('like_count.sum()')` → `{ like_count: number | null }`.
       supabase
         .from('kudos')
         .select('like_count.sum()')
         .eq('receiver_id', viewerId)
-        .single<{ sum: number | null }>(),
+        .single<{ like_count: number | null }>(),
       supabase
         .from('secret_boxes')
         .select('id', { count: 'exact', head: true })
@@ -273,7 +276,7 @@ export async function getSidebarStats(viewerId: string): Promise<SidebarStats> {
     return {
       kudosReceived: received.count ?? 0,
       kudosSent: sent.count ?? 0,
-      heartsReceived: heartsAgg.data?.sum ?? 0,
+      heartsReceived: heartsAgg.data?.like_count ?? 0,
       secretBoxesOpened: boxesOpened.count ?? 0,
       secretBoxesUnopened: boxesUnopened.count ?? 0,
     };

@@ -14,6 +14,7 @@ import {
   listHashtags,
   listHighlightKudos,
   listSpotlightNames,
+  resolveFilteredKudosIds,
 } from '@/lib/kudos/queries';
 import type { KudosFilters } from '@/lib/kudos/types';
 
@@ -59,6 +60,9 @@ export default async function KudosRoute({
     department: pickSingle(params.department),
   };
 
+  // Resolve filter intersection once so both list fetchers share the result.
+  const filteredIds = await resolveFilteredKudosIds(filters);
+
   const [
     highlightCards,
     allCards,
@@ -69,8 +73,8 @@ export default async function KudosRoute({
     spotlightNames,
     totalKudos,
   ] = await Promise.all([
-    listHighlightKudos(user.id, filters, 5),
-    listAllKudos(user.id, filters, 20),
+    listHighlightKudos(user.id, filteredIds, 5),
+    listAllKudos(user.id, filteredIds, 20),
     listHashtags(),
     listDepartments(),
     getSidebarStats(user.id),
