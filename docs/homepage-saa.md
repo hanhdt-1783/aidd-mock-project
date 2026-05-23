@@ -15,7 +15,7 @@ The `/` route implements the SAA homepage: header, hero, countdown, awards cards
 | `/profile` | `app/profile/page.tsx` | Stub |
 | `/standards` | `app/standards/page.tsx` | Stub |
 
-Stubs render a centered message via `t(lang, 'home.stub.coming_soon')`. They satisfy navigation tests (no 404) without real content.
+Stubs render `HomeHeader` (with language switcher) + a centered message via `t(lang, 'home.stub.coming_soon')`. They satisfy navigation tests (no 404) without real content.
 
 ---
 

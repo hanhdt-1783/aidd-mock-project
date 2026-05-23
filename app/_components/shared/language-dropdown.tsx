@@ -57,7 +57,6 @@ export default function LanguageDropdown({
 
   function handleSelect(lang: Language) {
     onSelect(lang);
-    onClose();
   }
 
   return (
@@ -66,7 +65,7 @@ export default function LanguageDropdown({
       role="listbox"
       aria-label="Select language"
       style={{ width: '110px' }}
-      className="flex flex-col overflow-hidden rounded-sm shadow-lg border border-white/10"
+      className="flex flex-col overflow-hidden rounded-lg shadow-lg"
     >
       {LANGUAGE_OPTIONS.map((option) => {
         const isSelected = option.code === currentLanguage;

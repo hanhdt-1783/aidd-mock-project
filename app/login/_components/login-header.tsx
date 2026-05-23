@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { t, type Language } from "@/lib/i18n/dictionary";
-import LanguageSwitcher from "./language-switcher";
+import LanguageSwitcher from "@/app/_components/shared/language-switcher";
 
 export default function LoginHeader({ lang }: { lang: Language }) {
   return (

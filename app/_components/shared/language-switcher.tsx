@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useCallback, useState, useTransition } from "react";
 import Image from "next/image";
 import { setLanguage } from "@/lib/i18n/actions";
 import type { Language } from "@/lib/i18n/dictionary";
@@ -42,6 +42,8 @@ export default function LanguageSwitcher({
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
+  const closeDropdown = useCallback(() => setIsOpen(false), []);
+
   function handleSelect(lang: Language) {
     if (lang === currentLanguage) {
       setIsOpen(false);
@@ -57,13 +59,16 @@ export default function LanguageSwitcher({
     <div className="relative">
       <button
         type="button"
+        // stopPropagation prevents the dropdown's outside-click handler from firing
+        // before onClick toggles isOpen — which would otherwise re-open immediately.
+        onMouseDown={(e) => e.stopPropagation()}
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-label="Language switcher"
         disabled={isPending}
         className="flex items-center justify-between gap-0.5 rounded-[4px] transition-colors duration-200 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-60"
-        style={{ width: 108, height: 56, padding: "16px" }}
+        style={{ width: 110, height: 56, padding: "16px" }}
       >
         <span className="flex items-center gap-1">
           <Image
@@ -96,7 +101,7 @@ export default function LanguageSwitcher({
           <LanguageDropdown
             currentLanguage={currentLanguage}
             onSelect={handleSelect}
-            onClose={() => setIsOpen(false)}
+            onClose={closeDropdown}
           />
         </div>
       )}

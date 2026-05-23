@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { t, type Language } from "@/lib/i18n/dictionary";
-import LanguageSwitcher from "@/app/login/_components/language-switcher";
+import LanguageSwitcher from "@/app/_components/shared/language-switcher";
 import { signOut } from "@/app/login/actions";
 
 type NavItem = {
