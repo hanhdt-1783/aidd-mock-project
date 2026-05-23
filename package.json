@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "download-assets:home": "node scripts/download-home-assets.mjs"
+    "download-assets:home": "node scripts/download-home-assets.mjs",
+    "download-assets:prelaunch": "node scripts/download-prelaunch-assets.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",

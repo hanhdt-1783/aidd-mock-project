@@ -40,8 +40,8 @@ export default async function HomePage() {
     isAdmin = profile?.role === "admin";
   }
 
-  // Countdown target — null when env unset/invalid; countdown then renders "--".
-  const eventDate = getEventDatetime();
+  // Countdown target — DB-first (event_config) with env fallback; null → "--".
+  const eventDate = await getEventDatetime();
   const countdownTargetIso = eventDate ? eventDate.toISOString() : null;
 
   return (

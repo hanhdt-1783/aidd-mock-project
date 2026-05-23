@@ -9,6 +9,7 @@ The `/` route implements the SAA homepage: header, hero, countdown, awards cards
 | Route | File | Notes |
 |---|---|---|
 | `/` | `app/page.tsx` | Server component; resolves auth + role, passes props to UI |
+| `/prelaunch` | `app/prelaunch/page.tsx` | Public standalone countdown page; no auth required |
 | `/awards` | `app/awards/page.tsx` | Full Awards Information page; **requires auth** (anonymous → `/login`) |
 | `/kudos` | `app/kudos/page.tsx` | Stub — "Coming Soon" panel |
 | `/profile` | `app/profile/page.tsx` | Stub |
@@ -20,17 +21,24 @@ Stubs render a centered message via `t(lang, 'home.stub.coming_soon')`. They sat
 
 ## Countdown
 
-`lib/event/get-event-datetime.ts` exports `getEventDatetime(): Date | null`.
+`lib/event/get-event-datetime.ts` exports `getEventDatetime(): Promise<Date | null>` (async).
 
-Env var: `NEXT_PUBLIC_EVENT_DATETIME` — ISO-8601 string, e.g. `2025-12-31T18:30:00+07:00`.
+**Source order (DB-first, env fallback):**
 
-| Env value | Countdown display | "Coming soon" label |
+1. `public.event_config.event_datetime` — singleton Supabase row; readable by anyone (public RLS); writable via service-role only. Migration: `supabase/migrations/20260523131000_create_event_config_table.sql`.
+2. `NEXT_PUBLIC_EVENT_DATETIME` — ISO-8601 env var, used when the DB row is absent or the query errors (e.g. during build).
+
+Both the homepage (`app/page.tsx`) and the prelaunch page (`app/prelaunch/page.tsx`) call the same resolver.
+
+| Source / value | Countdown display | "Coming soon" label |
 |---|---|---|
-| Valid ISO-8601, future date | `DD / HH / MM`, ticks each minute | visible |
-| Valid ISO-8601, past date | `00 / 00 / 00` | hidden |
-| Missing or unparseable | `-- / -- / --` | hidden |
+| Valid future datetime | `DD / HH / MM`, ticks each second | visible |
+| Valid past datetime | `00 / 00 / 00` | hidden |
+| No DB row + missing/unparseable env | `-- / -- / --` | hidden |
 
-Returns `null` for missing/invalid; the countdown component checks for `null` to choose the `--` state.
+Returns `null` for missing/invalid; countdown components check for `null` to choose the `--` state.
+
+**Updating the event datetime:** edit the `event_config` row in Supabase Studio (`event_datetime` column). No redeploy needed.
 
 ---
 
@@ -79,6 +87,25 @@ const isAdmin = profile?.role === 'admin';
 Props `isAuthenticated` and `isAdmin` are forwarded to `HomeHeader`. When `isAdmin` is true the header renders an Admin Dashboard link in the account menu.
 
 Sign-out reuses `signOut` from `app/login/actions.ts`. No new action was created.
+
+---
+
+## Prelaunch Page
+
+`app/prelaunch/page.tsx` is a public server component — no auth required.
+
+It calls `getEventDatetime()` and passes `targetIso` (string or `null`) to `PrelaunchCountdownPage`, a full-screen client component under `app/_components/prelaunch/`.
+
+| Component | File | Notes |
+|---|---|---|
+| `PrelaunchCountdownPage` | `prelaunch-countdown-page.tsx` | Full-screen layout wrapper; receives `lang` + `targetIso` |
+| `PrelaunchCountdownLogic` | `prelaunch-countdown-logic.ts` | Client-side tick logic; 1 s interval |
+| `PrelaunchCountdownUnit` | `prelaunch-countdown-unit.tsx` | Single unit block (label + digit tiles) |
+| `PrelaunchDigitTile` | `prelaunch-digit-tile.tsx` | Individual digit tile |
+
+Background image: `public/prelaunch/bg-image.png`. Fetch/refresh via `npm run download-assets:prelaunch`.
+
+Display units: DAYS / HOURS / MINUTES only (no seconds). T=0 behavior: stays at `00 / 00 / 00` (no redirect).
 
 ---
 
@@ -150,5 +177,7 @@ Net effect: `/awards#best-manager` lands on that section with the sidebar item h
 | `awards.meta.*` | Page `<title>` for `/awards` |
 | `awards.menu.*` | Side-menu item labels |
 | `awards.*` | Page heading, section titles, prize details |
+| `prelaunch.meta.*` | Page `<title>` for `/prelaunch` |
+| `prelaunch.*` | Countdown heading + unit labels (DAYS / HOURS / MINUTES) |
 
 All keys exist in both `vi` and `en` in `lib/i18n/dictionary.ts`.

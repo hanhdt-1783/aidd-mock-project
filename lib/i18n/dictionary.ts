@@ -80,6 +80,12 @@ export const dictionary = {
     'home.footer.nav.standards': 'Tiêu chuẩn chung',
     // Home — widget
     'home.widget.label': 'Viết Kudos',
+    // Prelaunch page
+    'prelaunch.meta.title': 'Sun* Annual Awards 2025',
+    'prelaunch.title': 'Sự kiện sẽ bắt đầu sau',
+    'prelaunch.days': 'DAYS',
+    'prelaunch.hours': 'HOURS',
+    'prelaunch.minutes': 'MINUTES',
     // Awards page
     'awards.meta.title': 'Hệ thống giải thưởng — Sun* Annual Awards 2025',
     'awards.label': 'Sun* Annual Awards 2025',
@@ -207,6 +213,12 @@ export const dictionary = {
     'home.footer.nav.standards': 'General Standards',
     // Home — widget
     'home.widget.label': 'Write Kudos',
+    // Prelaunch page
+    'prelaunch.meta.title': 'Sun* Annual Awards 2025',
+    'prelaunch.title': 'The event will start in',
+    'prelaunch.days': 'DAYS',
+    'prelaunch.hours': 'HOURS',
+    'prelaunch.minutes': 'MINUTES',
     // Awards page
     'awards.meta.title': 'Award System — Sun* Annual Awards 2025',
     'awards.label': 'Sun* Annual Awards 2025',
