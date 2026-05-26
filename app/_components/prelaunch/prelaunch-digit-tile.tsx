@@ -4,7 +4,8 @@
  * Figma node: Group 5 / Group 4 (component 186:2619)
  * Desktop size: 77×123px
  * Inner rect: gradient bg + #FFEA9E border at 0.5 opacity, border-radius 12px, blur 25px
- * Digit: "Digital Numbers" font, ~73.7px (desktop), white, centered
+ * Digit: DSEG7 Classic Bold (7-segment LCD font with ghost segments — matches Figma "Digital Numbers"),
+ *        ~73.7px (desktop), white, centered. Loaded via @font-face in globals.css.
  * Scales responsively via clamp on smaller viewports.
  */
 
@@ -40,9 +41,9 @@ export default function PrelaunchDigitTile({ digit }: PrelaunchDigitTileProps) {
       <span
         className="relative z-10"
         style={{
-          fontFamily: '"Digital Numbers", monospace',
+          fontFamily: 'var(--font-dseg7), "Digital Numbers", monospace',
           fontSize: "clamp(38px, 5.8vw, 73.73px)",
-          fontWeight: 400,
+          fontWeight: 700,
           lineHeight: 1,
           color: "#FFFFFF",
           letterSpacing: 0,
