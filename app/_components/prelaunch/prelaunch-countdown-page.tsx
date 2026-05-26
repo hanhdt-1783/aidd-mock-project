@@ -19,7 +19,7 @@
 
 import { useState, useEffect } from "react";
 import { t, type Language } from "@/lib/i18n/dictionary";
-import { computePrelaunchState } from "./prelaunch-countdown-logic";
+import { computeCountdownState } from "@/lib/event/compute-countdown-state";
 import PrelaunchCountdownUnit from "./prelaunch-countdown-unit";
 
 type PrelaunchCountdownPageProps = {
@@ -39,7 +39,8 @@ export default function PrelaunchCountdownPage({
     return () => clearInterval(timer);
   }, []);
 
-  const state = computePrelaunchState(targetIso, now);
+  // showComingSoon is ignored here — this page has its own title.
+  const state = computeCountdownState(targetIso, now);
 
   const unitLabels: Record<"days" | "hours" | "minutes", string> = {
     days: t(lang, "prelaunch.days"),

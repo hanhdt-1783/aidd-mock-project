@@ -2,88 +2,70 @@
 
 import { useState, useEffect } from "react";
 import { t, type Language } from "@/lib/i18n/dictionary";
+import {
+  computeCountdownState,
+  type CountdownUnit,
+} from "@/lib/event/compute-countdown-state";
 
-type CountdownUnit = {
-  display: string;
-  labelKey: "home.hero.days" | "home.hero.hours" | "home.hero.minutes";
+const LABEL_KEY: Record<CountdownUnit["unit"], "home.hero.days" | "home.hero.hours" | "home.hero.minutes"> = {
+  days: "home.hero.days",
+  hours: "home.hero.hours",
+  minutes: "home.hero.minutes",
 };
 
-type CountdownState = {
-  units: CountdownUnit[];
-  showComingSoon: boolean;
-};
-
-function pad(n: number): string {
-  return String(n).padStart(2, "0");
-}
-
-// targetIso null/empty/invalid → "--" tiles, "Coming soon" hidden.
-// Past target → "00" tiles, "Coming soon" hidden.
-// Future target → real diff, "Coming soon" visible.
-function computeState(
-  targetIso: string | null | undefined,
-  now: number,
-): CountdownState {
-  const placeholder = (display: string): CountdownState => ({
-    units: [
-      { display, labelKey: "home.hero.days" },
-      { display, labelKey: "home.hero.hours" },
-      { display, labelKey: "home.hero.minutes" },
-    ],
-    showComingSoon: false,
-  });
-
-  if (!targetIso) return placeholder("--");
-  const target = new Date(targetIso).getTime();
-  if (Number.isNaN(target)) return placeholder("--");
-
-  const diff = target - now;
-  if (diff <= 0) return placeholder("00");
-
-  const totalMinutes = Math.floor(diff / 1000 / 60);
-  const totalHours = Math.floor(totalMinutes / 60);
-  return {
-    units: [
-      { display: pad(Math.floor(totalHours / 24)), labelKey: "home.hero.days" },
-      { display: pad(totalHours % 24), labelKey: "home.hero.hours" },
-      { display: pad(totalMinutes % 60), labelKey: "home.hero.minutes" },
-    ],
-    showComingSoon: true,
-  };
-}
-
-type CountdownDisplayProps = {
-  /** Two-digit number string to show, e.g. "05" */
+type CountdownTileProps = {
+  /** Two-character display value, e.g. "05" or "--". */
   display: string;
   label: string;
 };
 
-function CountdownTile({ display, label }: CountdownDisplayProps) {
+// One unit (two digit tiles + label underneath).
+// Style mirrors /prelaunch (DSEG7 LCD + frosted glass + gold border)
+// but at home's compact 51x82 tile size — see compute-countdown-state.ts for shared logic.
+function CountdownTile({ display, label }: CountdownTileProps) {
+  const [d1, d2] =
+    display.length >= 2
+      ? [display[0], display[1]]
+      : [display[0] ?? "0", display[0] ?? "0"];
+
   return (
-    <div
-      className="flex flex-col"
-      style={{ gap: 14, width: 116 }}
-    >
-      {/* Number — two large digit blocks */}
+    <div className="flex flex-col" style={{ gap: 14 }}>
+      {/* Two digit tiles */}
       <div className="flex items-center" style={{ gap: 14, height: 82 }}>
-        {display.split("").map((digit, i) => (
+        {[d1, d2].map((digit, i) => (
           <div
             key={i}
-            className="flex items-center justify-center"
-            style={{
-              width: 51,
-              height: 82,
-              borderRadius: 4,
-              backgroundColor: "rgba(255,255,255,0.08)",
-              fontFamily: "Montserrat, sans-serif",
-              fontSize: 57,
-              fontWeight: 700,
-              lineHeight: "64px",
-              color: "#FFEA9E",
-              letterSpacing: "-0.25px",
-            }}
+            className="relative flex items-center justify-center"
+            style={{ width: 51, height: 82 }}
           >
-            {digit}
+            {/* Frosted glass background — matches /prelaunch tile aesthetic */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0"
+              style={{
+                borderRadius: 8,
+                border: "0.75px solid #FFEA9E",
+                background:
+                  "linear-gradient(180deg, #FFF 0%, rgba(255,255,255,0.10) 100%)",
+                opacity: 0.5,
+                backdropFilter: "blur(25px)",
+                WebkitBackdropFilter: "blur(25px)",
+              }}
+            />
+            <span
+              className="relative z-10"
+              style={{
+                fontFamily: 'var(--font-dseg7), "Digital Numbers", monospace',
+                fontSize: 48,
+                fontWeight: 700,
+                lineHeight: 1,
+                color: "#FFFFFF",
+                letterSpacing: 0,
+                userSelect: "none",
+              }}
+            >
+              {digit}
+            </span>
           </div>
         ))}
       </div>
@@ -112,7 +94,7 @@ type HomeCountdownProps = {
 
 export default function HomeCountdown({ lang, targetIso }: HomeCountdownProps) {
   // Lazy-init keeps server and client first render aligned. Interval ticks the
-  // clock; computeState recomputes from `now` each render — no cascading setState.
+  // clock; computeCountdownState recomputes from `now` each render.
   const [now, setNow] = useState<number>(() => Date.now());
 
   useEffect(() => {
@@ -120,7 +102,7 @@ export default function HomeCountdown({ lang, targetIso }: HomeCountdownProps) {
     return () => clearInterval(timer);
   }, []);
 
-  const state = computeState(targetIso, now);
+  const state = computeCountdownState(targetIso, now);
 
   return (
     <div className="flex flex-col" style={{ gap: 16 }}>
@@ -141,9 +123,9 @@ export default function HomeCountdown({ lang, targetIso }: HomeCountdownProps) {
       <div className="flex items-center" style={{ gap: 40 }}>
         {state.units.map((unit) => (
           <CountdownTile
-            key={unit.labelKey}
+            key={unit.unit}
             display={unit.display}
-            label={t(lang, unit.labelKey)}
+            label={t(lang, LABEL_KEY[unit.unit])}
           />
         ))}
       </div>
