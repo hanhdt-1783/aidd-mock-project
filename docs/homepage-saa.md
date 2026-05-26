@@ -11,7 +11,7 @@ The `/` route implements the SAA homepage: header, hero, countdown, awards cards
 | `/` | `app/page.tsx` | Server component; resolves auth + role, passes props to UI |
 | `/prelaunch` | `app/prelaunch/page.tsx` | Public standalone countdown page; no auth required |
 | `/awards` | `app/awards/page.tsx` | Full Awards Information page; **requires auth** (anonymous → `/login`) |
-| `/kudos` | `app/kudos/page.tsx` | Full Kudos Live Board; **requires auth** (anonymous → `/login`) |
+| `/kudos` | `app/kudos/page.tsx` | Kudos Live Board + "Viết Kudo" create form; **requires auth** (anonymous → `/login`) |
 | `/profile` | `app/profile/page.tsx` | Stub |
 | `/standards` | `app/standards/page.tsx` | Stub |
 
@@ -182,7 +182,7 @@ Net effect: `/awards#best-manager` lands on that section with the sidebar item h
 | `awards.meta.*` | Page `<title>` for `/awards` |
 | `awards.menu.*` | Side-menu item labels |
 | `awards.*` | Page heading, section titles, prize details |
-| `kudos.*` | Kudos Live Board — board heading, card labels, hashtag/like UI, gift/secret-box copy |
+| `kudos.*` | Kudos Live Board — board heading, card labels, hashtag/like UI, gift/secret-box copy, create-form labels |
 | `prelaunch.meta.*` | Page `<title>` for `/prelaunch` |
 | `prelaunch.*` | Countdown heading + unit labels (DAYS / HOURS / MINUTES) |
 

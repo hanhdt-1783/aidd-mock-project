@@ -7,6 +7,7 @@ import type {
   KudosCard,
   KudosFilters,
   KudosUser,
+  RecipientOption,
   SidebarStats,
   SpotlightName,
 } from './types';
@@ -332,7 +333,12 @@ export async function listGiftRecipients(limit = 10): Promise<GiftRecipient[]> {
 export async function listHashtags(): Promise<string[]> {
   try {
     const supabase = await createClient();
-    const { data, error } = await supabase.from('kudos_hashtags').select('tag');
+    // Bounded fetch — the create form needs a suggestion list, not the universe
+    // of every tag ever used. 500 rows is plenty for a dropdown autocomplete.
+    const { data, error } = await supabase
+      .from('kudos_hashtags')
+      .select('tag')
+      .limit(500);
     if (error) {
       console.error('[listHashtags] Query error:', error);
       return [];
@@ -380,6 +386,33 @@ export async function getTotalKudosCount(): Promise<number> {
   } catch (err) {
     console.error('[getTotalKudosCount] Exception:', err);
     return 0;
+  }
+}
+
+// Recipients for the Viết Kudo autocomplete — every profile except the viewer.
+export async function listRecipients(viewerId: string): Promise<RecipientOption[]> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id, display_name, avatar_url, department')
+      .neq('id', viewerId)
+      .order('display_name', { ascending: true });
+
+    if (error) {
+      console.error('[listRecipients] Query error:', error);
+      return [];
+    }
+
+    return ((data ?? []) as ProfileRow[]).map<RecipientOption>((r) => ({
+      id: r.id,
+      displayName: r.display_name ?? 'Sunner',
+      avatarUrl: r.avatar_url,
+      department: r.department,
+    }));
+  } catch (err) {
+    console.error('[listRecipients] Exception:', err);
+    return [];
   }
 }
 

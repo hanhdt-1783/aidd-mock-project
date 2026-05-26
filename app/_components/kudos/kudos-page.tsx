@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import type {
   GiftRecipient,
   KudosCard as KudosCardType,
+  RecipientOption,
   SidebarStats,
   SpotlightName,
 } from './types';
@@ -28,6 +29,8 @@ type KudosPageProps = {
   giftRecipients: GiftRecipient[];
   spotlightNames: SpotlightName[];
   totalKudos: number;
+  recipients: RecipientOption[];
+  currentUserId: string;
 };
 
 type LikePatch = { id: string; liked: boolean; likeCount: number };
@@ -51,6 +54,8 @@ export default function KudosPage({
   giftRecipients,
   spotlightNames,
   totalKudos,
+  recipients,
+  currentUserId,
 }: KudosPageProps) {
   const router = useRouter();
   const [, startTransition] = useTransition();
@@ -132,7 +137,11 @@ export default function KudosPage({
         paddingTop: 80,
       }}
     >
-      <KudosHeroBanner />
+      <KudosHeroBanner
+        recipients={recipients}
+        existingHashtags={hashtags}
+        currentUserId={currentUserId}
+      />
 
       <div
         style={{

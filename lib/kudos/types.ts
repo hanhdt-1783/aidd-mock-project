@@ -48,3 +48,23 @@ export type KudosFilters = {
   hashtag: string | null;
   department: string | null;
 };
+
+// Used by the recipient autocomplete in the Viết Kudo form.
+export type RecipientOption = {
+  id: string;
+  displayName: string;
+  avatarUrl: string | null;
+  department: string | null;
+};
+
+// Payload accepted by the createKudo server action.
+// imageUrls are already-uploaded public URLs from Supabase Storage.
+export type CreateKudoInput = {
+  recipientId: string;
+  title: string;
+  contentMarkdown: string;
+  hashtags: string[];
+  imageUrls: string[];
+  isAnonymous: boolean;
+  anonymousAlias: string | null;
+};

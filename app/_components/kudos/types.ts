@@ -6,4 +6,6 @@ export type {
   GiftRecipient,
   SpotlightName,
   KudosFilters,
+  RecipientOption,
+  CreateKudoInput,
 } from '@/lib/kudos/types';

@@ -13,6 +13,7 @@ import {
   listGiftRecipients,
   listHashtags,
   listHighlightKudos,
+  listRecipients,
   listSpotlightNames,
   resolveFilteredKudosIds,
 } from '@/lib/kudos/queries';
@@ -72,6 +73,7 @@ export default async function KudosRoute({
     giftRecipients,
     spotlightNames,
     totalKudos,
+    recipients,
   ] = await Promise.all([
     listHighlightKudos(user.id, filteredIds, 5),
     listAllKudos(user.id, filteredIds, 20),
@@ -81,6 +83,7 @@ export default async function KudosRoute({
     listGiftRecipients(10),
     listSpotlightNames(80),
     getTotalKudosCount(),
+    listRecipients(user.id),
   ]);
 
   // Type guards — ensure all arrays/objects are defined
@@ -98,6 +101,7 @@ export default async function KudosRoute({
   const safeGiftRecipients = Array.isArray(giftRecipients) ? giftRecipients : [];
   const safeSpotlightNames = Array.isArray(spotlightNames) ? spotlightNames : [];
   const safeTotalKudos = typeof totalKudos === 'number' ? totalKudos : 0;
+  const safeRecipients = Array.isArray(recipients) ? recipients : [];
 
   return (
     <div
@@ -123,6 +127,8 @@ export default async function KudosRoute({
           giftRecipients={safeGiftRecipients}
           spotlightNames={safeSpotlightNames}
           totalKudos={safeTotalKudos}
+          recipients={safeRecipients}
+          currentUserId={user.id}
         />
       </main>
 
