@@ -1,28 +1,22 @@
 "use client";
 
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useTransition } from "react";
 import Image from "next/image";
 import { setLanguage } from "@/lib/i18n/actions";
-import type { Language } from "@/lib/i18n/dictionary";
+import { t, type Language } from "@/lib/i18n/dictionary";
 import LanguageDropdown from "./language-dropdown";
 
-function ChevronDownIcon() {
+function TriangleDownIcon() {
   return (
     <svg
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      fill="none"
+      fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      <path
-        d="M6 9L12 15L18 9"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <path d="M7 10L12 15L17 10Z" />
     </svg>
   );
 }
@@ -36,22 +30,27 @@ const LABEL: Record<Language, string> = { vi: "VN", en: "EN" };
 
 export default function LanguageSwitcher({
   currentLanguage,
+  isOpen,
+  onToggle,
+  onClose,
 }: {
   currentLanguage: Language;
+  isOpen: boolean;
+  onToggle: () => void;
+  onClose: () => void;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const closeDropdown = useCallback(() => setIsOpen(false), []);
+  const closeDropdown = useCallback(() => onClose(), [onClose]);
 
   function handleSelect(lang: Language) {
     if (lang === currentLanguage) {
-      setIsOpen(false);
+      onClose();
       return;
     }
     startTransition(async () => {
       await setLanguage(lang);
-      setIsOpen(false);
+      onClose();
     });
   }
 
@@ -62,12 +61,12 @@ export default function LanguageSwitcher({
         // stopPropagation prevents the dropdown's outside-click handler from firing
         // before onClick toggles isOpen — which would otherwise re-open immediately.
         onMouseDown={(e) => e.stopPropagation()}
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={onToggle}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        aria-label="Language switcher"
+        aria-label={t(currentLanguage, "aria.language.switcher")}
         disabled={isPending}
-        className="flex items-center justify-between gap-0.5 rounded-[4px] transition-colors duration-200 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-60"
+        className="flex items-center justify-between gap-0.5 rounded-[4px] transition-colors duration-200 hover:bg-[rgba(255,234,158,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-60"
         style={{ width: 110, height: 56, padding: "16px" }}
       >
         <span className="flex items-center gap-1">
@@ -90,9 +89,9 @@ export default function LanguageSwitcher({
           </span>
         </span>
         <span
-          className={`transition-transform duration-200 ${isOpen ? "rotate-180" : "rotate-0"}`}
+          className={`text-white transition-transform duration-200 ${isOpen ? "rotate-180" : "rotate-0"}`}
         >
-          <ChevronDownIcon />
+          <TriangleDownIcon />
         </span>
       </button>
 

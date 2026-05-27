@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import type { Language } from '@/lib/i18n/dictionary';
+import { t, type Language, type TranslationKey } from '@/lib/i18n/dictionary';
 
 export interface LanguageDropdownProps {
   currentLanguage: Language;
@@ -14,7 +14,7 @@ interface LanguageOption {
   code: Language;
   label: string;
   flagSrc: string;
-  flagAlt: string;
+  flagAltKey: TranslationKey;
 }
 
 const LANGUAGE_OPTIONS: LanguageOption[] = [
@@ -22,13 +22,13 @@ const LANGUAGE_OPTIONS: LanguageOption[] = [
     code: 'vi',
     label: 'VN',
     flagSrc: '/login/flags/vn.svg',
-    flagAlt: 'Vietnamese flag',
+    flagAltKey: 'aria.flag.vi',
   },
   {
     code: 'en',
     label: 'EN',
     flagSrc: '/login/flags/en.svg',
-    flagAlt: 'English flag',
+    flagAltKey: 'aria.flag.en',
   },
 ];
 
@@ -63,9 +63,16 @@ export default function LanguageDropdown({
     <div
       ref={panelRef}
       role="listbox"
-      aria-label="Select language"
-      style={{ width: '110px' }}
-      className="flex flex-col overflow-hidden rounded-lg shadow-lg"
+      aria-label={t(currentLanguage, 'aria.language.select')}
+      className="flex flex-col shadow-lg"
+      style={{
+        backgroundColor: '#00070C',
+        border: '1px solid #998C5F',
+        borderRadius: 8,
+        padding: 6,
+        gap: 2,
+        minWidth: 110,
+      }}
     >
       {LANGUAGE_OPTIONS.map((option) => {
         const isSelected = option.code === currentLanguage;
@@ -76,22 +83,35 @@ export default function LanguageDropdown({
             role="option"
             aria-selected={isSelected}
             onClick={() => handleSelect(option.code)}
-            style={{ height: '56px' }}
-            className={[
-              'flex items-center gap-3 px-4 w-full cursor-pointer transition-colors duration-150',
+            className={`flex items-center justify-start w-full border-none cursor-pointer transition-colors duration-150 ${
               isSelected
-                ? 'bg-[#3a3a3a]'
-                : 'bg-black hover:bg-[#1a1a1a]',
-            ].join(' ')}
+                ? 'bg-[rgba(255,234,158,0.20)]'
+                : 'bg-transparent hover:bg-[rgba(255,234,158,0.10)]'
+            }`}
+            style={{
+              height: 56,
+              padding: 16,
+              gap: 8,
+              borderRadius: 4,
+            }}
           >
             <Image
               src={option.flagSrc}
-              alt={option.flagAlt}
-              width={30}
-              height={20}
-              className="shrink-0 rounded-[2px]"
+              alt={t(currentLanguage, option.flagAltKey)}
+              width={24}
+              height={24}
+              className="shrink-0"
             />
-            <span className="text-white text-sm font-medium leading-none">
+            <span
+              className="font-bold text-white"
+              style={{
+                fontFamily: 'Montserrat, sans-serif',
+                fontSize: 16,
+                fontWeight: 700,
+                lineHeight: '24px',
+                letterSpacing: '0.15px',
+              }}
+            >
               {option.label}
             </span>
           </button>

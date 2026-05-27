@@ -184,7 +184,7 @@ function KudosContent({ lang }: { lang: Language }) {
             style={{
               display: "block",
               fontWeight: 800,
-              color: "#FFEA9E",
+              color: "#FFFFFF",
               marginBottom: 4,
             }}
           >
@@ -198,7 +198,7 @@ function KudosContent({ lang }: { lang: Language }) {
       <div>
         <Link
           href="/kudos"
-          className="inline-flex items-center gap-2 transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5 active:scale-95"
+          className="inline-flex items-center justify-center gap-2 transition-all duration-200 hover:brightness-110 hover:-translate-y-0.5 active:scale-95"
           style={{
             padding: 16,
             borderRadius: 4,
@@ -211,6 +211,7 @@ function KudosContent({ lang }: { lang: Language }) {
             textDecoration: "none",
             width: 126,
             height: 56,
+            justifyContent: "center",
           }}
         >
           {t(lang, "home.kudos.cta")}

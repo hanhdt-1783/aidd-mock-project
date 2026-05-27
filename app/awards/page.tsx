@@ -52,7 +52,7 @@ export default async function AwardsPage() {
       <main className="flex flex-col w-full" style={{ paddingTop: 80 }}>
         {/* Section A — Page title */}
         <section
-          className="w-full px-6 sm:px-10 lg:px-36"
+          className="w-full px-6 sm:px-10 lg:px-60 xl:px-72"
           style={{
             paddingTop: 40,
             paddingBottom: 32,
@@ -67,7 +67,7 @@ export default async function AwardsPage() {
             CSS handles the responsive split — DOM ids stay unique so the
             IntersectionObserver in AwardsSideMenu works on all viewports. */}
         <section
-          className="w-full px-6 sm:px-10 lg:px-36 flex flex-col lg:flex-row lg:items-start"
+          className="w-full px-6 sm:px-10 lg:px-60 xl:px-72 flex flex-col lg:flex-row lg:items-start"
           style={{
             paddingBottom: 96,
             backgroundColor: "#00101A",

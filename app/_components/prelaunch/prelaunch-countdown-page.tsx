@@ -1,47 +1,31 @@
-"use client";
-
 /**
  * Prelaunch countdown page — full-viewport presentational component.
  *
  * Figma: "Countdown - Prelaunch page" (screenId: 8PJQswPZmU)
  * Frame: 1512×1077px
  *
- * Layers (bottom → top):
- *   1. MM_MEDIA_BG Image — background photo (root/organic pattern, dark)
- *   2. Cover — gradient overlay: 18deg, #00101A → rgba(0,18,29,0.46) → transparent
- *   3. Bìa — centered content frame: title + countdown
- *
- * Responsive breakpoints:
- *   - mobile (<640px): smaller gap/font, tiles scale via CSS custom property
- *   - tablet (640–1024px): intermediate scaling
- *   - desktop (≥1024px): full Figma values
+ * Countdown values are hardcoded to 00:05:20 per product spec.
  */
 
-import { useState, useEffect } from "react";
 import { t, type Language } from "@/lib/i18n/dictionary";
-import { computeCountdownState } from "@/lib/event/compute-countdown-state";
 import PrelaunchCountdownUnit from "./prelaunch-countdown-unit";
 
 type PrelaunchCountdownPageProps = {
   lang: Language;
-  /** ISO 8601 target datetime, or null to show "00" tiles */
-  targetIso: string | null;
 };
+
+const STATIC_UNITS: ReadonlyArray<{
+  unit: "days" | "hours" | "minutes";
+  display: string;
+}> = [
+  { unit: "days", display: "00" },
+  { unit: "hours", display: "05" },
+  { unit: "minutes", display: "20" },
+];
 
 export default function PrelaunchCountdownPage({
   lang,
-  targetIso,
 }: PrelaunchCountdownPageProps) {
-  const [now, setNow] = useState<number>(() => Date.now());
-
-  useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  // showComingSoon is ignored here — this page has its own title.
-  const state = computeCountdownState(targetIso, now);
-
   const unitLabels: Record<"days" | "hours" | "minutes", string> = {
     days: t(lang, "prelaunch.days"),
     hours: t(lang, "prelaunch.hours"),
@@ -53,15 +37,12 @@ export default function PrelaunchCountdownPage({
       className="relative w-full overflow-hidden"
       style={{ minHeight: "100svh", backgroundColor: "#00101A" }}
     >
-      {/* Layer 1: Background image */}
+      {/* Layer 1: Background image (Figma MM_MEDIA_BG Image 2268:35129).
+          Use plain cover/center so the image scales naturally at every viewport. */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('/prelaunch/bg-image.png')",
-          backgroundPosition: "-142px -789.753px",
-          backgroundSize: "109.392% 216.017%",
-        }}
+        style={{ backgroundImage: "url('/prelaunch/bg-image.png')" }}
       />
 
       {/* Layer 2: Gradient overlay (Cover) */}
@@ -76,7 +57,7 @@ export default function PrelaunchCountdownPage({
 
       {/* Layer 3: Content (Bìa) — vertically + horizontally centered */}
       <div
-        className="relative z-[2] flex flex-col items-center justify-center w-full px-6 sm:px-10 lg:px-36"
+        className="relative z-[2] flex flex-col items-center justify-center w-full px-6 sm:px-10 lg:px-60 xl:px-72"
         style={{ minHeight: "100svh", paddingTop: 96, paddingBottom: 96 }}
       >
         {/* Countdown time wrapper — gap 24px between title and tiles row */}
@@ -105,7 +86,7 @@ export default function PrelaunchCountdownPage({
             className="flex items-start flex-wrap justify-center"
             style={{ gap: "clamp(20px, 5vw, 60px)" }}
           >
-            {state.units.map((unit) => (
+            {STATIC_UNITS.map((unit) => (
               <PrelaunchCountdownUnit
                 key={unit.unit}
                 display={unit.display}

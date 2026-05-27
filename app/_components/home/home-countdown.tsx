@@ -1,17 +1,17 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import { t, type Language } from "@/lib/i18n/dictionary";
-import {
-  computeCountdownState,
-  type CountdownUnit,
-} from "@/lib/event/compute-countdown-state";
 
-const LABEL_KEY: Record<CountdownUnit["unit"], "home.hero.days" | "home.hero.hours" | "home.hero.minutes"> = {
-  days: "home.hero.days",
-  hours: "home.hero.hours",
-  minutes: "home.hero.minutes",
-};
+// Home-page countdown is intentionally STATIC at 20:20:20 (per product spec).
+// The prelaunch page still runs the real ticking countdown — see
+// app/_components/prelaunch/prelaunch-countdown-page.tsx.
+const STATIC_UNITS: ReadonlyArray<{
+  unit: "days" | "hours" | "minutes";
+  display: string;
+  labelKey: "home.hero.days" | "home.hero.hours" | "home.hero.minutes";
+}> = [
+  { unit: "days", display: "20", labelKey: "home.hero.days" },
+  { unit: "hours", display: "20", labelKey: "home.hero.hours" },
+  { unit: "minutes", display: "20", labelKey: "home.hero.minutes" },
+];
 
 type CountdownTileProps = {
   /** Two-character display value, e.g. "05" or "--". */
@@ -88,44 +88,29 @@ function CountdownTile({ display, label }: CountdownTileProps) {
 
 type HomeCountdownProps = {
   lang: Language;
-  /** ISO 8601 target. null/undefined/invalid → "--" tiles + "Coming soon" hidden. */
-  targetIso?: string | null;
 };
 
-export default function HomeCountdown({ lang, targetIso }: HomeCountdownProps) {
-  // Lazy-init keeps server and client first render aligned. Interval ticks the
-  // clock; computeCountdownState recomputes from `now` each render.
-  const [now, setNow] = useState<number>(() => Date.now());
-
-  useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const state = computeCountdownState(targetIso, now);
-
+export default function HomeCountdown({ lang }: HomeCountdownProps) {
   return (
     <div className="flex flex-col" style={{ gap: 16 }}>
-      {state.showComingSoon && (
-        <span
-          style={{
-            fontFamily: "Montserrat, sans-serif",
-            fontSize: 24,
-            fontWeight: 700,
-            lineHeight: "32px",
-            color: "#FFFFFF",
-          }}
-        >
-          {t(lang, "home.hero.coming.soon")}
-        </span>
-      )}
+      <span
+        style={{
+          fontFamily: "Montserrat, sans-serif",
+          fontSize: 24,
+          fontWeight: 700,
+          lineHeight: "32px",
+          color: "#FFFFFF",
+        }}
+      >
+        {t(lang, "home.hero.coming.soon")}
+      </span>
 
       <div className="flex items-center" style={{ gap: 40 }}>
-        {state.units.map((unit) => (
+        {STATIC_UNITS.map((unit) => (
           <CountdownTile
             key={unit.unit}
             display={unit.display}
-            label={t(lang, LABEL_KEY[unit.unit])}
+            label={t(lang, unit.labelKey)}
           />
         ))}
       </div>

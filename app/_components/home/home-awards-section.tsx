@@ -65,8 +65,8 @@ export default function HomeAwardsSection({ lang }: HomeAwardsSectionProps) {
       style={{ backgroundColor: "#00101A" }}
     >
       <div
-        className="mx-auto flex flex-col"
-        style={{ maxWidth: 1224, gap: 80, padding: "0" }}
+        className="flex flex-col w-full"
+        style={{ gap: 80, padding: "0" }}
       >
         {/* Section header */}
         <div className="flex flex-col" style={{ gap: 16 }}>
@@ -89,36 +89,21 @@ export default function HomeAwardsSection({ lang }: HomeAwardsSectionProps) {
             style={{ height: 1, backgroundColor: "#2E3940", width: "100%" }}
           />
 
-          {/* Title + description row */}
-          <div className="flex items-center" style={{ gap: 32 }}>
-            <h2
-              style={{
-                fontFamily: "Montserrat, sans-serif",
-                fontSize: 57,
-                fontWeight: 700,
-                lineHeight: "64px",
-                letterSpacing: "-0.25px",
-                color: "#FFEA9E",
-                margin: 0,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {t(lang, "home.awards.title")}
-            </h2>
-            <p
-              style={{
-                fontFamily: "Montserrat, sans-serif",
-                fontSize: 16,
-                fontWeight: 400,
-                lineHeight: "24px",
-                letterSpacing: "0.5px",
-                color: "rgba(255,255,255,0.70)",
-                margin: 0,
-              }}
-            >
-              {t(lang, "home.awards.description")}
-            </p>
-          </div>
+          {/* Title — Figma 2167:9073 */}
+          <h2
+            style={{
+              fontFamily: "Montserrat, sans-serif",
+              fontSize: 57,
+              fontWeight: 700,
+              lineHeight: "64px",
+              letterSpacing: "-0.25px",
+              color: "#FFEA9E",
+              margin: 0,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {t(lang, "home.awards.title")}
+          </h2>
         </div>
 
         {/* Awards grid — 3 cols desktop, 2 cols tablet, 1 col mobile */}

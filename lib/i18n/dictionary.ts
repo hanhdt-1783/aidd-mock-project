@@ -21,30 +21,28 @@ export const dictionary = {
     'home.meta.title': 'Sun* Annual Awards 2025',
     'home.meta.description': 'Root Further — Sun* Annual Awards 2025',
     // Home — header nav
-    'home.nav.about': 'About SAA 2025',
-    'home.nav.awards': 'Awards Information',
+    'home.nav.about': 'Giới thiệu SAA 2025',
+    'home.nav.awards': 'Thông tin giải thưởng',
     'home.nav.kudos': 'Sun* Kudos',
     // Home — header account menu
     'home.header.notification.label': 'Thông báo',
     'home.header.notification.empty': 'Không có thông báo mới.',
     'home.header.account.label': 'Tài khoản',
-    'home.header.account.profile': 'Hồ sơ',
+    'home.header.account.profile': 'Profile',
     'home.header.account.dashboard': 'Admin Dashboard',
-    'home.header.account.signout': 'Đăng xuất',
+    'home.header.account.signout': 'Logout',
     // Home — hero
     'home.hero.coming.soon': 'Coming soon',
-    'home.hero.event.date.label': 'Ngày:',
     'home.hero.event.time.label': 'Thời gian:',
     'home.hero.event.location.label': 'Địa điểm:',
     'home.hero.days': 'DAYS',
     'home.hero.hours': 'HOURS',
     'home.hero.minutes': 'MINUTES',
-    'home.hero.event.date': '26/12/2025',
-    'home.hero.event.time': '18h30',
+    'home.hero.event.time': '26/12/2025',
     'home.hero.event.location': 'Âu Cơ Art Center',
     'home.hero.event.livestream': 'Tường thuật trực tiếp qua sóng Livestream',
-    'home.hero.cta.about': 'ABOUT AWARDS',
-    'home.hero.cta.kudos': 'ABOUT KUDOS',
+    'home.hero.cta.about': 'VỀ GIẢI THƯỞNG',
+    'home.hero.cta.kudos': 'VỀ KUDOS',
     // Home — root further content
     'home.root.body1': 'Đứng trước bối cảnh thay đổi như vũ bão của thời đại AI và yêu cầu ngày càng cao từ khách hàng, Sun* lựa chọn chiến lược đa dạng hóa năng lực để không chỉ nỗ lực trở thành tinh anh trong lĩnh vực của mình, mà còn hướng đến một cái đích cao hơn, nơi mọi Sunner đều là "problem-solver" - chuyên gia trong việc giải quyết mọi vấn đề, tìm lời giải cho mọi bài toán của dự án, khách hàng và xã hội.\nLấy cảm hứng từ sự đa dạng năng lực, khả năng phát triển linh hoạt cùng tinh thần đào sâu để bứt phá trong kỷ nguyên AI, "Root Further" đã được chọn để trở thành chủ đề chính thức của Lễ trao giải Sun* Annual Awards 2025.\nVượt ra khỏi nét nghĩa bề mặt, "Root Further" chính là hành trình chúng ta không ngừng vươn xa hơn, cắm rễ mạnh hơn, chạm đến những tầng "địa chất" ẩn sâu để tiếp tục tồn tại, vươn lên và nuôi dưỡng đam mê kiến tạo giá trị luôn cháy bỏng của người Sun*. Mượn hình ảnh bộ rễ liên tục đâm sâu vào lòng đất, mạnh mẽ len lỏi qua từng lớp "trầm tích" để thẩm thấu những gì tinh tuý nhất, người Sun* cũng đang "hấp thụ" dưỡng chất từ thời đại và những thử thách của thị trường để làm mới mình mỗi ngày, mở rộng năng lực và mạnh mẽ "bén rễ" vào kỷ nguyên AI - một tầng "địa chất" hoàn toàn mới, phức tạp và khó đoán, nhưng cũng hội tụ vô vàn tiềm năng cùng cơ hội.',
     'home.root.quote': '"A tree with deep roots fears no storm"\n (Cây sâu bén rễ, bão giông chẳng nề - Ngạn ngữ Anh)',
@@ -74,12 +72,15 @@ export const dictionary = {
     'home.kudos.cta': 'Chi tiết',
     // Home — footer
     'home.footer.copyright': 'Bản quyền thuộc về Sun* © 2025',
-    'home.footer.nav.about': 'About SAA 2025',
-    'home.footer.nav.awards': 'Awards Information',
+    'home.footer.nav.about': 'Giới thiệu SAA 2025',
+    'home.footer.nav.awards': 'Thông tin giải thưởng',
     'home.footer.nav.kudos': 'Sun* Kudos',
     'home.footer.nav.standards': 'Tiêu chuẩn chung',
     // Home — widget
     'home.widget.label': 'Viết Kudos',
+    'home.widget.standards': 'Thể lệ',
+    'home.widget.write-kudos': 'Viết KUDOS',
+    'home.widget.cancel': 'Hủy',
     // Prelaunch page
     'prelaunch.meta.title': 'Sun* Annual Awards 2025',
     'prelaunch.title': 'Sự kiện sẽ bắt đầu sau',
@@ -166,6 +167,15 @@ export const dictionary = {
     'kudos.sidebar.openGift.coming.soon': 'Tính năng Secret Box sẽ sớm ra mắt!',
     'kudos.sidebar.leaderboard.gifts': '10 SUNNER NHẬN QUÀ MỚI NHẤT',
     'kudos.sidebar.leaderboard.gifts.empty.gift': 'Nhận được 1 áo phông SAA',
+    // Accessibility — aria-label / alt
+    'aria.home.hero': 'Phần chính — Root Further',
+    'aria.home.root-further': 'Nội dung Root Further',
+    'aria.nav.main': 'Điều hướng chính',
+    'aria.nav.footer': 'Điều hướng chân trang',
+    'aria.language.switcher': 'Chuyển đổi ngôn ngữ',
+    'aria.language.select': 'Chọn ngôn ngữ',
+    'aria.flag.vi': 'Cờ Việt Nam',
+    'aria.flag.en': 'Cờ Anh',
   },
   en: {
     // Login
@@ -195,14 +205,12 @@ export const dictionary = {
     'home.header.account.signout': 'Sign out',
     // Home — hero
     'home.hero.coming.soon': 'Coming soon',
-    'home.hero.event.date.label': 'Date:',
     'home.hero.event.time.label': 'Time:',
     'home.hero.event.location.label': 'Location:',
     'home.hero.days': 'DAYS',
     'home.hero.hours': 'HOURS',
     'home.hero.minutes': 'MINUTES',
-    'home.hero.event.date': '26/12/2025',
-    'home.hero.event.time': '18h30',
+    'home.hero.event.time': '26/12/2025',
     'home.hero.event.location': 'Âu Cơ Art Center',
     'home.hero.event.livestream': 'Live stream on Facebook Group Sun* Family',
     'home.hero.cta.about': 'ABOUT AWARDS',
@@ -242,6 +250,9 @@ export const dictionary = {
     'home.footer.nav.standards': 'General Standards',
     // Home — widget
     'home.widget.label': 'Write Kudos',
+    'home.widget.standards': 'Rules',
+    'home.widget.write-kudos': 'Write KUDOS',
+    'home.widget.cancel': 'Cancel',
     // Prelaunch page
     'prelaunch.meta.title': 'Sun* Annual Awards 2025',
     'prelaunch.title': 'The event will start in',
@@ -328,6 +339,15 @@ export const dictionary = {
     'kudos.sidebar.openGift.coming.soon': 'Secret Box is coming soon!',
     'kudos.sidebar.leaderboard.gifts': '10 LATEST GIFT RECIPIENTS',
     'kudos.sidebar.leaderboard.gifts.empty.gift': 'Received 1 SAA t-shirt',
+    // Accessibility — aria-label / alt
+    'aria.home.hero': 'Hero — Root Further',
+    'aria.home.root-further': 'Root Further — content',
+    'aria.nav.main': 'Main navigation',
+    'aria.nav.footer': 'Footer navigation',
+    'aria.language.switcher': 'Language switcher',
+    'aria.language.select': 'Select language',
+    'aria.flag.vi': 'Vietnamese flag',
+    'aria.flag.en': 'English flag',
   },
 } as const satisfies Record<Language, Record<string, string>>;
 

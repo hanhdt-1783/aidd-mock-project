@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getLang } from "@/lib/i18n/get-lang";
 import { t } from "@/lib/i18n/dictionary";
-import { getEventDatetime } from "@/lib/event/get-event-datetime";
+import { listHashtags, listRecipients } from "@/lib/kudos/queries";
 import SiteHeader from "./_components/shared/site-header";
 import HomeHero from "./_components/home/home-hero";
 import HomeRootFurther from "./_components/home/home-root-further";
@@ -26,23 +27,23 @@ export default async function HomePage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
-  const isAuthenticated = !!user;
+  if (!user) redirect("/login");
 
   // Role check: read own profile row (RLS-gated). Default to false if no row.
-  let isAdmin = false;
-  if (user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-    isAdmin = profile?.role === "admin";
-  }
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+  const isAdmin = profile?.role === "admin";
 
-  // Countdown target — DB-first (event_config) with env fallback; null → "--".
-  const eventDate = await getEventDatetime();
-  const countdownTargetIso = eventDate ? eventDate.toISOString() : null;
+  // FAB "Viết Kudo" modal data — fetched in parallel for fewer RTTs.
+  const [recipients, hashtags] = await Promise.all([
+    listRecipients(user.id),
+    listHashtags(),
+  ]);
+  const safeRecipients = Array.isArray(recipients) ? recipients : [];
+  const safeHashtags = Array.isArray(hashtags) ? hashtags : [];
 
   return (
     <div
@@ -52,40 +53,46 @@ export default async function HomePage() {
       {/* Sticky header */}
       <SiteHeader
         lang={lang}
-        isAuthenticated={isAuthenticated}
+        isAuthenticated={true}
         isAdmin={isAdmin}
+        activeNav="about"
       />
 
       <main className="flex flex-col w-full" style={{ paddingTop: 80 }}>
-        <HomeHero lang={lang} countdownTargetIso={countdownTargetIso} />
+        <HomeHero lang={lang} />
 
         {/* Section 2 — Root Further content block */}
         <section
-          className="w-full flex justify-center px-6 sm:px-10 lg:px-36"
-          style={{ backgroundColor: "#00101A", paddingTop: 96, paddingBottom: 96 }}
+          className="w-full flex justify-center px-6 sm:px-12 lg:px-60 xl:px-72"
+          style={{ backgroundColor: "#00101A", paddingTop: 0, paddingBottom: 96 }}
         >
           <HomeRootFurther lang={lang} />
         </section>
 
         {/* Section 3 — Awards */}
         <section
-          className="w-full px-6 sm:px-10 lg:px-36"
-          style={{ backgroundColor: "#00101A", paddingTop: 96, paddingBottom: 96 }}
+          className="w-full px-6 sm:px-12 lg:px-60 xl:px-72"
+          style={{ backgroundColor: "#00101A", paddingTop: 0, paddingBottom: 96 }}
         >
           <HomeAwardsSection lang={lang} />
         </section>
 
         {/* Section 4 — Sun* Kudos */}
         <section
-          className="w-full flex justify-center px-6 sm:px-10 lg:px-36"
+          className="w-full flex justify-center px-6 sm:px-12 lg:px-60 xl:px-72"
           style={{ backgroundColor: "#00101A", paddingTop: 96, paddingBottom: 96 }}
         >
           <HomeKudosSection lang={lang} />
         </section>
       </main>
 
-      {/* Fixed widget button — bottom right */}
-      <HomeWidgetButton lang={lang} />
+      {/* Fixed widget button — bottom right. Opens Viết Kudo modal. */}
+      <HomeWidgetButton
+        lang={lang}
+        recipients={safeRecipients}
+        existingHashtags={safeHashtags}
+        currentUserId={user.id}
+      />
 
       {/* Footer */}
       <SiteFooter lang={lang} />

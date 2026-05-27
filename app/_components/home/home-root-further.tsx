@@ -8,46 +8,44 @@ type HomeRootFurtherProps = {
 export default function HomeRootFurther({ lang }: HomeRootFurtherProps) {
   return (
     <section
-      id="about-saa-2025"
-      aria-label="Root Further — content"
+      aria-label={t(lang, "aria.home.root-further")}
       className="relative w-full"
       style={{
         backgroundColor: "#00101A",
         padding: "0",
       }}
     >
-      {/* Outer frame with rounded border */}
+      {/* Outer frame with rounded border. Horizontal padding comes from the
+          parent <section> in page.tsx so content aligns with header/footer. */}
       <div
-        className="relative mx-auto flex flex-col items-center px-6 sm:px-16 lg:px-[104px]"
+        className="relative mx-auto flex flex-col items-center w-full"
         style={{
           maxWidth: 1152,
           borderRadius: 8,
-          paddingTop: 80,
+          paddingTop: 24,
           paddingBottom: 80,
           gap: 32,
           overflow: "hidden",
         }}
       >
-        {/* Decorative background ROOT / FURTHER text images */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none"
-          style={{ zIndex: 0, opacity: 0.06 }}
-        >
+        {/* ROOT FURTHER headline — two stacked prominent text images.
+            Figma node 3204:10153 (Group 434): ROOT 189x67 centered above FURTHER 290x67. */}
+        <div className="relative z-10 flex flex-col items-center" style={{ gap: 0 }}>
           <Image
             src="/home/root-text.png"
-            alt=""
+            alt="ROOT"
             width={189}
             height={67}
             className="object-contain"
+            priority
           />
           <Image
             src="/home/further-text.png"
-            alt=""
+            alt="FURTHER"
             width={290}
             height={67}
             className="object-contain"
-            style={{ marginTop: 0 }}
+            priority
           />
         </div>
 
@@ -56,14 +54,14 @@ export default function HomeRootFurther({ lang }: HomeRootFurtherProps) {
           className="relative z-10 flex flex-col"
           style={{ gap: 32, width: "100%" }}
         >
-          {/* Paragraph 1 */}
+          {/* Paragraph 1 — Figma 3204:10156: 24/32/letterSpacing 0 */}
           <p
             style={{
               fontFamily: "Montserrat, sans-serif",
-              fontSize: 16,
+              fontSize: 24,
               fontWeight: 700,
-              lineHeight: "24px",
-              letterSpacing: "0.5px",
+              lineHeight: "32px",
+              letterSpacing: "0px",
               color: "#FFFFFF",
               whiteSpace: "pre-line",
               textAlign: "justify",
@@ -72,33 +70,42 @@ export default function HomeRootFurther({ lang }: HomeRootFurtherProps) {
             {t(lang, "home.root.body1")}
           </p>
 
-          {/* Quote */}
+          {/* Quote — line 1 24/32 (matches paragraphs); line 2 16/24 (smaller per user). */}
           <blockquote
             style={{
               fontFamily: "Montserrat, sans-serif",
-              fontSize: 16,
               fontWeight: 700,
-              lineHeight: "24px",
-              letterSpacing: "0.5px",
-              color: "#FFEA9E",
-              whiteSpace: "pre-line",
+              color: "#FFFFFF",
+              textAlign: "center",
               margin: 0,
               padding: 0,
               borderLeft: "none",
-              fontStyle: "italic",
             }}
           >
-            {t(lang, "home.root.quote")}
+            {t(lang, "home.root.quote")
+              .split("\n")
+              .map((line, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    fontSize: idx === 0 ? 24 : 16,
+                    lineHeight: idx === 0 ? "32px" : "24px",
+                    letterSpacing: "0px",
+                  }}
+                >
+                  {line}
+                </div>
+              ))}
           </blockquote>
 
-          {/* Paragraph 2 */}
+          {/* Paragraph 2 — Figma 3204:10162: 24/32/letterSpacing 0 */}
           <p
             style={{
               fontFamily: "Montserrat, sans-serif",
-              fontSize: 16,
+              fontSize: 24,
               fontWeight: 700,
-              lineHeight: "24px",
-              letterSpacing: "0.5px",
+              lineHeight: "32px",
+              letterSpacing: "0px",
               color: "#FFFFFF",
               whiteSpace: "pre-line",
               textAlign: "justify",

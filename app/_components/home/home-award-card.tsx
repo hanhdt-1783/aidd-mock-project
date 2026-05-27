@@ -147,21 +147,20 @@ export default function HomeAwardCard({ lang, award }: HomeAwardCardProps) {
           {t(lang, award.descriptionKey)}
         </p>
 
-        {/* Detail link */}
+        {/* Detail link — Figma I2167:9075;214:1023: text-only button, no border. */}
         <Link
           href={`/awards#${award.slug}`}
-          className="inline-flex items-center gap-2 mt-2 transition-colors duration-200 hover:text-[#FFEA9E]"
+          className="inline-flex items-center transition-colors duration-200 hover:text-[#FFEA9E]"
           style={{
             fontFamily: "Montserrat, sans-serif",
             fontSize: 16,
-            fontWeight: 700,
+            fontWeight: 500,
             lineHeight: "24px",
-            letterSpacing: "0.5px",
-            color: "rgba(255,255,255,0.87)",
+            letterSpacing: "0.15px",
+            color: "#FFFFFF",
             textDecoration: "none",
-            padding: "16px 24px",
-            borderRadius: 4,
-            border: "1px solid rgba(255,255,255,0.20)",
+            padding: "16px 0",
+            gap: 4,
             width: 88,
             height: 56,
           }}
