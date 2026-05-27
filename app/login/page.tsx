@@ -59,10 +59,9 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
       <LoginHeader lang={lang} />
 
-      <main
-        className="relative z-10 flex flex-1 items-center"
-        style={{ padding: "96px 144px" }}
-      >
+      {/* Main offsets pt-20 to clear the fixed header (h-20),
+          then items-center vertically centers the hero block between header bottom and footer top. */}
+      <main className="relative z-10 flex flex-1 items-center px-6 pt-20 sm:px-12 lg:px-36">
         <LoginHero lang={lang} errorMessage={errorMessage} />
       </main>
 

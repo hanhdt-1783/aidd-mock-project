@@ -9,7 +9,7 @@ export const dictionary = {
     // Login
     'login.welcome.line1': 'Bắt đầu hành trình của bạn cùng SAA 2025.',
     'login.welcome.line2': 'Đăng nhập để khám phá!',
-    'login.button.google': 'Đăng nhập bằng Google',
+    'login.button.google': 'ĐĂNG NHẬP Bằng Google',
     'login.button.loading': 'Đang đăng nhập…',
     'login.footer.copyright': 'Bản quyền thuộc về Sun* © 2025',
     'login.logo.alt': 'Sun* Annual Awards 2025',
@@ -171,7 +171,7 @@ export const dictionary = {
     // Login
     'login.welcome.line1': 'Start your journey with SAA 2025.',
     'login.welcome.line2': 'Log in to explore!',
-    'login.button.google': 'Sign in with Google',
+    'login.button.google': 'LOGIN With Google',
     'login.button.loading': 'Signing in…',
     'login.footer.copyright': 'Copyright © Sun* 2025',
     'login.logo.alt': 'Sun* Annual Awards 2025',

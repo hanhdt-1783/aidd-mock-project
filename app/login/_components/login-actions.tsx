@@ -17,7 +17,7 @@ function SubmitButton({ lang }: { lang: Language }) {
 
 export default function LoginActions({ lang }: { lang: Language }) {
   return (
-    <form action={signInWithGoogle} style={{ width: 305 }}>
+    <form action={signInWithGoogle} className="inline-block">
       <SubmitButton lang={lang} />
     </form>
   );
