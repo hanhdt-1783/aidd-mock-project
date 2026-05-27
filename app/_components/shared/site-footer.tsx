@@ -19,11 +19,44 @@ const FOOTER_NAV: FooterNavItem[] = [
   { labelKey: "home.footer.nav.standards", href: "/standards" },
 ];
 
-type HomeFooterProps = {
+export type SiteFooterProps = {
   lang: Language;
+  /** 'full' (default): logo + nav + copyright. 'minimal': just centered copyright (auth/landing pages). */
+  variant?: "full" | "minimal";
+  /** Translation key for copyright. Default: 'home.footer.copyright'. Use 'login.footer.copyright' for minimal/login. */
+  copyrightKey?: "home.footer.copyright" | "login.footer.copyright";
 };
 
-export default function HomeFooter({ lang }: HomeFooterProps) {
+export default function SiteFooter({
+  lang,
+  variant = "full",
+  copyrightKey,
+}: SiteFooterProps) {
+  const isMinimal = variant === "minimal";
+  const effectiveCopyrightKey =
+    copyrightKey ?? (isMinimal ? "login.footer.copyright" : "home.footer.copyright");
+
+  if (isMinimal) {
+    return (
+      <footer
+        className="flex items-center justify-center w-full px-6 py-6 sm:px-12 sm:py-8 lg:px-[90px] lg:py-10"
+        style={{ borderTop: "1px solid #2E3940" }}
+      >
+        <p
+          className="font-bold text-white text-center"
+          style={{
+            fontFamily: "'Montserrat Alternates', Montserrat, sans-serif",
+            fontSize: 16,
+            fontWeight: 700,
+            lineHeight: "24px",
+          }}
+        >
+          {t(lang, effectiveCopyrightKey)}
+        </p>
+      </footer>
+    );
+  }
+
   return (
     <footer
       className="w-full flex items-center justify-between"
@@ -33,9 +66,7 @@ export default function HomeFooter({ lang }: HomeFooterProps) {
         backgroundColor: "#00101A",
       }}
     >
-      {/* Left — Logo + nav links */}
       <div className="flex items-center" style={{ gap: 80 }}>
-        {/* Logo */}
         <Link href="/" aria-label={t(lang, "home.meta.title")}>
           <Image
             src="/home/logo-footer.png"
@@ -46,7 +77,6 @@ export default function HomeFooter({ lang }: HomeFooterProps) {
           />
         </Link>
 
-        {/* Nav links */}
         <nav aria-label="Footer navigation">
           <ul
             className="flex items-center"
@@ -68,9 +98,7 @@ export default function HomeFooter({ lang }: HomeFooterProps) {
                     padding: "16px",
                     display: "inline-flex",
                     alignItems: "center",
-                    backgroundColor: item.highlighted
-                      ? "rgba(255,234,158,0.10)"
-                      : "transparent",
+                    backgroundColor: item.highlighted ? "rgba(255,234,158,0.10)" : "transparent",
                     borderRadius: item.highlighted ? 4 : 0,
                   }}
                 >
@@ -82,7 +110,6 @@ export default function HomeFooter({ lang }: HomeFooterProps) {
         </nav>
       </div>
 
-      {/* Right — Copyright */}
       <p
         className="font-bold text-white"
         style={{
@@ -94,7 +121,7 @@ export default function HomeFooter({ lang }: HomeFooterProps) {
           color: "#FFFFFF",
         }}
       >
-        {t(lang, "home.footer.copyright")}
+        {t(lang, effectiveCopyrightKey)}
       </p>
     </footer>
   );

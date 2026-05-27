@@ -3,13 +3,13 @@ import { createClient } from "@/lib/supabase/server";
 import { getLang } from "@/lib/i18n/get-lang";
 import { t } from "@/lib/i18n/dictionary";
 import { getEventDatetime } from "@/lib/event/get-event-datetime";
-import HomeHeader from "./_components/home/home-header";
+import SiteHeader from "./_components/shared/site-header";
 import HomeHero from "./_components/home/home-hero";
 import HomeRootFurther from "./_components/home/home-root-further";
 import HomeAwardsSection from "./_components/home/home-awards-section";
 import HomeKudosSection from "./_components/home/home-kudos-section";
 import HomeWidgetButton from "./_components/home/home-widget-button";
-import HomeFooter from "./_components/home/home-footer";
+import SiteFooter from "./_components/shared/site-footer";
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLang();
@@ -50,7 +50,7 @@ export default async function HomePage() {
       style={{ backgroundColor: "#00101A" }}
     >
       {/* Sticky header */}
-      <HomeHeader
+      <SiteHeader
         lang={lang}
         isAuthenticated={isAuthenticated}
         isAdmin={isAdmin}
@@ -88,7 +88,7 @@ export default async function HomePage() {
       <HomeWidgetButton lang={lang} />
 
       {/* Footer */}
-      <HomeFooter lang={lang} />
+      <SiteFooter lang={lang} />
     </div>
   );
 }

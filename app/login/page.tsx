@@ -3,9 +3,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getLang } from "@/lib/i18n/get-lang";
 import { t } from "@/lib/i18n/dictionary";
-import LoginHeader from "./_components/login-header";
+import SiteHeader from "@/app/_components/shared/site-header";
+import SiteFooter from "@/app/_components/shared/site-footer";
 import LoginHero from "./_components/login-hero";
-import LoginFooter from "./_components/login-footer";
 
 export const metadata: Metadata = {
   title: "Đăng nhập — Sun* Annual Awards 2025",
@@ -57,7 +57,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         }}
       />
 
-      <LoginHeader lang={lang} />
+      <SiteHeader lang={lang} variant="minimal" />
 
       {/* Main offsets pt-20 to clear the fixed header (h-20),
           then items-center vertically centers the hero block between header bottom and footer top. */}
@@ -66,7 +66,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       </main>
 
       <div className="relative z-10 mt-auto">
-        <LoginFooter lang={lang} />
+        <SiteFooter lang={lang} variant="minimal" />
       </div>
     </div>
   );

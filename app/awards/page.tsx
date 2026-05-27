@@ -3,9 +3,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getLang } from "@/lib/i18n/get-lang";
 import { t } from "@/lib/i18n/dictionary";
-import HomeHeader from "@/app/_components/home/home-header";
+import SiteHeader from "@/app/_components/shared/site-header";
 import HomeKudosSection from "@/app/_components/home/home-kudos-section";
-import HomeFooter from "@/app/_components/home/home-footer";
+import SiteFooter from "@/app/_components/shared/site-footer";
 import AwardsPageTitle from "@/app/_components/awards/awards-page-title";
 import AwardsSideMenu from "@/app/_components/awards/awards-side-menu";
 import AwardsList from "@/app/_components/awards/awards-list";
@@ -42,7 +42,7 @@ export default async function AwardsPage() {
       style={{ backgroundColor: "#00101A" }}
     >
       {/* Sticky header — awards nav item active */}
-      <HomeHeader
+      <SiteHeader
         lang={lang}
         isAuthenticated={true}
         isAdmin={isAdmin}
@@ -84,7 +84,7 @@ export default async function AwardsPage() {
         <HomeKudosSection lang={lang} />
       </main>
 
-      <HomeFooter lang={lang} />
+      <SiteFooter lang={lang} />
     </div>
   );
 }

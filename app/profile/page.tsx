@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { getLang } from '@/lib/i18n/get-lang';
-import HomeHeader from '@/app/_components/home/home-header';
+import SiteHeader from '@/app/_components/shared/site-header';
 
 export const metadata: Metadata = {
   title: 'Profile — Sun* Annual Awards 2025',
@@ -30,7 +30,7 @@ export default async function ProfilePage() {
       className="relative min-h-screen w-full flex flex-col"
       style={{ backgroundColor: '#00101A' }}
     >
-      <HomeHeader lang={lang} isAuthenticated={true} isAdmin={isAdmin} />
+      <SiteHeader lang={lang} isAuthenticated={true} isAdmin={isAdmin} />
       <main
         className="flex flex-1 items-center justify-center text-white"
         style={{ paddingTop: 80 }}

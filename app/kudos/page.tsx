@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { getLang } from '@/lib/i18n/get-lang';
-import HomeHeader from '@/app/_components/home/home-header';
-import HomeFooter from '@/app/_components/home/home-footer';
+import SiteHeader from '@/app/_components/shared/site-header';
+import SiteFooter from '@/app/_components/shared/site-footer';
 import KudosPage from '@/app/_components/kudos/kudos-page';
 import {
   getSidebarStats,
@@ -108,7 +108,7 @@ export default async function KudosRoute({
       className="relative min-h-screen w-full flex flex-col"
       style={{ backgroundColor: '#00101A' }}
     >
-      <HomeHeader
+      <SiteHeader
         lang={lang}
         isAuthenticated={true}
         isAdmin={isAdmin}
@@ -132,7 +132,7 @@ export default async function KudosRoute({
         />
       </main>
 
-      <HomeFooter lang={lang} />
+      <SiteFooter lang={lang} />
     </div>
   );
 }
