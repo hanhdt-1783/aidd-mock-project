@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# but DO track the example templates so new devs know what to configure
+!.env.local.example
+!supabase/.env.example
 
 # vercel
 .vercel
@@ -41,9 +44,6 @@ yarn-error.log*
 next-env.d.ts
 
 # local agent/tool artifacts (regenerated)
-.claude/agent-memory/
+.claude/agent-memory
 .claude/hooks/.logs/
 .playwright-mcp/
-
-# supabase
-supabase/.temp/
