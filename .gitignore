@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local agent/tool artifacts (regenerated)
+.claude/agent-memory/
+.claude/hooks/.logs/
+.playwright-mcp/
+
+# supabase
+supabase/.temp/
