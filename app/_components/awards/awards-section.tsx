@@ -90,7 +90,10 @@ export default function AwardsSection({ lang, award, isLast = false }: AwardsSec
         {/* Image */}
         <div
           aria-hidden="true"
-          className="shrink-0 w-full aspect-square lg:w-[336px] lg:h-[336px]"
+          // Stacked layout (< lg): full-width but capped near the design size
+          // (336px) so the orb doesn't balloon on tablet; on lg+ it's the fixed
+          // 336×336 beside the text.
+          className="shrink-0 w-full max-w-[360px] aspect-square lg:max-w-none lg:w-[336px] lg:h-[336px]"
           style={{
             borderRadius: 24,
             border: "0.955px solid #FFEA9E",

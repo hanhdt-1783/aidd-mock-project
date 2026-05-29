@@ -120,7 +120,10 @@ export default async function AwardsPage() {
             gap: 80,
           }}
         >
-          <div className="shrink-0 lg:sticky lg:self-start" style={{ top: 100, width: 178 }}>
+          {/* In-page anchor nav is a desktop sidebar; hide below lg (the design
+              is desktop-only and on mobile/tablet it's an awkward vertical stack
+              above the list — users just scroll). */}
+          <div className="hidden shrink-0 lg:sticky lg:self-start lg:block" style={{ top: 100, width: 178 }}>
             <AwardsSideMenu lang={lang} />
           </div>
           <AwardsList lang={lang} />
