@@ -70,7 +70,7 @@ export default function HomeAwardCard({ lang, award }: HomeAwardCardProps) {
       <div
         className="relative overflow-hidden w-full aspect-square"
         style={{
-          borderRadius: 4,
+          borderRadius: 30,
           border: "1px solid #FFEA9E",
           boxShadow: "0 4px 4px 0 rgba(0,0,0,0.25), 0 0 6px 0 #FAE287",
           transition: "box-shadow 0.2s ease",
@@ -117,9 +117,9 @@ export default function HomeAwardCard({ lang, award }: HomeAwardCardProps) {
         <h3
           style={{
             fontFamily: "Montserrat, sans-serif",
-            fontSize: 24,
+            fontSize: "clamp(18px, 3vw, 24px)",
             fontWeight: 400,
-            lineHeight: "32px",
+            lineHeight: "1.33",
             color: "#FFEA9E",
             margin: 0,
           }}

@@ -139,7 +139,7 @@ export default function HomeWidgetButton({
   };
 
   return (
-    <div className="fixed z-50" style={{ bottom: 32, right: 19 }}>
+    <div className="fixed z-50" style={{ bottom: 32, right: 32 }}>
       {open ? (
         <div className="flex flex-col items-end" style={{ gap: 20 }}>
           {/* A_Button thể lệ */}

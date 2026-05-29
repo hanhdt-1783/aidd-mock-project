@@ -47,9 +47,29 @@ export default async function HomePage() {
 
   return (
     <div
-      className="relative min-h-screen w-full flex flex-col"
+      className="relative min-h-screen w-full flex flex-col overflow-hidden"
       style={{ backgroundColor: "#00101A" }}
     >
+      {/* Unified top background — keyvisual image fades into solid dark via gradient.
+          Sized to the design hero aspect; image sits at top, dark continues below. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-0 left-0 right-0 z-0 overflow-hidden"
+        style={{ aspectRatio: "1512 / 1392", minHeight: 900 }}
+      >
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/home/keyvisual-bg.png')" }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(12deg, #00101A 23.7%, rgba(0, 18, 29, 0.46) 38.34%, rgba(0, 19, 32, 0.00) 48.92%)",
+          }}
+        />
+      </div>
+
       {/* Sticky header */}
       <SiteHeader
         lang={lang}
@@ -58,13 +78,16 @@ export default async function HomePage() {
         activeNav="about"
       />
 
-      <main className="flex flex-col w-full" style={{ paddingTop: 80 }}>
+      <main className="relative z-10 flex flex-col w-full" style={{ paddingTop: 80 }}>
         <HomeHero lang={lang} />
 
-        {/* Section 2 — Root Further content block */}
+        {/* Section 2 — Root Further content block. */}
         <section
           className="w-full flex justify-center px-6 sm:px-12 lg:px-60 xl:px-72"
-          style={{ backgroundColor: "#00101A", paddingTop: 0, paddingBottom: 96 }}
+          style={{
+            paddingTop: "clamp(24px, 5vw, 48px)",
+            paddingBottom: "clamp(48px, 8vw, 96px)",
+          }}
         >
           <HomeRootFurther lang={lang} />
         </section>
@@ -72,7 +95,11 @@ export default async function HomePage() {
         {/* Section 3 — Awards */}
         <section
           className="w-full px-6 sm:px-12 lg:px-60 xl:px-72"
-          style={{ backgroundColor: "#00101A", paddingTop: 0, paddingBottom: 96 }}
+          style={{
+            backgroundColor: "#00101A",
+            paddingTop: 0,
+            paddingBottom: "clamp(48px, 8vw, 96px)",
+          }}
         >
           <HomeAwardsSection lang={lang} />
         </section>
@@ -80,7 +107,11 @@ export default async function HomePage() {
         {/* Section 4 — Sun* Kudos */}
         <section
           className="w-full flex justify-center px-6 sm:px-12 lg:px-60 xl:px-72"
-          style={{ backgroundColor: "#00101A", paddingTop: 96, paddingBottom: 96 }}
+          style={{
+            backgroundColor: "#00101A",
+            paddingTop: "clamp(48px, 8vw, 96px)",
+            paddingBottom: "clamp(48px, 8vw, 96px)",
+          }}
         >
           <HomeKudosSection lang={lang} />
         </section>

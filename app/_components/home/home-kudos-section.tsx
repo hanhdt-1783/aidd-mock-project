@@ -143,9 +143,9 @@ function KudosContent({ lang }: { lang: Language }) {
         <span
           style={{
             fontFamily: "Montserrat, sans-serif",
-            fontSize: 24,
+            fontSize: "clamp(18px, 3.5vw, 24px)",
             fontWeight: 700,
-            lineHeight: "32px",
+            lineHeight: "1.33",
             color: "#FFFFFF",
           }}
         >
@@ -156,9 +156,9 @@ function KudosContent({ lang }: { lang: Language }) {
         <h2
           style={{
             fontFamily: "Montserrat, sans-serif",
-            fontSize: 57,
+            fontSize: "clamp(32px, 6vw, 57px)",
             fontWeight: 700,
-            lineHeight: "64px",
+            lineHeight: "1.12",
             letterSpacing: "-0.25px",
             color: "#FFEA9E",
             margin: 0,

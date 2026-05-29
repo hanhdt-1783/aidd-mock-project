@@ -29,14 +29,23 @@ function CountdownTile({ display, label }: CountdownTileProps) {
       : [display[0] ?? "0", display[0] ?? "0"];
 
   return (
-    <div className="flex flex-col" style={{ gap: 14 }}>
+    <div className="flex flex-col" style={{ gap: "clamp(8px, 2vw, 14px)" }}>
       {/* Two digit tiles */}
-      <div className="flex items-center" style={{ gap: 14, height: 82 }}>
+      <div
+        className="flex items-center"
+        style={{
+          gap: "clamp(8px, 2vw, 14px)",
+          height: "clamp(60px, 14vw, 82px)",
+        }}
+      >
         {[d1, d2].map((digit, i) => (
           <div
             key={i}
             className="relative flex items-center justify-center"
-            style={{ width: 51, height: 82 }}
+            style={{
+              width: "clamp(38px, 9vw, 51px)",
+              height: "clamp(60px, 14vw, 82px)",
+            }}
           >
             {/* Frosted glass background — matches /prelaunch tile aesthetic */}
             <div
@@ -56,7 +65,7 @@ function CountdownTile({ display, label }: CountdownTileProps) {
               className="relative z-10"
               style={{
                 fontFamily: 'var(--font-dseg7), "Digital Numbers", monospace',
-                fontSize: 48,
+                fontSize: "clamp(32px, 8vw, 48px)",
                 fontWeight: 700,
                 lineHeight: 1,
                 color: "#FFFFFF",
@@ -73,9 +82,9 @@ function CountdownTile({ display, label }: CountdownTileProps) {
       <span
         style={{
           fontFamily: "Montserrat, sans-serif",
-          fontSize: 24,
+          fontSize: "clamp(16px, 3.5vw, 24px)",
           fontWeight: 700,
-          lineHeight: "32px",
+          lineHeight: "1.33",
           color: "#FFFFFF",
           letterSpacing: 0,
         }}
@@ -96,16 +105,19 @@ export default function HomeCountdown({ lang }: HomeCountdownProps) {
       <span
         style={{
           fontFamily: "Montserrat, sans-serif",
-          fontSize: 24,
+          fontSize: "clamp(18px, 3.5vw, 24px)",
           fontWeight: 700,
-          lineHeight: "32px",
+          lineHeight: "1.33",
           color: "#FFFFFF",
         }}
       >
         {t(lang, "home.hero.coming.soon")}
       </span>
 
-      <div className="flex items-center" style={{ gap: 40 }}>
+      <div
+        className="flex items-center"
+        style={{ gap: "clamp(12px, 4vw, 40px)" }}
+      >
         {STATIC_UNITS.map((unit) => (
           <CountdownTile
             key={unit.unit}

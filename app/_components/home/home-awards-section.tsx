@@ -66,7 +66,7 @@ export default function HomeAwardsSection({ lang }: HomeAwardsSectionProps) {
     >
       <div
         className="flex flex-col w-full"
-        style={{ gap: 80, padding: "0" }}
+        style={{ gap: "clamp(40px, 8vw, 80px)", padding: "0" }}
       >
         {/* Section header */}
         <div className="flex flex-col" style={{ gap: 16 }}>
@@ -74,9 +74,9 @@ export default function HomeAwardsSection({ lang }: HomeAwardsSectionProps) {
           <span
             style={{
               fontFamily: "Montserrat, sans-serif",
-              fontSize: 24,
+              fontSize: "clamp(18px, 3.5vw, 24px)",
               fontWeight: 700,
-              lineHeight: "32px",
+              lineHeight: "1.33",
               color: "#FFFFFF",
             }}
           >
@@ -89,17 +89,16 @@ export default function HomeAwardsSection({ lang }: HomeAwardsSectionProps) {
             style={{ height: 1, backgroundColor: "#2E3940", width: "100%" }}
           />
 
-          {/* Title — Figma 2167:9073 */}
+          {/* Title — Figma 2167:9073 — scales down on narrow viewports, wraps if needed */}
           <h2
             style={{
               fontFamily: "Montserrat, sans-serif",
-              fontSize: 57,
+              fontSize: "clamp(32px, 6vw, 57px)",
               fontWeight: 700,
-              lineHeight: "64px",
+              lineHeight: "1.12",
               letterSpacing: "-0.25px",
               color: "#FFEA9E",
               margin: 0,
-              whiteSpace: "nowrap",
             }}
           >
             {t(lang, "home.awards.title")}

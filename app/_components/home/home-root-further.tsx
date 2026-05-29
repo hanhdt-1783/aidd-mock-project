@@ -10,22 +10,14 @@ export default function HomeRootFurther({ lang }: HomeRootFurtherProps) {
     <section
       aria-label={t(lang, "aria.home.root-further")}
       className="relative w-full"
-      style={{
-        backgroundColor: "#00101A",
-        padding: "0",
-      }}
     >
-      {/* Outer frame with rounded border. Horizontal padding comes from the
-          parent <section> in page.tsx so content aligns with header/footer. */}
       <div
         className="relative mx-auto flex flex-col items-center w-full"
         style={{
           maxWidth: 1152,
-          borderRadius: 8,
           paddingTop: 24,
-          paddingBottom: 80,
-          gap: 32,
-          overflow: "hidden",
+          paddingBottom: "clamp(40px, 7vw, 80px)",
+          gap: "clamp(20px, 4vw, 32px)",
         }}
       >
         {/* ROOT FURTHER headline — two stacked prominent text images.
@@ -58,9 +50,9 @@ export default function HomeRootFurther({ lang }: HomeRootFurtherProps) {
           <p
             style={{
               fontFamily: "Montserrat, sans-serif",
-              fontSize: 24,
+              fontSize: "clamp(16px, 3vw, 24px)",
               fontWeight: 700,
-              lineHeight: "32px",
+              lineHeight: "1.4",
               letterSpacing: "0px",
               color: "#FFFFFF",
               whiteSpace: "pre-line",
@@ -88,8 +80,9 @@ export default function HomeRootFurther({ lang }: HomeRootFurtherProps) {
                 <div
                   key={idx}
                   style={{
-                    fontSize: idx === 0 ? 24 : 16,
-                    lineHeight: idx === 0 ? "32px" : "24px",
+                    fontSize:
+                      idx === 0 ? "clamp(16px, 3vw, 24px)" : "clamp(14px, 2.2vw, 16px)",
+                    lineHeight: "1.4",
                     letterSpacing: "0px",
                   }}
                 >
@@ -102,9 +95,9 @@ export default function HomeRootFurther({ lang }: HomeRootFurtherProps) {
           <p
             style={{
               fontFamily: "Montserrat, sans-serif",
-              fontSize: 24,
+              fontSize: "clamp(16px, 3vw, 24px)",
               fontWeight: 700,
-              lineHeight: "32px",
+              lineHeight: "1.4",
               letterSpacing: "0px",
               color: "#FFFFFF",
               whiteSpace: "pre-line",

@@ -131,7 +131,7 @@ export default function SiteHeader({
 
         {!isMinimal && (
           <nav aria-label={t(lang, "aria.nav.main")}>
-            <ul className="flex items-center" style={{ gap: 0, listStyle: "none", margin: 0, padding: 0 }}>
+            <ul className="flex items-center" style={{ gap: 24, listStyle: "none", margin: 0, padding: 0 }}>
               {NAV_ITEMS.map((item) => {
                 const isActive = activeNav === item.key;
                 return (
@@ -142,7 +142,7 @@ export default function SiteHeader({
                         isActive ? "text-[#FFEA9E]" : "text-white/[0.87]"
                       }`}
                       style={{
-                        padding: "16px 24px",
+                        padding: 16,
                         fontFamily: "Montserrat, sans-serif",
                         fontSize: 16,
                         fontWeight: 700,
@@ -235,7 +235,7 @@ export default function SiteHeader({
               aria-expanded={accountMenuOpen}
               aria-haspopup="menu"
               className="flex items-center justify-center rounded bg-transparent text-white transition-colors duration-200 hover:bg-[rgba(255,234,158,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-              style={{ width: 40, height: 40 }}
+              style={{ width: 40, height: 40, border: "1px solid #998C5F" }}
             >
               <UserIcon />
             </button>
