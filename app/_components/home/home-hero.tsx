@@ -40,7 +40,7 @@ export default function HomeHero({ lang }: HomeHeroProps) {
       {/* Content wrapper — fills outer padded area so left/right edges align
           with header/footer at every viewport. */}
       <div
-        className="relative z-10 flex flex-col px-6 sm:px-12 lg:px-60 xl:px-72"
+        className="relative z-10 flex flex-col px-page"
         style={{
           gap: "clamp(24px, 5vw, 40px)",
           paddingTop: "clamp(96px, 12vw, 144px)",

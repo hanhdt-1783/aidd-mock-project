@@ -25,6 +25,16 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Page side gutters — fluid, responsive to viewport.
+   Content caps at the 1152px design width and centers; gutters grow on
+   wide screens and shrink to 24px on small ones. At the 1440 design
+   artboard this resolves to exactly 144px (matches Figma). Applied to
+   header, footer, and every page section so they all stay aligned. */
+.px-page {
+  padding-left: max(1.5rem, calc((100vw - 1152px) / 2));
+  padding-right: max(1.5rem, calc((100vw - 1152px) / 2));
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

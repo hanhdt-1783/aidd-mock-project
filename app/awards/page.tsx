@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getLang } from "@/lib/i18n/get-lang";
@@ -49,17 +50,58 @@ export default async function AwardsPage() {
         activeNav="awards"
       />
 
-      <main className="flex flex-col w-full" style={{ paddingTop: 80 }}>
-        {/* Section A — Page title */}
+      <main className="relative z-10 flex flex-col w-full" style={{ paddingTop: 80 }}>
+        {/* Section A — Keyvisual hero: ROOT FURTHER logo + page title.
+            The keyvisual artwork is the background of THIS section, so its
+            bottom edge always sits just below the title across viewports
+            (Figma: image y80–627, title ends y583 → ~44px below title). */}
         <section
-          className="w-full px-6 sm:px-10 lg:px-60 xl:px-72"
+          className="relative w-full overflow-hidden px-page flex flex-col"
           style={{
-            paddingTop: 40,
-            paddingBottom: 32,
-            backgroundColor: "#00101A",
+            paddingTop: "clamp(48px, 8vw, 96px)",
+            // Image extends ~44px below the title (Figma y583 → y627).
+            paddingBottom: "clamp(24px, 4vw, 44px)",
+            gap: "clamp(40px, 8vw, 120px)",
           }}
         >
-          <AwardsPageTitle lang={lang} />
+          {/* Keyvisual artwork (Figma node 2167:5138) + dark fade
+              (Figma "Cover" gradient 313:8439): solid #00101A at the bottom,
+              transparent by ~53% up — so the title sits on the dark lower edge. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+          >
+            <div
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: "url('/awards/keyvisual-bg.png')" }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(0deg, #00101A -4.23%, rgba(0, 19, 32, 0.00) 52.79%)",
+              }}
+            />
+          </div>
+
+          {/* ROOT FURTHER logo (Figma node 2789:12915) — 338×150, scales down on mobile */}
+          <div
+            className="relative z-10"
+            style={{ width: "100%", maxWidth: 338, aspectRatio: "169 / 75" }}
+          >
+            <Image
+              src="/awards/root-further-logo.png"
+              alt="ROOT FURTHER"
+              width={338}
+              height={150}
+              priority
+              className="object-contain w-full h-auto"
+            />
+          </div>
+
+          <div className="relative z-10">
+            <AwardsPageTitle lang={lang} />
+          </div>
         </section>
 
         {/* Section B — side menu + awards list.
@@ -67,11 +109,15 @@ export default async function AwardsPage() {
             CSS handles the responsive split — DOM ids stay unique so the
             IntersectionObserver in AwardsSideMenu works on all viewports. */}
         <section
-          className="w-full px-6 sm:px-10 lg:px-60 xl:px-72 flex flex-col lg:flex-row lg:items-start"
+          className="w-full px-page flex flex-col lg:flex-row lg:items-start"
           style={{
+            // Space below the keyvisual image (Figma: image bottom y627 →
+            // awards list y703 = ~76px).
+            paddingTop: "clamp(40px, 6vw, 76px)",
             paddingBottom: 96,
             backgroundColor: "#00101A",
-            gap: 40,
+            // Figma mms_B gap between side menu and award list = 80.
+            gap: 80,
           }}
         >
           <div className="shrink-0 lg:sticky lg:self-start" style={{ top: 100, width: 178 }}>

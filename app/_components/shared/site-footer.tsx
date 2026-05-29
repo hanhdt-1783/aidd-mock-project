@@ -48,7 +48,7 @@ export default function SiteFooter({
   if (isMinimal) {
     return (
       <footer
-        className="flex items-center justify-center w-full px-6 py-6 sm:px-12 sm:py-8 lg:px-60 xl:px-72 lg:py-10"
+        className="flex items-center justify-center w-full px-page py-6 sm:py-8 lg:py-10"
         style={{ borderTop: "1px solid #2E3940" }}
       >
         <p
@@ -68,7 +68,7 @@ export default function SiteFooter({
 
   return (
     <footer
-      className="w-full flex items-center justify-between px-6 sm:px-12 lg:px-60 xl:px-72 py-10"
+      className="w-full flex items-center justify-between px-page py-10"
       style={{
         borderTop: "1px solid #2E3940",
         backgroundColor: "#00101A",

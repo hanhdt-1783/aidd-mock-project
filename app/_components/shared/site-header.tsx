@@ -110,7 +110,7 @@ export default function SiteHeader({
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between h-20 px-6 sm:px-12 lg:px-60 xl:px-72"
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between h-20 px-page"
       style={{
         backgroundColor: isMinimal ? "rgba(11, 15, 18, 0.80)" : "rgba(16, 20, 23, 0.80)",
         backdropFilter: isMinimal ? undefined : "blur(8px)",

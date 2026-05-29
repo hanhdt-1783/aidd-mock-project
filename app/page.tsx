@@ -3,13 +3,11 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getLang } from "@/lib/i18n/get-lang";
 import { t } from "@/lib/i18n/dictionary";
-import { listHashtags, listRecipients } from "@/lib/kudos/queries";
 import SiteHeader from "./_components/shared/site-header";
 import HomeHero from "./_components/home/home-hero";
 import HomeRootFurther from "./_components/home/home-root-further";
 import HomeAwardsSection from "./_components/home/home-awards-section";
 import HomeKudosSection from "./_components/home/home-kudos-section";
-import HomeWidgetButton from "./_components/home/home-widget-button";
 import SiteFooter from "./_components/shared/site-footer";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -36,14 +34,6 @@ export default async function HomePage() {
     .eq("id", user.id)
     .single();
   const isAdmin = profile?.role === "admin";
-
-  // FAB "Viết Kudo" modal data — fetched in parallel for fewer RTTs.
-  const [recipients, hashtags] = await Promise.all([
-    listRecipients(user.id),
-    listHashtags(),
-  ]);
-  const safeRecipients = Array.isArray(recipients) ? recipients : [];
-  const safeHashtags = Array.isArray(hashtags) ? hashtags : [];
 
   return (
     <div
@@ -83,7 +73,7 @@ export default async function HomePage() {
 
         {/* Section 2 — Root Further content block. */}
         <section
-          className="w-full flex justify-center px-6 sm:px-12 lg:px-60 xl:px-72"
+          className="w-full flex justify-center px-page"
           style={{
             paddingTop: "clamp(24px, 5vw, 48px)",
             paddingBottom: "clamp(48px, 8vw, 96px)",
@@ -94,7 +84,7 @@ export default async function HomePage() {
 
         {/* Section 3 — Awards */}
         <section
-          className="w-full px-6 sm:px-12 lg:px-60 xl:px-72"
+          className="w-full px-page"
           style={{
             backgroundColor: "#00101A",
             paddingTop: 0,
@@ -106,7 +96,7 @@ export default async function HomePage() {
 
         {/* Section 4 — Sun* Kudos */}
         <section
-          className="w-full flex justify-center px-6 sm:px-12 lg:px-60 xl:px-72"
+          className="w-full flex justify-center px-page"
           style={{
             backgroundColor: "#00101A",
             paddingTop: "clamp(48px, 8vw, 96px)",
@@ -116,14 +106,6 @@ export default async function HomePage() {
           <HomeKudosSection lang={lang} />
         </section>
       </main>
-
-      {/* Fixed widget button — bottom right. Opens Viết Kudo modal. */}
-      <HomeWidgetButton
-        lang={lang}
-        recipients={safeRecipients}
-        existingHashtags={safeHashtags}
-        currentUserId={user.id}
-      />
 
       {/* Footer */}
       <SiteFooter lang={lang} />

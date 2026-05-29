@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
+import KudoFab from "@/app/_components/shared/kudo-fab";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -37,7 +38,27 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${dseg7.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <head>
+        {/* Montserrat — the design-system font referenced across the app
+            (fontFamily: "Montserrat"). Loaded here so those references
+            resolve instead of falling back to Arial. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="min-h-full flex flex-col">
+        {children}
+        {/* Shared floating Viết Kudo button — rendered once for every route;
+            self-gates to logged-in users (renders null otherwise). */}
+        <KudoFab />
+      </body>
     </html>
   );
 }

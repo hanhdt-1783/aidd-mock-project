@@ -1,5 +1,6 @@
 import { t, type Language } from "@/lib/i18n/dictionary";
 import type { AwardData } from "./awards-section";
+import { LicenseIcon } from "./awards-icons";
 
 type AwardsValueBlockProps = {
   lang: Language;
@@ -48,7 +49,13 @@ export default function AwardsValueBlock({ lang, award }: AwardsValueBlockProps)
   const { valueKey, valueUnitKey, value2Key, value2UnitKey, orKey } = award;
   return (
     <div className="flex flex-col" style={{ gap: 16 }}>
-      <span style={LABEL_STYLE}>{t(lang, "awards.section.value.label")}</span>
+      {/* Value label — License/medal icon (Figma) + label, gold. */}
+      <div className="flex items-center" style={{ gap: 8, color: "#FFFFFF" }}>
+        <span className="shrink-0" aria-hidden="true">
+          <LicenseIcon />
+        </span>
+        <span style={LABEL_STYLE}>{t(lang, "awards.section.value.label")}</span>
+      </div>
 
       <div className="flex flex-col" style={{ gap: 4 }}>
         <span style={AMOUNT_STYLE}>{t(lang, valueKey)}</span>

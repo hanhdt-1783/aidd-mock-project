@@ -1,16 +1,12 @@
 import { type Language } from "@/lib/i18n/dictionary";
 import AwardsSection, { type AwardData } from "./awards-section";
 
-// Award images: no Figma media assets uploaded for award section images.
-// Using placeholder path — orchestrator should replace with actual images.
-// Each slug maps to /awards/<slug>.png when real images are available.
-const PLACEHOLDER = "/awards/placeholder.svg";
-
-const AWARDS: AwardData[] = [
+// Award thumbnails (Figma mms_D.X.1_Picture-Award, 336×336): glowing gold orb
+// with the award name baked in. Each card's image lives at /awards/<slug>.png.
+const AWARDS: Omit<AwardData, "imageSrc">[] = [
   {
     slug: "top-talent",
     imageLeft: true,
-    imageSrc: PLACEHOLDER,
     titleKey: "awards.section.top-talent.title",
     descriptionKey: "awards.section.top-talent.description",
     countKey: "awards.section.top-talent.count",
@@ -21,7 +17,6 @@ const AWARDS: AwardData[] = [
   {
     slug: "top-project",
     imageLeft: false,
-    imageSrc: PLACEHOLDER,
     titleKey: "awards.section.top-project.title",
     descriptionKey: "awards.section.top-project.description",
     countKey: "awards.section.top-project.count",
@@ -32,7 +27,6 @@ const AWARDS: AwardData[] = [
   {
     slug: "top-project-leader",
     imageLeft: true,
-    imageSrc: PLACEHOLDER,
     titleKey: "awards.section.top-project-leader.title",
     descriptionKey: "awards.section.top-project-leader.description",
     countKey: "awards.section.top-project-leader.count",
@@ -43,7 +37,6 @@ const AWARDS: AwardData[] = [
   {
     slug: "best-manager",
     imageLeft: false,
-    imageSrc: PLACEHOLDER,
     titleKey: "awards.section.best-manager.title",
     descriptionKey: "awards.section.best-manager.description",
     countKey: "awards.section.best-manager.count",
@@ -54,7 +47,6 @@ const AWARDS: AwardData[] = [
   {
     slug: "signature-2025-creator",
     imageLeft: true,
-    imageSrc: PLACEHOLDER,
     titleKey: "awards.section.signature-2025-creator.title",
     descriptionKey: "awards.section.signature-2025-creator.description",
     countKey: "awards.section.signature-2025-creator.count",
@@ -68,7 +60,6 @@ const AWARDS: AwardData[] = [
   {
     slug: "mvp",
     imageLeft: false,
-    imageSrc: PLACEHOLDER,
     titleKey: "awards.section.mvp.title",
     descriptionKey: "awards.section.mvp.description",
     countKey: "awards.section.mvp.count",
@@ -86,7 +77,13 @@ export default function AwardsList({ lang }: AwardsListProps) {
   return (
     <div className="flex flex-col" style={{ gap: 80, flex: 1, minWidth: 0 }}>
       {AWARDS.map((award) => (
-        <AwardsSection key={award.slug} lang={lang} award={award} />
+        <AwardsSection
+          key={award.slug}
+          lang={lang}
+          // -v2 filename: thumbnails were replaced (orb+name); the new path
+          // busts the browser + Next image-optimizer cache cleanly.
+          award={{ ...award, imageSrc: `/awards/${award.slug}-v2.png` }}
+        />
       ))}
     </div>
   );

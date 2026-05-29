@@ -73,8 +73,6 @@ type HomeWidgetButtonProps = {
   currentUserId: string;
 };
 
-const PILL_SHADOW = "0 4px 4px 0 rgba(0,0,0,0.25), 0 0 6px 0 #FAE287";
-
 /**
  * Floating Action Button (FAB).
  * Closed (Figma screenId _hphd32jN2): pill 106x64 with pen + "/" + SAA icons.
@@ -154,7 +152,6 @@ export default function HomeWidgetButton({
               color: "#00101A",
               textDecoration: "none",
               height: 64,
-              boxShadow: PILL_SHADOW,
             }}
           >
             <SaaIcon />
@@ -185,7 +182,6 @@ export default function HomeWidgetButton({
               border: "none",
               cursor: "pointer",
               height: 64,
-              boxShadow: PILL_SHADOW,
             }}
           >
             <PenIcon />
@@ -217,7 +213,6 @@ export default function HomeWidgetButton({
               color: "#FFFFFF",
               border: "none",
               cursor: "pointer",
-              boxShadow: PILL_SHADOW,
             }}
           >
             <CloseIcon />
@@ -240,7 +235,6 @@ export default function HomeWidgetButton({
             color: "#00101A",
             border: "none",
             cursor: "pointer",
-            boxShadow: PILL_SHADOW,
           }}
         >
           <PenIcon />

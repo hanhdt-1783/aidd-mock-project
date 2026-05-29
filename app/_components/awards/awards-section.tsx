@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { t, type Language } from "@/lib/i18n/dictionary";
 import AwardsValueBlock from "./awards-value-block";
+import { TargetIcon, DiamondIcon } from "./awards-icons";
 
 export type AwardData = {
   slug: string;
@@ -81,7 +82,7 @@ export default function AwardsSection({ lang, award }: AwardsSectionProps) {
           image-on-top because flex-col + the image being the first child. */}
       <div
         className={`flex flex-col lg:flex-row items-start ${imageLeft ? "" : "lg:flex-row-reverse"}`}
-        style={{ gap: 32 }}
+        style={{ gap: 40 }}
       >
         {/* Image */}
         <div
@@ -102,25 +103,38 @@ export default function AwardsSection({ lang, award }: AwardsSectionProps) {
             fill
             sizes="336px"
             className="object-cover"
-            unoptimized={imageSrc.endsWith(".svg")}
+            // Serve the raw file (skip Next image-optimizer): the thumbnails
+            // are already 672px (shown ≤336@2x) so optimization adds nothing,
+            // and it avoids the optimizer's URL-keyed cache serving a stale
+            // version after a thumbnail is replaced.
+            unoptimized
           />
         </div>
 
         {/* Content */}
         <div className="flex flex-col" style={{ gap: 32, flex: 1, minWidth: 0 }}>
           <div className="flex flex-col" style={{ gap: 24 }}>
-            <h2
-              style={{
-                fontFamily: "Montserrat, sans-serif",
-                fontSize: 24,
-                fontWeight: 700,
-                lineHeight: "32px",
-                color: "#FFEA9E",
-                margin: 0,
-              }}
+            {/* Title row — Target icon (Figma) + title, gold. */}
+            <div
+              className="flex items-center"
+              style={{ gap: 8, color: "#FFFFFF" }}
             >
-              {t(lang, titleKey)}
-            </h2>
+              <span className="shrink-0" aria-hidden="true">
+                <TargetIcon />
+              </span>
+              <h2
+                style={{
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 24,
+                  fontWeight: 700,
+                  lineHeight: "32px",
+                  color: "#FFEA9E",
+                  margin: 0,
+                }}
+              >
+                {t(lang, titleKey)}
+              </h2>
+            </div>
             <p
               style={{
                 fontFamily: "Montserrat, sans-serif",
@@ -139,19 +153,24 @@ export default function AwardsSection({ lang, award }: AwardsSectionProps) {
 
           <div aria-hidden="true" style={DIVIDER_STYLE} />
 
-          {/* Count row */}
+          {/* Count row — Diamond icon (Figma) + label, gold. */}
           <div className="flex items-center" style={{ gap: 16 }}>
-            <span
-              style={{
-                fontFamily: "Montserrat, sans-serif",
-                fontSize: 24,
-                fontWeight: 700,
-                lineHeight: "32px",
-                color: "#FFEA9E",
-              }}
-            >
-              {t(lang, "awards.section.count.label")}
-            </span>
+            <div className="flex items-center" style={{ gap: 8, color: "#FFFFFF" }}>
+              <span className="shrink-0" aria-hidden="true">
+                <DiamondIcon />
+              </span>
+              <span
+                style={{
+                  fontFamily: "Montserrat, sans-serif",
+                  fontSize: 24,
+                  fontWeight: 700,
+                  lineHeight: "32px",
+                  color: "#FFEA9E",
+                }}
+              >
+                {t(lang, "awards.section.count.label")}
+              </span>
+            </div>
             <div className="flex items-center" style={{ gap: 8 }}>
               <span
                 style={{

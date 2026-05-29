@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { t, type Language } from "@/lib/i18n/dictionary";
+import { TargetIcon } from "./awards-icons";
 
 type MenuItem = {
   slug: string;
@@ -89,7 +90,7 @@ export default function AwardsSideMenu({ lang }: AwardsSideMenuProps) {
     <nav
       aria-label="Awards navigation"
       className="flex flex-col"
-      style={{ gap: 0, width: 178 }}
+      style={{ gap: 16, width: 178 }}
     >
       {MENU_ITEMS.map(({ slug, labelKey }) => {
         const isActive = activeSlug === slug;
@@ -114,28 +115,20 @@ export default function AwardsSideMenu({ lang }: AwardsSideMenuProps) {
               cursor: "pointer",
             }}
           >
-            {/* Dot indicator */}
+            {/* Target icon — Figma MM_MEDIA_Target. Gold when active,
+                white otherwise (color drives the inline SVG currentColor). */}
             <span
               aria-hidden="true"
               style={{
-                width: 24,
-                height: 24,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 flexShrink: 0,
+                color: isActive ? "#FFEA9E" : "rgba(255,255,255,0.87)",
+                transition: "color 0.2s ease",
               }}
             >
-              <span
-                style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  backgroundColor: isActive ? "#FFEA9E" : "rgba(255,255,255,0.4)",
-                  transition: "background-color 0.2s ease",
-                  display: "block",
-                }}
-              />
+              <TargetIcon />
             </span>
 
             {/* Label */}
@@ -147,10 +140,7 @@ export default function AwardsSideMenu({ lang }: AwardsSideMenuProps) {
                 lineHeight: "20px",
                 letterSpacing: "0.25px",
                 color: isActive ? "#FFEA9E" : "rgba(255,255,255,0.87)",
-                textShadow: isActive
-                  ? "0 4px 4px rgba(0,0,0,0.25), 0 0 6px #FAE287"
-                  : "none",
-                transition: "color 0.2s ease, text-shadow 0.2s ease",
+                transition: "color 0.2s ease",
                 whiteSpace: "pre-line",
               }}
             >

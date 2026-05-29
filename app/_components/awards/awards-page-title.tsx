@@ -26,17 +26,18 @@ export default function AwardsPageTitle({ lang }: AwardsPageTitleProps) {
         {t(lang, "awards.label")}
       </p>
 
-      {/* Divider line */}
+      {/* Divider line — Figma Rectangle 26 (#2E3940) */}
       <div
         aria-hidden="true"
         style={{
           width: "100%",
           height: 1,
-          backgroundColor: "rgba(255,255,255,0.15)",
+          backgroundColor: "#2E3940",
         }}
       />
 
-      {/* Main title */}
+      {/* Main title — Figma node 313:8457: Montserrat 700, 57px/64px,
+          -0.25px tracking, #FFEA9E, centered block. */}
       <h1
         style={{
           fontFamily: "Montserrat, sans-serif",
@@ -46,6 +47,7 @@ export default function AwardsPageTitle({ lang }: AwardsPageTitleProps) {
           letterSpacing: "-0.25px",
           color: "#FFEA9E",
           margin: 0,
+          textAlign: "center",
         }}
       >
         {t(lang, "awards.title")}
