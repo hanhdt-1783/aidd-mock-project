@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getLang } from "@/lib/i18n/get-lang";
 import { t } from "@/lib/i18n/dictionary";
 import SiteHeader from "@/app/_components/shared/site-header";
-import HomeKudosSection from "@/app/_components/home/home-kudos-section";
+import KudosSection from "@/app/_components/shared/kudos-section";
 import SiteFooter from "@/app/_components/shared/site-footer";
 import AwardsPageTitle from "@/app/_components/awards/awards-page-title";
 import AwardsSideMenu from "@/app/_components/awards/awards-side-menu";
@@ -126,8 +126,20 @@ export default async function AwardsPage() {
           <AwardsList lang={lang} />
         </section>
 
-        {/* Section D1/D2 — Sun* Kudos banner (reused from homepage) */}
-        <HomeKudosSection lang={lang} />
+        {/* Section D1/D2 — Sun* Kudos banner (shared "Phong trào ghi nhận" section).
+            Bottom gap before the footer (Figma "Bìa" 96px bottom padding: kudos
+            ends y6156 → footer divider y6266). Without it the footer's top divider
+            sits flush against the dark banner — no visible line + wrong spacing.
+            Matches the homepage kudos section's bottom rhythm. */}
+        <section
+          className="w-full"
+          style={{
+            backgroundColor: "#00101A",
+            paddingBottom: "clamp(48px, 8vw, 96px)",
+          }}
+        >
+          <KudosSection lang={lang} />
+        </section>
       </main>
 
       <SiteFooter lang={lang} />

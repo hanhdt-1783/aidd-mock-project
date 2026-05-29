@@ -7,7 +7,7 @@ import SiteHeader from "./_components/shared/site-header";
 import HomeHero from "./_components/home/home-hero";
 import HomeRootFurther from "./_components/home/home-root-further";
 import HomeAwardsSection from "./_components/home/home-awards-section";
-import HomeKudosSection from "./_components/home/home-kudos-section";
+import KudosSection from "./_components/shared/kudos-section";
 import SiteFooter from "./_components/shared/site-footer";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -41,11 +41,15 @@ export default async function HomePage() {
       style={{ backgroundColor: "#00101A" }}
     >
       {/* Unified top background — keyvisual image fades into solid dark via gradient.
-          Sized to the design hero aspect; image sits at top, dark continues below. */}
+          Scaling: aspect-ratio (Figma 1512×1392) is the primary driver, so the
+          band keeps the design proportion and the image never distorts. On wide
+          screens aspect-ratio wins; on narrow screens a responsive min-height
+          backs the taller mobile hero — clamped (not a rigid 900px) so `cover`
+          doesn't over-zoom and crop away the right-side artwork. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute top-0 left-0 right-0 z-0 overflow-hidden"
-        style={{ aspectRatio: "1512 / 1392", minHeight: 900 }}
+        style={{ aspectRatio: "1512 / 1392", minHeight: "clamp(560px, 130vw, 860px)" }}
       >
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -107,7 +111,7 @@ export default async function HomePage() {
             paddingBottom: "clamp(48px, 8vw, 96px)",
           }}
         >
-          <HomeKudosSection lang={lang} />
+          <KudosSection lang={lang} />
         </section>
       </main>
 

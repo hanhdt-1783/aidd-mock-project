@@ -23,11 +23,16 @@ function ArrowUpRightIcon() {
   );
 }
 
-type HomeKudosSectionProps = {
+type KudosSectionProps = {
   lang: Language;
 };
 
-export default function HomeKudosSection({ lang }: HomeKudosSectionProps) {
+/**
+ * "Phong trào ghi nhận" / Sun* Kudos banner.
+ * Shared section (Figma component mms_D1_Sunkudos) reused by both the
+ * homepage and the awards page.
+ */
+export default function KudosSection({ lang }: KudosSectionProps) {
   return (
     <section
       id="kudos"
@@ -42,7 +47,7 @@ export default function HomeKudosSection({ lang }: HomeKudosSectionProps) {
       >
         {/* Background image */}
         <Image
-          src="/home/kudos-bg.png"
+          src="/shared/kudos-bg.png"
           alt=""
           fill
           sizes="1120px"
@@ -81,7 +86,7 @@ export default function HomeKudosSection({ lang }: HomeKudosSectionProps) {
           style={{ right: 40, top: "50%", transform: "translateY(-50%)" }}
         >
           <Image
-            src="/home/kudos-logo.svg"
+            src="/shared/kudos-logo.svg"
             alt="Sun* Kudos"
             width={364}
             height={72}
@@ -98,7 +103,7 @@ export default function HomeKudosSection({ lang }: HomeKudosSectionProps) {
         {/* Background image */}
         <div className="relative w-full" style={{ height: 200 }}>
           <Image
-            src="/home/kudos-bg.png"
+            src="/shared/kudos-bg.png"
             alt=""
             fill
             sizes="375px"
@@ -116,7 +121,7 @@ export default function HomeKudosSection({ lang }: HomeKudosSectionProps) {
           {/* Kudos logo centred on the image */}
           <div className="absolute inset-0 flex items-center justify-center">
             <Image
-              src="/home/kudos-logo.svg"
+              src="/shared/kudos-logo.svg"
               alt="Sun* Kudos"
               width={200}
               height={40}
