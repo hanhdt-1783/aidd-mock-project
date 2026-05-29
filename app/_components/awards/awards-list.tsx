@@ -80,9 +80,9 @@ export default function AwardsList({ lang }: AwardsListProps) {
         <AwardsSection
           key={award.slug}
           lang={lang}
-          // -v2 filename: thumbnails were replaced (orb+name); the new path
-          // busts the browser + Next image-optimizer cache cleanly.
-          award={{ ...award, imageSrc: `/awards/${award.slug}-v2.png` }}
+          // Shared award photos (orb+name baked in) live in /shared, reused by
+          // the home awards section. -v2 suffix busts browser/optimizer cache.
+          award={{ ...award, imageSrc: `/shared/${award.slug}-v2.png` }}
         />
       ))}
     </div>

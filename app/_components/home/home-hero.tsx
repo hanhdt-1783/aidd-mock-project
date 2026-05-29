@@ -43,8 +43,10 @@ export default function HomeHero({ lang }: HomeHeroProps) {
         className="relative z-10 flex flex-col px-page"
         style={{
           gap: "clamp(24px, 5vw, 40px)",
-          paddingTop: "clamp(96px, 12vw, 144px)",
-          paddingBottom: "clamp(48px, 8vw, 96px)",
+          // Top space above first content ≈ design 96 (Bìa top padding).
+          paddingTop: "clamp(64px, 8vw, 96px)",
+          // Bottom gap to next section handled by the section's paddingTop (≈120).
+          paddingBottom: 0,
         }}
       >
         {/* ROOT FURTHER logo — scales down on mobile */}

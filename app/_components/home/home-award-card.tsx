@@ -12,12 +12,6 @@ export type AwardSlug =
 
 export type AwardCardData = {
   slug: AwardSlug;
-  /** Path to the award name image (e.g. /home/award-top-talent.png) */
-  nameImageSrc: string;
-  /** Natural width of the name image in px */
-  nameImageWidth: number;
-  /** Natural height of the name image in px */
-  nameImageHeight: number;
   titleKey:
     | "home.awards.top-talent.title"
     | "home.awards.top-project.title"
@@ -66,39 +60,30 @@ export default function HomeAwardCard({ lang, award }: HomeAwardCardProps) {
       className="flex flex-col group transition-all duration-200 hover:-translate-y-1 w-full"
       style={{ gap: 24, cursor: "default" }}
     >
-      {/* Thumbnail — square with yellow border + glow */}
+      {/* Thumbnail — square award photo (orb + name baked in), shared with the
+          Awards page (/shared/<slug>-v2.png), sized for the home 3-col grid.
+          Yellow border + glow per Figma mms_C2.1.1_Picture-Award (336×336). */}
       <div
         className="relative overflow-hidden w-full aspect-square"
         style={{
-          borderRadius: 30,
-          border: "1px solid #FFEA9E",
+          // Figma mms_C2.1.1_Picture-Award: screen blend so the photo's dark
+          // background merges into the page (orb appears to float) + glow.
+          // Inner border/radius from MM_MEDIA_Award BG (0.955px gold, radius 24).
+          borderRadius: 24,
+          border: "0.955px solid #FFEA9E",
           boxShadow: "0 4px 4px 0 rgba(0,0,0,0.25), 0 0 6px 0 #FAE287",
+          mixBlendMode: "screen",
           transition: "box-shadow 0.2s ease",
         }}
       >
-        {/* Award background fill */}
         <Image
-          src="/home/award-bg.png"
-          alt=""
+          src={`/shared/${award.slug}-v2.png`}
+          alt={t(lang, award.titleKey)}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 336px"
           className="object-cover"
-          aria-hidden="true"
+          unoptimized
         />
-        {/* Award name image (centred, mix-blend-mode: screen) */}
-        <div
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ mixBlendMode: "screen" }}
-        >
-          <Image
-            src={award.nameImageSrc}
-            alt={t(lang, award.titleKey)}
-            width={award.nameImageWidth}
-            height={award.nameImageHeight}
-            className="object-contain"
-            style={{ maxWidth: "66%", maxHeight: "66%" }}
-          />
-        </div>
 
         {/* Hover glow overlay */}
         <div

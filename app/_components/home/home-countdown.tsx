@@ -66,7 +66,7 @@ function CountdownTile({ display, label }: CountdownTileProps) {
               style={{
                 fontFamily: 'var(--font-dseg7), "Digital Numbers", monospace',
                 fontSize: "clamp(32px, 8vw, 48px)",
-                fontWeight: 700,
+                fontWeight: 400,
                 lineHeight: 1,
                 color: "#FFFFFF",
                 letterSpacing: 0,

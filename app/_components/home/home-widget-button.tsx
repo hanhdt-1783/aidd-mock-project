@@ -57,7 +57,7 @@ function CloseIcon() {
 function SaaIcon() {
   return (
     <Image
-      src="/home/icon-saa.svg"
+      src="/shared/icon-saa.svg"
       alt=""
       width={24}
       height={24}
@@ -137,7 +137,9 @@ export default function HomeWidgetButton({
   };
 
   return (
-    <div className="fixed z-50" style={{ bottom: 32, right: 32 }}>
+    // Offsets scale with viewport: 16px on phones, 24px on tablets, 32px on
+    // desktop (matches the Figma ~19–32px placement without crowding small screens).
+    <div className="fixed z-50 bottom-4 right-4 sm:bottom-6 sm:right-6 lg:bottom-8 lg:right-8">
       {open ? (
         <div className="flex flex-col items-end" style={{ gap: 20 }}>
           {/* A_Button thể lệ */}

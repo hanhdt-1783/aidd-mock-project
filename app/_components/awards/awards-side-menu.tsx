@@ -124,7 +124,7 @@ export default function AwardsSideMenu({ lang }: AwardsSideMenuProps) {
                 alignItems: "center",
                 justifyContent: "center",
                 flexShrink: 0,
-                color: isActive ? "#FFEA9E" : "rgba(255,255,255,0.87)",
+                color: isActive ? "#FFEA9E" : "#FFFFFF",
                 transition: "color 0.2s ease",
               }}
             >
@@ -139,7 +139,7 @@ export default function AwardsSideMenu({ lang }: AwardsSideMenuProps) {
                 fontWeight: 700,
                 lineHeight: "20px",
                 letterSpacing: "0.25px",
-                color: isActive ? "#FFEA9E" : "rgba(255,255,255,0.87)",
+                color: isActive ? "#FFEA9E" : "#FFFFFF",
                 transition: "color 0.2s ease",
                 whiteSpace: "pre-line",
               }}

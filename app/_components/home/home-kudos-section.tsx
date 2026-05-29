@@ -183,7 +183,7 @@ function KudosContent({ lang }: { lang: Language }) {
           <span
             style={{
               display: "block",
-              fontWeight: 800,
+              fontWeight: 700,
               color: "#FFFFFF",
               marginBottom: 4,
             }}

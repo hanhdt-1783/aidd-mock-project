@@ -1,55 +1,15 @@
 import { t, type Language } from "@/lib/i18n/dictionary";
 import HomeAwardCard, { type AwardCardData } from "./home-award-card";
 
+// Card photos are shared with the Awards page (/shared/<slug>-v2.png) — the
+// orb + award name are baked into each image, so no separate name overlay.
 const AWARDS: AwardCardData[] = [
-  {
-    slug: "top-talent",
-    nameImageSrc: "/home/award-top-talent.png",
-    nameImageWidth: 221,
-    nameImageHeight: 35,
-    titleKey: "home.awards.top-talent.title",
-    descriptionKey: "home.awards.top-talent.description",
-  },
-  {
-    slug: "top-project",
-    nameImageSrc: "/home/award-top-project.png",
-    nameImageWidth: 232,
-    nameImageHeight: 35,
-    titleKey: "home.awards.top-project.title",
-    descriptionKey: "home.awards.top-project.description",
-  },
-  {
-    slug: "top-project-leader",
-    nameImageSrc: "/home/award-top-project-leader.png",
-    nameImageWidth: 232,
-    nameImageHeight: 64,
-    titleKey: "home.awards.top-project-leader.title",
-    descriptionKey: "home.awards.top-project-leader.description",
-  },
-  {
-    slug: "best-manager",
-    nameImageSrc: "/home/award-best-manager.png",
-    nameImageWidth: 232,
-    nameImageHeight: 30,
-    titleKey: "home.awards.best-manager.title",
-    descriptionKey: "home.awards.best-manager.description",
-  },
-  {
-    slug: "signature-2025-creator",
-    nameImageSrc: "/home/award-signature-creator.png",
-    nameImageWidth: 232,
-    nameImageHeight: 54,
-    titleKey: "home.awards.signature-2025-creator.title",
-    descriptionKey: "home.awards.signature-2025-creator.description",
-  },
-  {
-    slug: "mvp",
-    nameImageSrc: "/home/award-mvp.png",
-    nameImageWidth: 116,
-    nameImageHeight: 52,
-    titleKey: "home.awards.mvp.title",
-    descriptionKey: "home.awards.mvp.description",
-  },
+  { slug: "top-talent", titleKey: "home.awards.top-talent.title", descriptionKey: "home.awards.top-talent.description" },
+  { slug: "top-project", titleKey: "home.awards.top-project.title", descriptionKey: "home.awards.top-project.description" },
+  { slug: "top-project-leader", titleKey: "home.awards.top-project-leader.title", descriptionKey: "home.awards.top-project-leader.description" },
+  { slug: "best-manager", titleKey: "home.awards.best-manager.title", descriptionKey: "home.awards.best-manager.description" },
+  { slug: "signature-2025-creator", titleKey: "home.awards.signature-2025-creator.title", descriptionKey: "home.awards.signature-2025-creator.description" },
+  { slug: "mvp", titleKey: "home.awards.mvp.title", descriptionKey: "home.awards.mvp.description" },
 ];
 
 type HomeAwardsSectionProps = {

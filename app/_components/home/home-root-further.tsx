@@ -15,8 +15,10 @@ export default function HomeRootFurther({ lang }: HomeRootFurtherProps) {
         className="relative mx-auto flex flex-col items-center w-full"
         style={{
           maxWidth: 1152,
-          paddingTop: 24,
-          paddingBottom: "clamp(40px, 7vw, 80px)",
+          // Inter-section gaps are owned by the page section wrappers (≈120px),
+          // so this block adds no vertical padding of its own.
+          paddingTop: 0,
+          paddingBottom: 0,
           gap: "clamp(20px, 4vw, 32px)",
         }}
       >
@@ -52,7 +54,7 @@ export default function HomeRootFurther({ lang }: HomeRootFurtherProps) {
               fontFamily: "Montserrat, sans-serif",
               fontSize: "clamp(16px, 3vw, 24px)",
               fontWeight: 700,
-              lineHeight: "1.4",
+              lineHeight: "1.33",
               letterSpacing: "0px",
               color: "#FFFFFF",
               whiteSpace: "pre-line",
@@ -62,7 +64,7 @@ export default function HomeRootFurther({ lang }: HomeRootFurtherProps) {
             {t(lang, "home.root.body1")}
           </p>
 
-          {/* Quote — line 1 24/32 (matches paragraphs); line 2 16/24 (smaller per user). */}
+          {/* Quote — Figma 3204:10161: 20px/32 (lh 1.6), 700, centered, both lines. */}
           <blockquote
             style={{
               fontFamily: "Montserrat, sans-serif",
@@ -80,9 +82,8 @@ export default function HomeRootFurther({ lang }: HomeRootFurtherProps) {
                 <div
                   key={idx}
                   style={{
-                    fontSize:
-                      idx === 0 ? "clamp(16px, 3vw, 24px)" : "clamp(14px, 2.2vw, 16px)",
-                    lineHeight: "1.4",
+                    fontSize: "clamp(16px, 2.5vw, 20px)",
+                    lineHeight: "1.6",
                     letterSpacing: "0px",
                   }}
                 >
@@ -97,7 +98,7 @@ export default function HomeRootFurther({ lang }: HomeRootFurtherProps) {
               fontFamily: "Montserrat, sans-serif",
               fontSize: "clamp(16px, 3vw, 24px)",
               fontWeight: 700,
-              lineHeight: "1.4",
+              lineHeight: "1.33",
               letterSpacing: "0px",
               color: "#FFFFFF",
               whiteSpace: "pre-line",

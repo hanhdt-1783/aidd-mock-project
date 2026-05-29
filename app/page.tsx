@@ -71,12 +71,16 @@ export default async function HomePage() {
       <main className="relative z-10 flex flex-col w-full" style={{ paddingTop: 80 }}>
         <HomeHero lang={lang} />
 
+        {/* Inter-section vertical rhythm — design uses ~120px between sections.
+            Each junction is owned by the next section's paddingTop (the previous
+            section contributes 0), so gaps stay a consistent ~120px on desktop
+            and shrink fluidly on smaller screens. */}
         {/* Section 2 — Root Further content block. */}
         <section
           className="w-full flex justify-center px-page"
           style={{
-            paddingTop: "clamp(24px, 5vw, 48px)",
-            paddingBottom: "clamp(48px, 8vw, 96px)",
+            paddingTop: "clamp(64px, 10vw, 120px)",
+            paddingBottom: 0,
           }}
         >
           <HomeRootFurther lang={lang} />
@@ -87,8 +91,8 @@ export default async function HomePage() {
           className="w-full px-page"
           style={{
             backgroundColor: "#00101A",
-            paddingTop: 0,
-            paddingBottom: "clamp(48px, 8vw, 96px)",
+            paddingTop: "clamp(64px, 10vw, 120px)",
+            paddingBottom: 0,
           }}
         >
           <HomeAwardsSection lang={lang} />
@@ -99,7 +103,7 @@ export default async function HomePage() {
           className="w-full flex justify-center px-page"
           style={{
             backgroundColor: "#00101A",
-            paddingTop: "clamp(48px, 8vw, 96px)",
+            paddingTop: "clamp(64px, 10vw, 120px)",
             paddingBottom: "clamp(48px, 8vw, 96px)",
           }}
         >

@@ -120,7 +120,7 @@ export default function SiteHeader({
       <div className="flex items-center" style={{ gap: isMinimal ? 0 : 64 }}>
         <Link href="/" aria-label={t(lang, "home.meta.title")}>
           <Image
-            src="/home/logo-header.png"
+            src="/shared/logo-header.png"
             alt={t(lang, "home.meta.title")}
             width={52}
             height={48}
@@ -138,28 +138,22 @@ export default function SiteHeader({
                   <li key={item.key}>
                     <Link
                       href={item.href}
-                      className={`relative flex items-center rounded transition-colors duration-200 hover:bg-[rgba(255,234,158,0.10)] ${
-                        isActive ? "text-[#FFEA9E]" : "text-white/[0.87]"
+                      className={`relative flex items-center rounded transition-all duration-200 hover:bg-[rgba(255,234,158,0.10)] ${
+                        isActive ? "text-[#FFEA9E]" : "text-white"
                       }`}
                       style={{
                         padding: 16,
                         fontFamily: "Montserrat, sans-serif",
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: 700,
-                        lineHeight: "24px",
-                        letterSpacing: "0.5px",
+                        lineHeight: "20px",
+                        letterSpacing: "0.1px",
                         textDecoration: "none",
+                        // Active = 1px gold underline at the button's bottom edge (Figma mms_A1.2).
+                        borderBottom: isActive ? "1px solid #FFEA9E" : "1px solid transparent",
                       }}
                     >
-                      <span
-                        style={{
-                          borderBottom: isActive ? "2px solid #FFEA9E" : "2px solid transparent",
-                          paddingBottom: 2,
-                          transition: "border-color 0.2s ease, color 0.2s ease",
-                        }}
-                      >
-                        {t(lang, item.translationKey)}
-                      </span>
+                      {t(lang, item.translationKey)}
                     </Link>
                   </li>
                 );
@@ -169,8 +163,8 @@ export default function SiteHeader({
         )}
       </div>
 
-      {/* Right — Controls */}
-      <div className="flex items-center" style={{ gap: 8 }}>
+      {/* Right — Controls. Gap=16 per Figma Frame 482. */}
+      <div className="flex items-center" style={{ gap: 16 }}>
         {!isMinimal && isAuthenticated && (
           <div className="relative">
             <button
