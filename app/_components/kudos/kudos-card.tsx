@@ -159,7 +159,7 @@ export default function KudosCard({ card, onLike, onCopyLink }: KudosCardProps) 
                 padding: '2px 8px',
               }}
             >
-              {tag}
+              #{tag}
             </span>
           ))}
         </div>

@@ -27,6 +27,7 @@ type KudosRow = {
   id: string;
   sender_id: string;
   receiver_id: string;
+  title: string | null;
   content: string;
   image_urls: string[] | null;
   created_at: string;
@@ -123,6 +124,7 @@ async function hydrateKudosRows(
     sender: profiles.get(r.sender_id) ?? fallbackUser(r.sender_id),
     receiver: profiles.get(r.receiver_id) ?? fallbackUser(r.receiver_id),
     createdAt: r.created_at,
+    title: r.title,
     content: r.content,
     hashtags: tagMap.get(r.id) ?? [],
     images: r.image_urls ?? [],
@@ -196,7 +198,7 @@ export async function listHighlightKudos(
     let query = supabase
       .from('kudos')
       .select(
-        'id, sender_id, receiver_id, content, image_urls, created_at, like_count',
+        'id, sender_id, receiver_id, title, content, image_urls, created_at, like_count',
       )
       .order('like_count', { ascending: false })
       .limit(limit);
@@ -225,7 +227,7 @@ export async function listAllKudos(
     let query = supabase
       .from('kudos')
       .select(
-        'id, sender_id, receiver_id, content, image_urls, created_at, like_count',
+        'id, sender_id, receiver_id, title, content, image_urls, created_at, like_count',
       )
       .order('created_at', { ascending: false })
       .limit(limit);

@@ -43,77 +43,77 @@ BEGIN
   END LOOP;
 
   UPDATE public.profiles SET
-    display_name = 'Huỳnh Dương Xuân Nhật', avatar_url = '/kudos/avatars/u1.png',
+    display_name = 'Huỳnh Dương Xuân Nhật', avatar_url = '/kudos-live-board/avatars/u1.png',
     department = 'CEVC10', title = 'Legend Hero', rank_stars = 3
   WHERE id = u1;
   UPDATE public.profiles SET
-    display_name = 'Nguyễn Bá Chức', avatar_url = '/kudos/avatars/u2.png',
+    display_name = 'Nguyễn Bá Chức', avatar_url = '/kudos-live-board/avatars/u2.png',
     department = 'CEVC10', title = 'Rising Hero', rank_stars = 2
   WHERE id = u2;
   UPDATE public.profiles SET
-    display_name = 'Trần Minh Anh', avatar_url = '/kudos/avatars/u3.png',
+    display_name = 'Trần Minh Anh', avatar_url = '/kudos-live-board/avatars/u3.png',
     department = 'Marketing', title = 'New Hero', rank_stars = 1
   WHERE id = u3;
   UPDATE public.profiles SET
-    display_name = 'Phạm Thu Hà', avatar_url = '/kudos/avatars/u4.png',
+    display_name = 'Phạm Thu Hà', avatar_url = '/kudos-live-board/avatars/u4.png',
     department = 'CEVC12', title = 'Legend Hero', rank_stars = 3
   WHERE id = u4;
   UPDATE public.profiles SET
-    display_name = 'Lê Văn Sơn', avatar_url = '/kudos/avatars/u5.png',
+    display_name = 'Lê Văn Sơn', avatar_url = '/kudos-live-board/avatars/u5.png',
     department = 'CEVC10', title = 'Rising Hero', rank_stars = 2
   WHERE id = u5;
   UPDATE public.profiles SET
-    display_name = 'Hoàng Mai Linh', avatar_url = '/kudos/avatars/u6.png',
+    display_name = 'Hoàng Mai Linh', avatar_url = '/kudos-live-board/avatars/u6.png',
     department = 'HR', title = 'New Hero', rank_stars = 1
   WHERE id = u6;
   UPDATE public.profiles SET
-    display_name = 'Đỗ Thanh Tùng', avatar_url = '/kudos/avatars/u7.png',
+    display_name = 'Đỗ Thanh Tùng', avatar_url = '/kudos-live-board/avatars/u7.png',
     department = 'CEVC15', title = 'Rising Hero', rank_stars = 2
   WHERE id = u7;
   UPDATE public.profiles SET
-    display_name = 'Bùi Khánh Linh', avatar_url = '/kudos/avatars/u8.png',
+    display_name = 'Bùi Khánh Linh', avatar_url = '/kudos-live-board/avatars/u8.png',
     department = 'Marketing', title = 'Legend Hero', rank_stars = 3
   WHERE id = u8;
   UPDATE public.profiles SET
-    display_name = 'Vũ Quang Huy', avatar_url = '/kudos/avatars/u9.png',
+    display_name = 'Vũ Quang Huy', avatar_url = '/kudos-live-board/avatars/u9.png',
     department = 'CEVC11', title = 'New Hero', rank_stars = 1
   WHERE id = u9;
   UPDATE public.profiles SET
-    display_name = 'Trịnh Phương Thảo', avatar_url = '/kudos/avatars/u10.png',
+    display_name = 'Trịnh Phương Thảo', avatar_url = '/kudos-live-board/avatars/u10.png',
     department = 'CEVC10', title = 'Rising Hero', rank_stars = 2
   WHERE id = u10;
 
-  INSERT INTO public.kudos (id, sender_id, receiver_id, content, image_urls, created_at)
+  INSERT INTO public.kudos (id, sender_id, receiver_id, title, content, image_urls, created_at)
   VALUES
-    (gen_random_uuid(), u1, u2,
+    (gen_random_uuid(), u1, u2, 'IDOL GIỚI TRẺ',
      'Cảm ơn người em bình thường nhưng phi thường :D Cảm ơn em đã cùng team chăm chỉ, cần mẫn nhé!',
      '{}', now() - interval '2 hours')
   RETURNING id INTO k1;
 
-  INSERT INTO public.kudos (id, sender_id, receiver_id, content, image_urls, created_at)
+  INSERT INTO public.kudos (id, sender_id, receiver_id, title, content, image_urls, created_at)
   VALUES
-    (gen_random_uuid(), u3, u4,
+    (gen_random_uuid(), u3, u4, 'NGƯỜI TRUYỀN CẢM HỨNG',
      'Cảm ơn chị đã luôn nhắc nhở mình luôn phải nỗ lực hơn nữa trong công việc. <3 và cuộc sống nữa nhé!',
      ARRAY['/kudos/samples/img1.jpg','/kudos/samples/img2.jpg'], now() - interval '5 hours')
   RETURNING id INTO k2;
 
-  INSERT INTO public.kudos (id, sender_id, receiver_id, content, image_urls, created_at)
+  INSERT INTO public.kudos (id, sender_id, receiver_id, title, content, image_urls, created_at)
   VALUES
-    (gen_random_uuid(), u5, u1,
+    (gen_random_uuid(), u5, u1, 'NGƯỜI THẦY TẬN TÂM',
      'Anh đã dạy em rất nhiều bài học quý báu trong suốt quá trình làm việc — biết ơn anh.',
      '{}', now() - interval '1 day')
   RETURNING id INTO k3;
 
-  INSERT INTO public.kudos (id, sender_id, receiver_id, content, image_urls, created_at)
+  INSERT INTO public.kudos (id, sender_id, receiver_id, title, content, image_urls, created_at)
   VALUES
-    (gen_random_uuid(), u6, u7,
+    (gen_random_uuid(), u6, u7, 'HỖ TRỢ XUẤT SẮC',
      'Cảm ơn anh đã hỗ trợ chị onboarding các bạn mới trong tháng vừa rồi rất nhiệt tình!',
      '{}', now() - interval '3 days')
   RETURNING id INTO k4;
 
-  INSERT INTO public.kudos (id, sender_id, receiver_id, content, image_urls, created_at)
+  INSERT INTO public.kudos (id, sender_id, receiver_id, title, content, image_urls, created_at)
   VALUES
-    (gen_random_uuid(), u8, u9,
+    (gen_random_uuid(), u8, u9, 'TINH THẦN HỌC HỎI',
      'Em rất nể phục tinh thần học hỏi và chịu khó của anh. Mong anh giữ lửa nhé!',
      ARRAY['/kudos/samples/img3.jpg'], now() - interval '4 days')
   RETURNING id INTO k5;

@@ -14,6 +14,7 @@ export type KudosCard = {
   sender: KudosUser;
   receiver: KudosUser;
   createdAt: string; // ISO
+  title: string | null;
   content: string;
   hashtags: string[];
   images: string[];

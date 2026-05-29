@@ -3,135 +3,179 @@
 import Image from 'next/image';
 import type { KudosCard } from './types';
 
-type RankBadgeProps = {
-  title: string | null;
-  stars: 0 | 1 | 2 | 3;
+// Hero rank badge artwork (Figma MM_MEDIA_*Hero, 110×20, text baked in).
+// Keyed by profiles.title (see supabase/seed.sql).
+const HERO_BADGE: Record<string, string> = {
+  'New Hero': '/kudos-live-board/badge-new-hero.png',
+  'Rising Hero': '/kudos-live-board/badge-rising-hero.png',
+  'Legend Hero': '/kudos-live-board/badge-legend-hero.png',
+  'Super Hero': '/kudos-live-board/badge-super-hero.png',
 };
-
-function RankBadge({ title, stars }: RankBadgeProps) {
-  const starColor = '#FFEA9E';
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-      {Array.from({ length: stars }).map((_, i) => (
-        <svg
-          key={i}
-          width="12"
-          height="12"
-          viewBox="0 0 12 12"
-          fill={starColor}
-          aria-hidden="true"
-        >
-          <path d="M6 1l1.545 3.13 3.455.502-2.5 2.436.59 3.44L6 8.893l-3.09 1.615.59-3.44L1 4.632l3.455-.502z" />
-        </svg>
-      ))}
-      {title && (
-        <span
-          style={{
-            fontFamily: 'Montserrat, sans-serif',
-            fontSize: 10,
-            fontWeight: 700,
-            color: starColor,
-            marginLeft: 2,
-            letterSpacing: '0.5px',
-          }}
-        >
-          {title}
-        </span>
-      )}
-    </div>
-  );
-}
 
 type UserInfoBlockProps = {
   user: KudosCard['sender'];
-  align?: 'left' | 'right';
 };
 
-function UserInfoBlock({ user, align = 'left' }: UserInfoBlockProps) {
+function UserInfoBlock({ user }: UserInfoBlockProps) {
+  const badgeSrc = user.title ? HERO_BADGE[user.title] : undefined;
+  const initials =
+    user.name
+      ?.trim()
+      .split(/\s+/)
+      .slice(-2)
+      .map((w) => w[0] ?? '')
+      .join('')
+      .toUpperCase() || '?';
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: align === 'right' ? 'flex-end' : 'flex-start',
+        alignItems: 'center',
         gap: 6,
         flex: 1,
+        minWidth: 0,
       }}
     >
-      {/* Avatar */}
+      {/* Avatar — Figma: 1.87px white ring. Initials show behind the photo as a
+          fallback so a missing/broken avatar never renders as a black circle. */}
       <div
         style={{
+          position: 'relative',
           width: 64,
           height: 64,
           borderRadius: '50%',
           overflow: 'hidden',
-          border: '2px solid #FFEA9E',
+          border: '2px solid #FFFFFF',
           flexShrink: 0,
-          backgroundColor: '#1A2430',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#33414F',
+          color: '#FFEA9E',
+          fontFamily: 'Montserrat, sans-serif',
+          fontSize: 22,
+          fontWeight: 700,
+          userSelect: 'none',
         }}
       >
-        <Image
-          src={user.avatarUrl}
-          alt={user.name}
-          width={64}
-          height={64}
-          style={{ objectFit: 'cover' }}
-          onError={(e) => {
-            // fallback to initials background
-            (e.target as HTMLImageElement).style.display = 'none';
-          }}
-        />
+        <span aria-hidden="true">{initials}</span>
+        {user.avatarUrl && (
+          <Image
+            src={user.avatarUrl}
+            alt={user.name}
+            width={64}
+            height={64}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
+          />
+        )}
       </div>
-      {/* Name */}
+      {/* Name — Figma node 256:4735: 16/700, dark on cream, centered.
+          Always one line, never wraps (whiteSpace: nowrap). */}
       <span
         style={{
           fontFamily: 'Montserrat, sans-serif',
-          fontSize: 14,
+          fontSize: 16,
           fontWeight: 700,
-          color: '#FFEA9E',
-          textAlign: align,
+          lineHeight: '24px',
+          letterSpacing: '0.15px',
+          color: '#00101A',
+          textAlign: 'center',
+          whiteSpace: 'nowrap',
         }}
       >
         {user.name}
       </span>
-      {/* Department */}
-      <span
+      {/* Department · hero badge row (Figma "Huy hiệu + Sao" 256:4741) */}
+      <div
         style={{
-          fontFamily: 'Montserrat, sans-serif',
-          fontSize: 12,
-          fontWeight: 500,
-          color: 'rgba(255,255,255,0.6)',
-          textAlign: align,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 6,
         }}
       >
-        {user.department}
-      </span>
-      {/* Rank */}
-      <RankBadge title={user.title} stars={user.rankStars} />
+        {user.department && (
+          <span
+            style={{
+              fontFamily: 'Montserrat, sans-serif',
+              fontSize: 14,
+              fontWeight: 700,
+              lineHeight: '20px',
+              letterSpacing: '0.1px',
+              color: '#999999',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {user.department}
+          </span>
+        )}
+        {user.department && badgeSrc && (
+          <span
+            aria-hidden="true"
+            style={{
+              width: 4,
+              height: 4,
+              borderRadius: '50%',
+              backgroundColor: '#999999',
+              opacity: 0.4,
+              flexShrink: 0,
+            }}
+          />
+        )}
+        {badgeSrc && (
+          <Image
+            src={badgeSrc}
+            alt={user.title ?? ''}
+            width={110}
+            height={20}
+            style={{ width: 'auto', height: 20, flexShrink: 0 }}
+          />
+        )}
+      </div>
     </div>
   );
 }
 
 type KudosCardHighlightProps = {
   card: KudosCard;
-  prominent?: boolean;
   onLike: (id: string) => void;
   onCopyLink: (id: string) => void;
 };
 
+const pad = (n: number) => String(n).padStart(2, '0');
+
 export default function KudosCardHighlight({
   card,
-  prominent = false,
   onLike,
   onCopyLink,
 }: KudosCardHighlightProps) {
-  const timeAgo = (() => {
-    const diff = Date.now() - new Date(card.createdAt).getTime();
-    const days = Math.floor(diff / 86400000);
-    if (days === 0) return 'Hôm nay';
-    if (days === 1) return 'Hôm qua';
-    return `${days} ngày trước`;
-  })();
+  // Absolute timestamp "HH:mm - MM/DD/YYYY" (Figma node 335:9449). UTC getters
+  // keep the server and client render identical (no hydration drift).
+  const dt = new Date(card.createdAt);
+  const timeLabel = `${pad(dt.getUTCHours())}:${pad(dt.getUTCMinutes())} - ${pad(
+    dt.getUTCMonth() + 1,
+  )}/${pad(dt.getUTCDate())}/${dt.getUTCFullYear()}`;
+
+  // Vietnamese thousands grouping with '.' — deterministic (no toLocaleString).
+  const likeLabel = String(card.likeCount).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+  // Rectangle 14 / 15 — gold dividers around the content (Figma #FFEA9E).
+  const goldDivider = (
+    <div
+      aria-hidden="true"
+      style={{ width: '100%', height: 1, backgroundColor: '#FFEA9E' }}
+    />
+  );
 
   return (
     <article
@@ -141,108 +185,144 @@ export default function KudosCardHighlight({
         gap: 16,
         padding: '24px 24px 16px 24px',
         borderRadius: 16,
-        border: `4px solid ${prominent ? '#FFEA9E' : 'rgba(255,234,158,0.3)'}`,
+        border: '4px solid #FFEA9E',
         background: '#FFF8E1',
         flexShrink: 0,
-        width: prominent ? 528 : 480,
-        opacity: prominent ? 1 : 0.7,
-        transform: prominent ? 'scale(1)' : 'scale(0.96)',
-        transition: 'opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease',
+        width: 528,
       }}
     >
-      {/* Sender → Receiver row */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-        <UserInfoBlock user={card.sender} align="left" />
+      {/* Sender → Receiver row (Frame 482) */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 24 }}>
+        <UserInfoBlock user={card.sender} />
 
-        {/* Arrow */}
+        {/* Send icon — Figma MM_MEDIA_Send (filled paper-plane), centered with
+            the avatars. Dark fill so it reads on the cream card. */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            paddingTop: 20,
+            paddingTop: 16,
             flexShrink: 0,
           }}
           aria-hidden="true"
         >
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            style={{ color: '#00101A' }}
+          >
             <path
-              d="M6 16h20M20 10l6 6-6 6"
-              stroke="#FFEA9E"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              d="M2.9043 20.4797V4.47974L21.9043 12.4797M4.9043 17.4797L16.7543 12.4797L4.9043 7.47974V10.9797L10.9043 12.4797L4.9043 13.9797M4.9043 17.4797V7.47974V13.9797V17.4797Z"
+              fill="currentColor"
             />
           </svg>
         </div>
 
-        <UserInfoBlock user={card.receiver} align="right" />
+        <UserInfoBlock user={card.receiver} />
       </div>
 
-      {/* Time */}
-      <p
-        style={{
-          margin: 0,
-          fontFamily: 'Montserrat, sans-serif',
-          fontSize: 12,
-          fontWeight: 500,
-          color: 'rgba(0,16,26,0.5)',
-        }}
-      >
-        {timeAgo}
-      </p>
+      {goldDivider}
 
-      {/* Content */}
-      <p
-        style={{
-          margin: 0,
-          fontFamily: 'Montserrat, sans-serif',
-          fontSize: 14,
-          fontWeight: 500,
-          color: '#00101A',
-          lineHeight: '22px',
-          display: '-webkit-box',
-          WebkitLineClamp: 4,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-        }}
-      >
-        {card.content}
-      </p>
+      {/* Content (Figma node 335:9448) */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%' }}>
+        {/* Time */}
+        <p
+          style={{
+            margin: 0,
+            fontFamily: 'Montserrat, sans-serif',
+            fontSize: 16,
+            fontWeight: 700,
+            lineHeight: '24px',
+            letterSpacing: '0.5px',
+            color: '#999999',
+          }}
+        >
+          {timeLabel}
+        </p>
 
-      {/* Hashtags */}
-      {card.hashtags.length > 0 && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-          {card.hashtags.map((tag) => (
-            <span
-              key={tag}
-              style={{
-                fontFamily: 'Montserrat, sans-serif',
-                fontSize: 12,
-                fontWeight: 600,
-                color: '#6D5B00',
-                background: 'rgba(109,91,0,0.10)',
-                borderRadius: 4,
-                padding: '2px 8px',
-              }}
-            >
-              {tag}
-            </span>
-          ))}
+        {/* Title */}
+        {card.title && (
+          <p
+            style={{
+              margin: 0,
+              fontFamily: 'Montserrat, sans-serif',
+              fontSize: 16,
+              fontWeight: 700,
+              lineHeight: '24px',
+              letterSpacing: '0.5px',
+              color: '#00101A',
+              textAlign: 'center',
+            }}
+          >
+            {card.title}
+          </p>
+        )}
+
+        {/* Message — highlighted box (Figma Frame 425) */}
+        <div
+          style={{
+            border: '1px solid #FFEA9E',
+            background: 'rgba(255,234,158,0.40)',
+            borderRadius: 12,
+            padding: '16px 24px',
+          }}
+        >
+          <p
+            style={{
+              margin: 0,
+              fontFamily: 'Montserrat, sans-serif',
+              fontSize: 20,
+              fontWeight: 700,
+              lineHeight: '32px',
+              color: '#00101A',
+              textAlign: 'justify',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
+            {card.content}
+          </p>
         </div>
-      )}
 
-      {/* Action bar */}
+        {/* Hashtags — Figma node 335:9459: single red line, 16/700, one line
+            truncated with ellipsis (not separate chips). */}
+        {card.hashtags.length > 0 && (
+          <p
+            style={{
+              margin: 0,
+              width: '100%',
+              fontFamily: 'Montserrat, sans-serif',
+              fontSize: 16,
+              fontWeight: 700,
+              lineHeight: '24px',
+              letterSpacing: '0.5px',
+              color: '#D4271D',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {card.hashtags.map((t) => `#${t}`).join(' ')}
+          </p>
+        )}
+      </div>
+
+      {goldDivider}
+
+      {/* Action bar (Frame 485): hearts left, Copy Link + Xem chi tiết right */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: 8,
-          paddingTop: 8,
-          borderTop: '1px solid rgba(0,16,26,0.1)',
+          gap: 24,
         }}
       >
-        {/* Like */}
+        {/* Hearts — like count + heart icon */}
         <button
           type="button"
           disabled={!card.canLike}
@@ -252,28 +332,29 @@ export default function KudosCardHighlight({
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 6,
+            gap: 4,
             background: 'none',
             border: 'none',
+            padding: 0,
             cursor: card.canLike ? 'pointer' : 'not-allowed',
-            opacity: card.canLike ? 1 : 0.4,
-            padding: '4px 8px',
-            borderRadius: 6,
-            transition: 'background 0.15s ease',
-          }}
-          onMouseEnter={(e) => {
-            if (card.canLike) {
-              (e.currentTarget as HTMLButtonElement).style.background =
-                'rgba(0,16,26,0.06)';
-            }
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = 'none';
+            opacity: card.canLike ? 1 : 0.5,
+            flexShrink: 0,
           }}
         >
+          <span
+            style={{
+              fontFamily: 'Montserrat, sans-serif',
+              fontSize: 24,
+              fontWeight: 700,
+              lineHeight: '32px',
+              color: '#00101A',
+            }}
+          >
+            {likeLabel}
+          </span>
           <svg
-            width="24"
-            height="24"
+            width="32"
+            height="32"
             viewBox="0 0 24 24"
             fill={card.likedByMe ? '#E53935' : 'none'}
             aria-hidden="true"
@@ -286,96 +367,97 @@ export default function KudosCardHighlight({
               strokeLinejoin="round"
             />
           </svg>
-          <span
+        </button>
+
+        {/* Copy Link + Xem chi tiết */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button
+            type="button"
+            onClick={() => onCopyLink(card.id)}
+            aria-label="Copy Link"
             style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 16,
+              borderRadius: 4,
               fontFamily: 'Montserrat, sans-serif',
-              fontSize: 13,
+              fontSize: 16,
               fontWeight: 700,
-              color: card.likedByMe ? '#E53935' : '#00101A',
+              lineHeight: '24px',
+              letterSpacing: '0.15px',
+              color: '#00101A',
+              transition: 'background 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background =
+                'rgba(0,16,26,0.06)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'none';
             }}
           >
-            {card.likeCount}
-          </span>
-        </button>
+            Copy Link
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
 
-        {/* Copy link */}
-        <button
-          type="button"
-          onClick={() => onCopyLink(card.id)}
-          aria-label="Sao chép liên kết"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            background: 'rgba(0,16,26,0.06)',
-            border: 'none',
-            cursor: 'pointer',
-            padding: '8px 16px',
-            borderRadius: 8,
-            fontFamily: 'Montserrat, sans-serif',
-            fontSize: 13,
-            fontWeight: 600,
-            color: '#00101A',
-            transition: 'background 0.15s ease',
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background =
-              'rgba(0,16,26,0.12)';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background =
-              'rgba(0,16,26,0.06)';
-          }}
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
+          <a
+            href={`/kudos/${card.id}`}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+              padding: 16,
+              borderRadius: 4,
+              fontFamily: 'Montserrat, sans-serif',
+              fontSize: 16,
+              fontWeight: 700,
+              lineHeight: '24px',
+              letterSpacing: '0.15px',
+              color: '#00101A',
+              textDecoration: 'none',
+              whiteSpace: 'nowrap',
+              transition: 'background 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background =
+                'rgba(0,16,26,0.06)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.background = 'none';
+            }}
           >
-            <path
-              d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          Sao chép link
-        </button>
-
-        {/* Xem chi tiết */}
-        <a
-          href={`/kudos/${card.id}`}
-          style={{
-            fontFamily: 'Montserrat, sans-serif',
-            fontSize: 13,
-            fontWeight: 600,
-            color: '#6D5B00',
-            textDecoration: 'none',
-            padding: '4px 0',
-            borderBottom: '1px solid transparent',
-            transition: 'border-color 0.15s ease',
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLAnchorElement).style.borderBottomColor =
-              '#6D5B00';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLAnchorElement).style.borderBottomColor =
-              'transparent';
-          }}
-        >
-          Xem chi tiết
-        </a>
+            Xem chi tiết
+            {/* Arrow up-right ↗ (Figma IC 186:2691) — matches home CTA pattern */}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M7 17L17 7M17 7H7M17 7V17"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
+        </div>
       </div>
     </article>
   );

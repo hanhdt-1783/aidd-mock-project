@@ -134,7 +134,8 @@ export default function KudosPage({
         backgroundColor: '#00101A',
         display: 'flex',
         flexDirection: 'column',
-        paddingTop: 80,
+        // No top padding: the keyvisual hero runs to the top, behind the
+        // fixed header (the hero content adds its own header clearance).
       }}
     >
       <KudosHeroBanner
@@ -170,26 +171,32 @@ export default function KudosPage({
           style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 40 }}
         >
           <div
+            className="px-page"
             style={{
-              padding: '0 144px',
               display: 'flex',
               flexDirection: 'column',
               gap: 16,
             }}
           >
+            {/* Eyebrow — Figma "Header Giải thưởng": 24px/700, white, no uppercase */}
             <p
               style={{
                 margin: 0,
                 fontFamily: 'Montserrat, sans-serif',
-                fontSize: 14,
+                fontSize: 24,
                 fontWeight: 700,
-                letterSpacing: '2px',
-                textTransform: 'uppercase',
-                color: 'rgba(255,255,255,0.5)',
+                lineHeight: '32px',
+                color: '#FFFFFF',
               }}
             >
               Sun* Annual Awards 2025
             </p>
+
+            {/* Divider — 1px #2E3940 (Rectangle 26), matches HIGHLIGHT KUDOS */}
+            <div
+              aria-hidden="true"
+              style={{ width: '100%', height: 1, backgroundColor: '#2E3940' }}
+            />
 
             <h2
               id="all-kudos-heading"
@@ -208,8 +215,8 @@ export default function KudosPage({
           </div>
 
           <div
+            className="px-page"
             style={{
-              padding: '0 144px',
               display: 'flex',
               alignItems: 'flex-start',
               gap: 80,

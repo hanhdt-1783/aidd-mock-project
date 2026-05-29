@@ -1,18 +1,23 @@
 'use client';
 
-type KudosEntryInputProps = {
-  onAction: () => void;
+type KudosSearchInputProps = {
+  /** Optional handler — wired when profile search lands. Presentational for now. */
+  onAction?: () => void;
 };
 
-export default function KudosEntryInput({ onAction }: KudosEntryInputProps) {
+/**
+ * "Tìm kiếm profile Sunner" pill — sits beside the entry pill over the hero.
+ * Figma node 2940:13450 (Tìm kiếm sunner): 381px, search icon + label,
+ * same secondary-button styling as the entry pill.
+ */
+export default function KudosSearchInput({ onAction }: KudosSearchInputProps) {
   return (
     <div
       style={{
         display: 'flex',
         alignItems: 'center',
         gap: 16,
-        flex: '1 1 738px',
-        maxWidth: 738,
+        flex: '0 1 381px',
         minWidth: 0,
         height: 72,
         padding: '24px 16px',
@@ -24,12 +29,12 @@ export default function KudosEntryInput({ onAction }: KudosEntryInputProps) {
       }}
       role="button"
       tabIndex={0}
-      aria-label="Viết lời cảm ơn đồng nghiệp"
+      aria-label="Tìm kiếm profile Sunner"
       onClick={onAction}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          onAction();
+          onAction?.();
         }
       }}
       onMouseEnter={(e) => {
@@ -43,7 +48,7 @@ export default function KudosEntryInput({ onAction }: KudosEntryInputProps) {
         (e.currentTarget as HTMLDivElement).style.borderColor = '#998C5F';
       }}
     >
-      {/* Pen icon — exact Figma asset MM_MEDIA_Pen (filled, white) */}
+      {/* Search icon — exact Figma asset MM_MEDIA_Search (filled, white) */}
       <svg
         width="24"
         height="24"
@@ -53,12 +58,11 @@ export default function KudosEntryInput({ onAction }: KudosEntryInputProps) {
         style={{ flexShrink: 0, color: '#FFFFFF' }}
       >
         <path
-          d="M20.8067 6.72951C21.1967 6.33951 21.1967 5.68951 20.8067 5.31951L18.4667 2.97951C18.0967 2.58951 17.4467 2.58951 17.0567 2.97951L15.2167 4.80951L18.9667 8.55951M3.09668 16.9395V20.6895H6.84668L17.9067 9.61951L14.1567 5.86951L3.09668 16.9395Z"
+          d="M9.5 3C11.2239 3 12.8772 3.68482 14.0962 4.90381C15.3152 6.12279 16 7.77609 16 9.5C16 11.11 15.41 12.59 14.44 13.73L14.71 14H15.5L20.5 19L19 20.5L14 15.5V14.71L13.73 14.44C12.59 15.41 11.11 16 9.5 16C7.77609 16 6.12279 15.3152 4.90381 14.0962C3.68482 12.8772 3 11.2239 3 9.5C3 7.77609 3.68482 6.12279 4.90381 4.90381C6.12279 3.68482 7.77609 3 9.5 3ZM9.5 5C7 5 5 7 5 9.5C5 12 7 14 9.5 14C12 14 14 12 14 9.5C14 7 12 5 9.5 5Z"
           fill="currentColor"
         />
       </svg>
 
-      {/* Prompt text — matches Figma node I2940:13449;186:2760 */}
       <span
         style={{
           fontFamily: 'Montserrat, sans-serif',
@@ -67,15 +71,13 @@ export default function KudosEntryInput({ onAction }: KudosEntryInputProps) {
           lineHeight: '24px',
           letterSpacing: '0.15px',
           color: '#FFFFFF',
-          flex: 1,
-          minWidth: 0,
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           userSelect: 'none',
         }}
       >
-        Hôm nay, bạn muốn gửi lời cảm ơn và ghi nhận đến ai?
+        Tìm kiếm profile Sunner
       </span>
     </div>
   );

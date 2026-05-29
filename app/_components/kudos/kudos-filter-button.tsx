@@ -7,6 +7,9 @@ type KudosFilterButtonProps = {
   options: string[];
   selected: string | null;
   onSelect: (value: string | null) => void;
+  /** Display-only prefix for each option/selected value (e.g. "#" for hashtags).
+      The stored/selected value stays unprefixed. */
+  prefix?: string;
 };
 
 export default function KudosFilterButton({
@@ -14,6 +17,7 @@ export default function KudosFilterButton({
   options,
   selected,
   onSelect,
+  prefix = '',
 }: KudosFilterButtonProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -48,17 +52,22 @@ export default function KudosFilterButton({
           background: isActive
             ? 'rgba(255, 234, 158, 0.20)'
             : 'rgba(255, 234, 158, 0.10)',
-          color: isActive ? '#FFEA9E' : 'rgba(255,255,255,0.87)',
+          // Figma trigger text (B.1.1 node I2940:13459;186:2760): 16/700 white,
+          // ls 0.15. Gold kept only for the active (filter-applied) state.
+          color: isActive ? '#FFEA9E' : '#FFFFFF',
           fontFamily: 'Montserrat, sans-serif',
-          fontSize: 14,
-          fontWeight: 600,
+          fontSize: 16,
+          fontWeight: 700,
+          lineHeight: '24px',
+          letterSpacing: '0.15px',
           cursor: 'pointer',
           whiteSpace: 'nowrap',
-          transition: 'background 0.15s ease, border-color 0.15s ease',
+          transition:
+            'background 0.15s ease, border-color 0.15s ease, color 0.15s ease',
         }}
       >
-        <span>{selected ?? label}</span>
-        {/* Down chevron */}
+        <span>{selected ? `${prefix}${selected}` : label}</span>
+        {/* Down caret — exact Figma asset MM_MEDIA_Down (filled triangle) */}
         <svg
           width="24"
           height="24"
@@ -71,13 +80,7 @@ export default function KudosFilterButton({
             color: 'inherit',
           }}
         >
-          <path
-            d="M6 9l6 6 6-6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          <path d="M7 10L12 15L17 10H7Z" fill="currentColor" />
         </svg>
       </button>
 
@@ -85,21 +88,25 @@ export default function KudosFilterButton({
         <ul
           role="listbox"
           aria-label={label}
+          className="kudos-dropdown-scroll"
           style={{
             position: 'absolute',
             top: 'calc(100% + 4px)',
             left: 0,
             zIndex: 100,
-            minWidth: 180,
-            maxHeight: 280,
+            minWidth: 160,
+            maxHeight: 320,
             overflowY: 'auto',
             margin: 0,
-            padding: '4px 0',
+            padding: 6,
             listStyle: 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            // Dropdown-List (Figma 563:8026): #00070C, 1px #998C5F, radius 8, pad 6
             borderRadius: 8,
             border: '1px solid #998C5F',
-            backgroundColor: '#00181F',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+            backgroundColor: '#00070C',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
           }}
         >
           {/* Clear option */}
@@ -115,15 +122,34 @@ export default function KudosFilterButton({
               style={{
                 display: 'block',
                 width: '100%',
-                padding: '10px 16px',
+                padding: 16,
                 textAlign: 'left',
-                background: selected === null ? 'rgba(255,234,158,0.12)' : 'none',
+                borderRadius: 4,
+                background: selected === null ? 'rgba(255,234,158,0.10)' : 'none',
                 border: 'none',
-                color: selected === null ? '#FFEA9E' : 'rgba(255,255,255,0.7)',
+                color: '#FFFFFF',
                 fontFamily: 'Montserrat, sans-serif',
-                fontSize: 13,
-                fontWeight: 600,
+                fontSize: 16,
+                fontWeight: 700,
+                lineHeight: '24px',
+                letterSpacing: '0.5px',
+                textShadow:
+                  selected === null
+                    ? '0 4px 4px rgba(0,0,0,0.25), 0 0 6px #FAE287'
+                    : 'none',
                 cursor: 'pointer',
+                transition: 'background 0.1s ease',
+              }}
+              onMouseEnter={(e) => {
+                if (selected !== null) {
+                  (e.currentTarget as HTMLButtonElement).style.background =
+                    'rgba(255,255,255,0.06)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selected !== null) {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'none';
+                }
               }}
             >
               Tất cả
@@ -143,16 +169,22 @@ export default function KudosFilterButton({
                 style={{
                   display: 'block',
                   width: '100%',
-                  padding: '10px 16px',
+                  padding: 16,
                   textAlign: 'left',
+                  borderRadius: 4,
                   background:
-                    selected === opt ? 'rgba(255,234,158,0.12)' : 'none',
+                    selected === opt ? 'rgba(255,234,158,0.10)' : 'none',
                   border: 'none',
-                  color:
-                    selected === opt ? '#FFEA9E' : 'rgba(255,255,255,0.87)',
+                  color: '#FFFFFF',
                   fontFamily: 'Montserrat, sans-serif',
-                  fontSize: 13,
-                  fontWeight: selected === opt ? 700 : 500,
+                  fontSize: 16,
+                  fontWeight: 700,
+                  lineHeight: '24px',
+                  letterSpacing: '0.5px',
+                  textShadow:
+                    selected === opt
+                      ? '0 4px 4px rgba(0,0,0,0.25), 0 0 6px #FAE287'
+                      : 'none',
                   cursor: 'pointer',
                   transition: 'background 0.1s ease',
                 }}
@@ -169,7 +201,7 @@ export default function KudosFilterButton({
                   }
                 }}
               >
-                {opt}
+                {prefix}{opt}
               </button>
             </li>
           ))}

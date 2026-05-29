@@ -26,8 +26,9 @@ export default function KudosSpotlightBoard({
 }: KudosSpotlightBoardProps) {
   return (
     <section
+      className="px-page"
       aria-label="Spotlight — tất cả người đã nhận Kudos"
-      style={{ padding: '0 144px', width: '100%', boxSizing: 'border-box' }}
+      style={{ width: '100%', boxSizing: 'border-box' }}
     >
       {/* B.6 Header */}
       <div

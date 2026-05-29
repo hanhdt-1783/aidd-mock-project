@@ -58,26 +58,32 @@ export default function KudosHighlightSection({
       }}
     >
       <div
+        className="px-page"
         style={{
-          padding: '0 144px',
           display: 'flex',
           flexDirection: 'column',
           gap: 16,
         }}
       >
+        {/* Eyebrow — Figma node 2940:13454: 24px/700, white, no uppercase */}
         <p
           style={{
             margin: 0,
             fontFamily: 'Montserrat, sans-serif',
-            fontSize: 14,
+            fontSize: 24,
             fontWeight: 700,
-            letterSpacing: '2px',
-            textTransform: 'uppercase',
-            color: 'rgba(255,255,255,0.5)',
+            lineHeight: '32px',
+            color: '#FFFFFF',
           }}
         >
           Sun* Annual Awards 2025
         </p>
+
+        {/* Divider — Figma node 2940:13455 (Rectangle 26): 1px #2E3940 */}
+        <div
+          aria-hidden="true"
+          style={{ width: '100%', height: 1, backgroundColor: '#2E3940' }}
+        />
 
         <div
           style={{
@@ -105,6 +111,7 @@ export default function KudosHighlightSection({
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <KudosFilterButton
               label="Hashtag"
+              prefix="#"
               options={hashtags}
               selected={selectedHashtag}
               onSelect={(v) => updateFilter('hashtag', v)}
