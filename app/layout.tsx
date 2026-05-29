@@ -40,8 +40,9 @@ export default function RootLayout({
     >
       <head>
         {/* Montserrat — the design-system font referenced across the app
-            (fontFamily: "Montserrat"). Loaded here so those references
-            resolve instead of falling back to Arial. */}
+            (fontFamily: "Montserrat"). Montserrat Alternates backs the footer
+            copyright line (Figma uses it). Loaded here so those references
+            resolve instead of falling back to Arial / plain Montserrat. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -49,7 +50,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Montserrat+Alternates:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>

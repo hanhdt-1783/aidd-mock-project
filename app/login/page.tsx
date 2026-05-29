@@ -47,13 +47,16 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             "linear-gradient(90deg, #00101A 0%, #00101A 25.41%, rgba(0,16,26,0.00) 100%)",
         }}
       />
-      {/* Layer 3 — bottom-up dark gradient */}
+      {/* Layer 3 — bottom-up dark fade (Figma "Cover" 662:14390).
+          The design rect is offset (top 138px) and taller than the frame
+          (1093px vs 1024px), so its 22.48%/51.74% stops map to ~4%/35% of the
+          viewport — a compact fade at the footer, not a half-screen darkening. */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-[2]"
         style={{
           background:
-            "linear-gradient(0deg, #00101A 22.48%, rgba(0,19,32,0.00) 51.74%)",
+            "linear-gradient(0deg, #00101A 0%, #00101A 4%, rgba(0,19,32,0.00) 35%)",
         }}
       />
 
