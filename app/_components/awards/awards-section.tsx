@@ -59,6 +59,9 @@ export type AwardData = {
 type AwardsSectionProps = {
   lang: Language;
   award: AwardData;
+  /** Last award (MVP): skip the bottom divider — Figma mms_D.6_MVP has no
+      Rectangle 14, so no line between the last award and the Kudos section. */
+  isLast?: boolean;
 };
 
 const DIVIDER_STYLE = {
@@ -67,7 +70,7 @@ const DIVIDER_STYLE = {
   backgroundColor: "#2E3940",
 } as const;
 
-export default function AwardsSection({ lang, award }: AwardsSectionProps) {
+export default function AwardsSection({ lang, award, isLast = false }: AwardsSectionProps) {
   const { slug, imageLeft, imageSrc, titleKey, descriptionKey, countKey, countUnitKey } = award;
 
   return (
@@ -204,10 +207,12 @@ export default function AwardsSection({ lang, award }: AwardsSectionProps) {
         </div>
       </div>
 
-      <div
-        aria-hidden="true"
-        style={{ ...DIVIDER_STYLE, marginTop: 80 }}
-      />
+      {!isLast && (
+        <div
+          aria-hidden="true"
+          style={{ ...DIVIDER_STYLE, marginTop: 80 }}
+        />
+      )}
     </section>
   );
 }

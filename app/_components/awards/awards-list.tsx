@@ -76,13 +76,14 @@ type AwardsListProps = {
 export default function AwardsList({ lang }: AwardsListProps) {
   return (
     <div className="flex flex-col" style={{ gap: 80, flex: 1, minWidth: 0 }}>
-      {AWARDS.map((award) => (
+      {AWARDS.map((award, index) => (
         <AwardsSection
           key={award.slug}
           lang={lang}
           // Shared award photos (orb+name baked in) live in /shared, reused by
           // the home awards section. -v2 suffix busts browser/optimizer cache.
           award={{ ...award, imageSrc: `/shared/${award.slug}-v2.png` }}
+          isLast={index === AWARDS.length - 1}
         />
       ))}
     </div>
