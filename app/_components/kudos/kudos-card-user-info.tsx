@@ -6,10 +6,10 @@ import type { KudosCard } from './types';
 // Hero rank badge artwork (Figma MM_MEDIA_*Hero, 110×20, text baked in).
 // Keyed by profiles.title (see supabase/seed.sql).
 const HERO_BADGE: Record<string, string> = {
-  'New Hero': '/kudos-live-board/badge-new-hero.png',
-  'Rising Hero': '/kudos-live-board/badge-rising-hero.png',
-  'Legend Hero': '/kudos-live-board/badge-legend-hero.png',
-  'Super Hero': '/kudos-live-board/badge-super-hero.png',
+  'New Hero': '/kudos/badge-new-hero.png',
+  'Rising Hero': '/kudos/badge-rising-hero.png',
+  'Legend Hero': '/kudos/badge-legend-hero.png',
+  'Super Hero': '/kudos/badge-super-hero.png',
 };
 
 type UserInfoBlockProps = {

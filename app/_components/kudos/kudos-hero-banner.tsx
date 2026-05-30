@@ -88,7 +88,7 @@ export default function KudosHeroBanner({
         }}
       >
         <Image
-          src="/kudos-live-board/keyvisual-bg.png"
+          src="/kudos/keyvisual-bg.png"
           alt=""
           aria-hidden="true"
           fill
@@ -141,7 +141,7 @@ export default function KudosHeroBanner({
 
             <div style={{ height: 104, display: 'flex', alignItems: 'center' }}>
               <Image
-                src="/kudos-live-board/MM_MEDIA_Kudos logo.svg"
+                src="/kudos/MM_MEDIA_Kudos logo.svg"
                 alt="Sun* Kudos"
                 width={593}
                 height={104}

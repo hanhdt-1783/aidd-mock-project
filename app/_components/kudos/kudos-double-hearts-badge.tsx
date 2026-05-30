@@ -9,7 +9,7 @@ const CAMPAIGN_BODY =
   'Từ XX:XX ngày XX/12 đến XX:XX ngày XX/12, tất cả tim bạn nhận được đều được nhân đôi.';
 
 // Authentic flame + "x2" raster cropped from the Figma design (Group 435).
-const FLAME_SRC = '/kudos-live-board/double-hearts-flame.png';
+const FLAME_SRC = '/kudos/double-hearts-flame.png';
 const FLAME_INTRINSIC = { w: 53, h: 67 };
 
 // Flame badge scaled to `height` px, preserving the design aspect ratio.

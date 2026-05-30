@@ -100,7 +100,7 @@ export default function KudosSpotlightBoard({
           // with the constellation network (spotlight-bg.svg) layered on top.
           backgroundColor: '#00101A',
           backgroundImage:
-            'url(/kudos-live-board/spotlight-bg.svg), url(/kudos-live-board/spotlight-bg.png)',
+            'url(/kudos/spotlight-bg.svg), url(/kudos/spotlight-bg.png)',
           backgroundSize: 'cover, cover',
           backgroundPosition: 'center, center',
           backgroundRepeat: 'no-repeat, no-repeat',
