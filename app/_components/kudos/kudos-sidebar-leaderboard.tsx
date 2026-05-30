@@ -7,6 +7,8 @@ type KudosSidebarLeaderboardProps = {
   recipients: GiftRecipient[];
 };
 
+// "10 SUNNER NHẬN QUÀ MỚI NHẤT" sidebar list (Figma D.3).
+// Row = 64px avatar (white border) + gold name (22/700) + white prize (16/700).
 export default function KudosSidebarLeaderboard({
   title,
   recipients,
@@ -24,7 +26,7 @@ export default function KudosSidebarLeaderboard({
         width: '100%',
       }}
     >
-      {/* Title */}
+      {/* D.3.1 Title */}
       <h3
         style={{
           margin: 0,
@@ -39,18 +41,21 @@ export default function KudosSidebarLeaderboard({
         {title}
       </h3>
 
-      {/* Recipients list */}
+      {/* Recipients list — show 5 rows (5×64 + 4×16 gap = 384px), scroll the rest */}
       <ul
+        className="kudos-leaderboard-scroll"
         style={{
           margin: 0,
           padding: 0,
           listStyle: 'none',
           display: 'flex',
           flexDirection: 'column',
-          gap: 12,
+          gap: 16,
+          maxHeight: 384,
+          overflowY: 'auto',
         }}
       >
-        {recipients.map((recipient, index) => (
+        {recipients.map((recipient) => (
           <li key={recipient.id}>
             <div
               style={{
@@ -58,31 +63,17 @@ export default function KudosSidebarLeaderboard({
                 alignItems: 'center',
                 gap: 8,
                 width: '100%',
+                height: 64,
               }}
             >
-              {/* Rank number */}
-              <span
-                style={{
-                  fontFamily: 'Montserrat, sans-serif',
-                  fontSize: 13,
-                  fontWeight: 700,
-                  color: index < 3 ? '#FFEA9E' : 'rgba(255,255,255,0.4)',
-                  width: 20,
-                  flexShrink: 0,
-                  textAlign: 'center',
-                }}
-              >
-                {index + 1}
-              </span>
-
-              {/* Avatar */}
+              {/* D.3.x Avatar — 64px circle, white border */}
               <div
                 style={{
-                  width: 40,
-                  height: 40,
+                  width: 64,
+                  height: 64,
                   borderRadius: '50%',
                   overflow: 'hidden',
-                  border: `1px solid ${index < 3 ? '#FFEA9E' : 'rgba(255,234,158,0.2)'}`,
+                  border: '1.87px solid #FFFFFF',
                   backgroundColor: '#1A2430',
                   flexShrink: 0,
                 }}
@@ -90,9 +81,9 @@ export default function KudosSidebarLeaderboard({
                 <Image
                   src={recipient.avatarUrl}
                   alt={recipient.name}
-                  width={40}
-                  height={40}
-                  style={{ objectFit: 'cover' }}
+                  width={64}
+                  height={64}
+                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
                 />
               </div>
 
@@ -110,22 +101,15 @@ export default function KudosSidebarLeaderboard({
                   href={`/profile/${recipient.id}`}
                   style={{
                     fontFamily: 'Montserrat, sans-serif',
-                    fontSize: 13,
+                    fontSize: 22,
                     fontWeight: 700,
-                    color: index < 3 ? '#FFEA9E' : 'rgba(255,255,255,0.87)',
+                    lineHeight: '28px',
+                    color: '#FFEA9E',
                     textDecoration: 'none',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                     display: 'block',
-                    transition: 'color 0.15s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLAnchorElement).style.color = '#FFEA9E';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLAnchorElement).style.color =
-                      index < 3 ? '#FFEA9E' : 'rgba(255,255,255,0.87)';
                   }}
                 >
                   {recipient.name}
@@ -133,9 +117,11 @@ export default function KudosSidebarLeaderboard({
                 <span
                   style={{
                     fontFamily: 'Montserrat, sans-serif',
-                    fontSize: 11,
-                    fontWeight: 500,
-                    color: 'rgba(255,255,255,0.45)',
+                    fontSize: 16,
+                    fontWeight: 700,
+                    lineHeight: '24px',
+                    letterSpacing: '0.15px',
+                    color: '#FFFFFF',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',

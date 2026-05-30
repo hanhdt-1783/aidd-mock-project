@@ -287,9 +287,9 @@ export default function KudosPage({
                         marginTop: 8,
                         padding: '12px 32px',
                         borderRadius: 8,
-                        border: '1px solid #FFEA9E',
-                        background: 'transparent',
-                        color: '#FFEA9E',
+                        border: 'none',
+                        background: '#FFEA9E',
+                        color: '#00101A',
                         fontFamily: 'Montserrat, sans-serif',
                         fontSize: 16,
                         fontWeight: 700,
@@ -298,11 +298,11 @@ export default function KudosPage({
                       }}
                       onMouseEnter={(e) => {
                         (e.currentTarget as HTMLButtonElement).style.background =
-                          'rgba(255,234,158,0.1)';
+                          '#FFD54F';
                       }}
                       onMouseLeave={(e) => {
                         (e.currentTarget as HTMLButtonElement).style.background =
-                          'transparent';
+                          '#FFEA9E';
                       }}
                     >
                       Xem thêm
