@@ -35,6 +35,17 @@ type KudosPageProps = {
 
 type LikePatch = { id: string; liked: boolean; likeCount: number };
 
+// Fixed timezone → identical SSR/client output (no hydration mismatch). "08:30PM"
+const TICKER_TIME_FMT = new Intl.DateTimeFormat('en-US', {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: true,
+  timeZone: 'Asia/Ho_Chi_Minh',
+});
+function formatTickerTime(iso: string): string {
+  return TICKER_TIME_FMT.format(new Date(iso)).replace(/\s/g, '').toUpperCase();
+}
+
 function applyPatch(cards: KudosCardType[], patch: LikePatch): KudosCardType[] {
   return cards.map((c) =>
     c.id === patch.id
@@ -164,7 +175,15 @@ export default function KudosPage({
           />
         </div>
 
-        <KudosSpotlightBoard names={spotlightNames} totalKudos={totalKudos} />
+        <KudosSpotlightBoard
+          names={spotlightNames}
+          totalKudos={totalKudos}
+          activity={allCards.slice(0, 5).map((c) => ({
+            id: c.id,
+            name: c.receiver.name,
+            time: formatTickerTime(c.createdAt),
+          }))}
+        />
 
         <section
           aria-labelledby="all-kudos-heading"

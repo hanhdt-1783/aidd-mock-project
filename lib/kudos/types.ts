@@ -45,6 +45,13 @@ export type SpotlightName = {
   highlighted: boolean;
 };
 
+// Bottom-left activity ticker row on the Spotlight Board.
+export type SpotlightActivity = {
+  id: string;
+  name: string;
+  time: string; // pre-formatted "08:30PM"
+};
+
 export type KudosFilters = {
   hashtag: string | null;
   department: string | null;

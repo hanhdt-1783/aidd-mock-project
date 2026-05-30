@@ -5,6 +5,7 @@ export type {
   SidebarStats,
   GiftRecipient,
   SpotlightName,
+  SpotlightActivity,
   KudosFilters,
   RecipientOption,
   CreateKudoInput,
