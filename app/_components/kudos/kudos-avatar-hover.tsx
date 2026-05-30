@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { KudosUser } from './types';
 import { HERO_BADGE } from './kudos-hero-badge';
+import { useKudoCompose } from './kudo-compose-provider';
 import { t, type Language } from '@/lib/i18n/dictionary';
 
 type KudosAvatarHoverProps = {
@@ -42,6 +43,10 @@ function initialsOf(name: string): string {
 // `overflow: hidden` and sits above the fixed header (z-index), and it flips
 // below the avatar when there isn't room above the header.
 export default function KudosAvatarHover({ lang, user, size = 64 }: KudosAvatarHoverProps) {
+  const { openCompose, currentUserId } = useKudoCompose();
+  // You can't send a Kudo to yourself — and your own id isn't in the recipient
+  // list, so pre-selection would silently miss. Hide the action on self.
+  const canSendKudo = currentUserId !== null && currentUserId !== user.id;
   const triggerRef = useRef<HTMLSpanElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [anchor, setAnchor] = useState<Anchor | null>(null);
@@ -91,13 +96,11 @@ export default function KudosAvatarHover({ lang, user, size = 64 }: KudosAvatarH
     };
   }, [anchor, closeNow]);
 
-  // Open the compose modal (owned by the hero banner) for this recipient.
+  // Open the one shared compose modal, pre-selecting this person as recipient.
   const sendKudo = useCallback(() => {
     closeNow();
-    window.dispatchEvent(
-      new CustomEvent('kudos:open-compose', { detail: { recipientId: user.id } }),
-    );
-  }, [closeNow, user.id]);
+    openCompose(user.id);
+  }, [closeNow, openCompose, user.id]);
 
   const initials = initialsOf(user.name);
   const badgeSrc = user.title ? HERO_BADGE[user.title] : undefined;
@@ -223,7 +226,9 @@ export default function KudosAvatarHover({ lang, user, size = 64 }: KudosAvatarH
               {t(lang, 'kudos.sidebar.stats.sent')} <span style={{ color: '#FFEA9E' }}>{user.kudosSent}</span>
             </span>
 
-            {/* "Gửi KUDO" — same style as the "Mở Secret Box" button, pencil left */}
+            {/* "Gửi KUDO" — same style as the "Mở Secret Box" button, pencil left.
+                Hidden on your own avatar (can't send a Kudo to yourself). */}
+            {canSendKudo && (
             <button
               type="button"
               onClick={sendKudo}
@@ -262,6 +267,7 @@ export default function KudosAvatarHover({ lang, user, size = 64 }: KudosAvatarH
               </svg>
               {t(lang, 'kudos.avatar.send-kudo')}
             </button>
+            )}
           </div>,
           document.body,
         )}

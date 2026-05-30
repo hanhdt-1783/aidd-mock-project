@@ -1,18 +1,10 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { t, type Language } from "@/lib/i18n/dictionary";
-import KudosCreateModal from "@/app/_components/kudos/kudos-create-modal";
-import { KudosToast, useKudosToast } from "@/app/_components/kudos/kudos-toast";
-import type {
-  KudoCreatePayload,
-  RecipientOption,
-} from "@/app/_components/kudos/kudos-create-form-types";
-import { createKudo } from "@/lib/kudos/actions";
-import { deleteKudoImages, uploadKudoImage } from "@/lib/kudos/upload-kudo-image";
+import { useKudoCompose } from "@/app/_components/kudos/kudo-compose-provider";
 
 // Pen icon — inlined from public/home/icon-pen.svg (Figma MM_MEDIA_Pen).
 // fill set to currentColor so the parent's `color` controls it.
@@ -68,72 +60,24 @@ function SaaIcon() {
 
 type HomeWidgetButtonProps = {
   lang: Language;
-  recipients: RecipientOption[];
-  existingHashtags: string[];
-  currentUserId: string;
 };
 
 /**
  * Floating Action Button (FAB).
  * Closed (Figma screenId _hphd32jN2): pill 106x64 with pen + "/" + SAA icons.
  * Open  (Figma screenId Sv7DFwBw1h): 3 stacked buttons — Thể lệ, Viết KUDOS, Hủy.
+ *
+ * Pure trigger: it opens the one shared compose modal owned by
+ * `KudoComposeProvider` — it holds no modal/submit state of its own.
  */
-export default function HomeWidgetButton({
-  lang,
-  recipients,
-  existingHashtags,
-  currentUserId,
-}: HomeWidgetButtonProps) {
-  const router = useRouter();
-  const { toast, showToast, dismissToast } = useKudosToast();
+export default function HomeWidgetButton({ lang }: HomeWidgetButtonProps) {
+  const { openCompose } = useKudoCompose();
   // Panel expand/collapse state.
   const [open, setOpen] = useState(false);
-  // Viết Kudo modal state.
-  const [modalOpen, setModalOpen] = useState(false);
-
-  // Submit handler — same pipeline as KudosHeroBanner: upload images, create kudo,
-  // roll back uploads on failure, refresh on success.
-  const handleSubmit = useCallback(
-    async (payload: KudoCreatePayload) => {
-      const uploadedPaths: string[] = [];
-      const imageUrls: string[] = [];
-      for (const file of payload.imageFiles) {
-        const result = await uploadKudoImage(file, currentUserId);
-        if (!result.ok) {
-          await deleteKudoImages(uploadedPaths);
-          showToast(result.error);
-          throw new Error(result.error);
-        }
-        imageUrls.push(result.url);
-        uploadedPaths.push(result.path);
-      }
-
-      const created = await createKudo({
-        recipientId: payload.recipientId,
-        title: payload.title,
-        contentMarkdown: payload.contentMarkdown,
-        hashtags: payload.hashtags,
-        imageUrls,
-        isAnonymous: payload.isAnonymous,
-        anonymousAlias: payload.anonymousAlias,
-      });
-
-      if (!created.ok) {
-        await deleteKudoImages(uploadedPaths);
-        showToast(created.error);
-        throw new Error(created.error);
-      }
-
-      setModalOpen(false);
-      showToast("Đã gửi Kudo của bạn — cảm ơn bạn đã ghi nhận đồng đội!");
-      router.refresh();
-    },
-    [currentUserId, router, showToast],
-  );
 
   const openKudoModal = () => {
     setOpen(false);
-    setModalOpen(true);
+    openCompose();
   };
 
   return (
@@ -170,7 +114,7 @@ export default function HomeWidgetButton({
             </span>
           </Link>
 
-          {/* B_Button viết kudos — opens the Viết Kudo modal. */}
+          {/* B_Button viết kudos — opens the shared Viết Kudo modal. */}
           <button
             type="button"
             onClick={openKudoModal}
@@ -255,18 +199,6 @@ export default function HomeWidgetButton({
           <SaaIcon />
         </button>
       )}
-
-      <KudosCreateModal
-        lang={lang}
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSubmit={handleSubmit}
-        recipients={recipients}
-        existingHashtags={existingHashtags}
-        currentUserId={currentUserId}
-      />
-
-      {toast && <KudosToast message={toast} onDismiss={dismissToast} />}
     </div>
   );
 }

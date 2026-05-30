@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
-import KudoFab from "@/app/_components/shared/kudo-fab";
+import KudoComposeRoot from "@/app/_components/kudos/kudo-compose-root";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -55,10 +55,10 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        {children}
-        {/* Shared floating Viết Kudo button — rendered once for every route;
-            self-gates to logged-in users (renders null otherwise). */}
-        <KudoFab />
+        {/* Owns the one shared "Viết Kudo" modal + floating button for every
+            route; self-gates to logged-in users (passes children through
+            untouched otherwise). Any screen opens it via useKudoCompose(). */}
+        <KudoComposeRoot>{children}</KudoComposeRoot>
       </body>
     </html>
   );

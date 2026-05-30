@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import type {
   GiftRecipient,
   KudosCard as KudosCardType,
-  RecipientOption,
   SidebarStats,
   SpotlightName,
 } from './types';
@@ -30,8 +29,6 @@ type KudosPageProps = {
   giftRecipients: GiftRecipient[];
   spotlightNames: SpotlightName[];
   totalKudos: number;
-  recipients: RecipientOption[];
-  currentUserId: string;
   lang: Language;
 };
 
@@ -70,8 +67,6 @@ export default function KudosPage({
   giftRecipients,
   spotlightNames,
   totalKudos,
-  recipients,
-  currentUserId,
   lang,
 }: KudosPageProps) {
   const router = useRouter();
@@ -167,12 +162,7 @@ export default function KudosPage({
         // fixed header (the hero content adds its own header clearance).
       }}
     >
-      <KudosHeroBanner
-        recipients={recipients}
-        existingHashtags={hashtags}
-        currentUserId={currentUserId}
-        lang={lang}
-      />
+      <KudosHeroBanner lang={lang} />
 
       <div
         className="kudos-sections-gap"
