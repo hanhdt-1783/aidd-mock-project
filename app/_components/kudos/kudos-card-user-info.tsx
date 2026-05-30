@@ -1,9 +1,9 @@
 'use client';
 
-import Image from 'next/image';
 import type { KudosCard } from './types';
 import { HERO_BADGE } from './kudos-hero-badge';
 import KudosAvatarHover from './kudos-avatar-hover';
+import KudosHeroTag from './kudos-hero-tag';
 
 type UserInfoBlockProps = {
   user: KudosCard['sender'];
@@ -80,15 +80,7 @@ export default function UserInfoBlock({ user }: UserInfoBlockProps) {
             }}
           />
         )}
-        {badgeSrc && (
-          <Image
-            src={badgeSrc}
-            alt={user.title ?? ''}
-            width={110}
-            height={20}
-            style={{ width: 'auto', height: 20, flexShrink: 0 }}
-          />
-        )}
+        {user.title && badgeSrc && <KudosHeroTag title={user.title} height={20} />}
       </div>
     </div>
   );
