@@ -13,6 +13,8 @@ type Props = {
   existingHashtags: string[];
   currentUserId: string;
   lang: Language;
+  /** Pre-select this recipient when the modal opens (e.g. from avatar "Gửi KUDO"). */
+  initialRecipient?: RecipientOption | null;
 };
 
 export default function KudosCreateModal({
@@ -23,6 +25,7 @@ export default function KudosCreateModal({
   existingHashtags,
   currentUserId,
   lang,
+  initialRecipient = null,
 }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -142,6 +145,7 @@ export default function KudosCreateModal({
             onSubmit={onSubmit}
             onCancel={onClose}
             lang={lang}
+            initialRecipient={initialRecipient}
           />
         </div>
       </div>

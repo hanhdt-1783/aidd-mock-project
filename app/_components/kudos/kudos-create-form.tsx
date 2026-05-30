@@ -30,6 +30,10 @@ const HINT_STYLE: React.CSSProperties = {
   color: '#999',
   lineHeight: '24px',
 };
+// Shared input chrome. Text style matches Figma "Viết Kudo" (screenId
+// ihQ26W78P2): every field — recipient, title, content, nickname — is
+// Montserrat 16/700, #00101A, 0.15px tracking, lh 24. Placeholder color is
+// set via the `.kudos-field::placeholder` rule below (inheriting size/weight).
 const INPUT_STYLE: React.CSSProperties = {
   width: '100%',
   boxSizing: 'border-box',
@@ -38,8 +42,10 @@ const INPUT_STYLE: React.CSSProperties = {
   borderRadius: 8,
   background: '#FFF',
   fontFamily: 'Montserrat, sans-serif',
-  fontSize: 14,
-  fontWeight: 500,
+  fontSize: 16,
+  fontWeight: 700,
+  lineHeight: '24px',
+  letterSpacing: '0.15px',
   color: '#00101A',
   outline: 'none',
 };
@@ -54,6 +60,12 @@ const MAX_TITLE = 200;
 const MAX_IMAGES = 5;
 const ACCEPTED_IMAGE_TYPES = 'image/jpeg,image/png';
 
+// Dot thousands separator to match the design counter ("1.000"). Manual (not
+// toLocaleString) so SSR and client render identically — no hydration mismatch.
+function withThousandsDot(n: number): string {
+  return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
 type Props = {
   recipients: RecipientOption[];
   existingHashtags: string[];
@@ -61,6 +73,8 @@ type Props = {
   onSubmit: (payload: KudoCreatePayload) => Promise<void>;
   onCancel: () => void;
   lang: Language;
+  /** Recipient to pre-select on mount (the modal remounts the form per open). */
+  initialRecipient?: RecipientOption | null;
 };
 
 // Reusable label cell that matches the fixed LABEL_COL width
@@ -104,9 +118,10 @@ export default function KudosCreateForm({
   onSubmit,
   onCancel,
   lang,
+  initialRecipient = null,
 }: Props) {
   // ── State ─────────────────────────────────────────────────────────────────
-  const [recipient, setRecipient] = useState<RecipientOption | null>(null);
+  const [recipient, setRecipient] = useState<RecipientOption | null>(initialRecipient);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [hashtags, setHashtags] = useState<string[]>([]);
@@ -273,6 +288,10 @@ export default function KudosCreateForm({
         isAnonymous,
         anonymousAlias: isAnonymous && anonymousAlias.trim() ? anonymousAlias.trim() : null,
       });
+    } catch {
+      // The submit pipeline already surfaced a toast for the failure; absorb
+      // the re-thrown error here so it doesn't escape as an unhandled
+      // rejection (which could trip the nearest error boundary).
     } finally {
       setSubmitting(false);
     }
@@ -284,14 +303,15 @@ export default function KudosCreateForm({
       {/* ── A: Heading ───────────────────────────────────────────────────── */}
       <h2
         style={{
+          // Figma node I662:9637;520:9870: Montserrat 32/700, #00101A, lh40, ls0.
           margin: '0 0 24px',
           fontFamily: 'Montserrat, sans-serif',
-          fontSize: 28,
+          fontSize: 32,
           fontWeight: 700,
-          lineHeight: '36px',
+          lineHeight: '40px',
           color: '#00101A',
           textAlign: 'center',
-          letterSpacing: '0.15px',
+          letterSpacing: '0',
         }}
       >
         {t(lang, 'kudos.create.title')}
@@ -339,6 +359,7 @@ export default function KudosCreateForm({
           maxLength={MAX_TITLE}
           required
           aria-label={t(lang, 'kudos.create.title.label')}
+          className="kudos-field"
           style={{ ...INPUT_STYLE, height: 56 }}
           onFocus={(e) => {
             (e.target as HTMLInputElement).style.borderColor = '#00101A';
@@ -372,14 +393,17 @@ export default function KudosCreateForm({
             required
             aria-label={t(lang, 'kudos.create.content.aria')}
             rows={8}
+            className="kudos-field"
             style={{
               ...INPUT_STYLE,
+              // Content uses the same 16/700 type as the other fields per Figma
+              // "Viết Kudo" node I520:11647;520:9886;186:2760 (placeholder
+              // "Hãy gửi gắm…" = Montserrat 16/700, lh 24, #999).
               borderRadius: '0 0 8px 8px',
               borderTop: 'none',
               resize: 'vertical',
               minHeight: 200,
               verticalAlign: 'top',
-              lineHeight: '24px',
               paddingTop: 16,
             }}
             onFocus={(e) => {
@@ -459,14 +483,19 @@ export default function KudosCreateForm({
           </span>
           <span
             style={{
+              // Figma node I662:9637;520:9889: Montserrat 16/700, #999, lh24,
+              // 0.5px tracking, with a dot thousands separator ("0/1.000").
               fontFamily: 'Montserrat, sans-serif',
-              fontSize: 12,
+              fontSize: 16,
+              fontWeight: 700,
+              lineHeight: '24px',
+              letterSpacing: '0.5px',
               color: content.length > MAX_CONTENT * 0.9 ? '#CF1322' : '#999',
               flexShrink: 0,
               marginLeft: 8,
             }}
           >
-            {content.length}/{MAX_CONTENT}
+            {withThousandsDot(content.length)}/{withThousandsDot(MAX_CONTENT)}
           </span>
         </div>
       </div>
@@ -484,7 +513,8 @@ export default function KudosCreateForm({
         <LabelCell required alignTop requiredLabel={t(lang, 'kudos.create.required')}>
           Hashtag
         </LabelCell>
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {/* "Tối đa 5" lives as the 2nd line inside the add button (per design). */}
           <KudosCreateHashtagInput
             value={hashtags}
             onChange={setHashtags}
@@ -492,7 +522,6 @@ export default function KudosCreateForm({
             maxTags={5}
             lang={lang}
           />
-          <span style={{ ...HINT_STYLE, fontSize: 13 }}>{t(lang, 'kudos.create.max5')}</span>
         </div>
       </div>
 
@@ -515,35 +544,41 @@ export default function KudosCreateForm({
             {imagePreviews.map((src, idx) => (
               <div
                 key={idx}
-                style={{
-                  position: 'relative',
-                  width: 80,
-                  height: 80,
-                  flexShrink: 0,
-                  borderRadius: 18,
-                  border: '1px solid #998C5F',
-                  overflow: 'hidden',
-                  background: '#FFF',
-                }}
+                style={{ position: 'relative', width: 80, height: 80, flexShrink: 0 }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={src}
-                  alt={`${t(lang, 'kudos.create.image.alt')} ${idx + 1}`}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                />
+                {/* Selected image: 80x80, 1px #998C5F border, radius 18
+                    (Figma node 662:9197). */}
+                <div
+                  style={{
+                    width: 80,
+                    height: 80,
+                    border: '1px solid #998C5F',
+                    borderRadius: 18,
+                    overflow: 'hidden',
+                    background: '#FFF',
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={src}
+                    alt={`${t(lang, 'kudos.create.image.alt')} ${idx + 1}`}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                </div>
                 <button
                   type="button"
                   aria-label={`${t(lang, 'kudos.create.image.remove')} ${idx + 1}`}
                   onClick={() => removeImage(idx)}
                   style={{
+                    // Solid red badge (#D4271D) overhanging the top-right corner,
+                    // per Figma node 662:9197;662:9287 (20x20 circle).
                     position: 'absolute',
-                    top: 2,
-                    right: 2,
+                    top: -6,
+                    right: -6,
                     width: 20,
                     height: 20,
                     borderRadius: '50%',
-                    background: 'rgba(207,19,34,0.85)',
+                    background: '#D4271D',
                     border: 'none',
                     cursor: 'pointer',
                     display: 'flex',
@@ -573,22 +608,19 @@ export default function KudosCreateForm({
                     setImageError(null);
                     fileInputRef.current?.click();
                   }}
+                  // Same add-button style as Hashtag (Figma node I662:9637;662:9133):
+                  // solid 1px #998C5F border, radius 8, white bg, h48, 4px/8px
+                  // padding, 24px plus icon + two-line label (Image / Tối đa 5).
                   style={{
                     display: 'inline-flex',
-                    flexDirection: 'column',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 4,
-                    width: 100,
-                    height: 38,
+                    gap: 8,
+                    height: 48,
+                    padding: '4px 8px',
                     border: '1px solid #998C5F',
                     borderRadius: 8,
-                    background: 'transparent',
+                    background: '#FFF',
                     cursor: 'pointer',
-                    fontFamily: 'Montserrat, sans-serif',
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: '#998C5F',
                     transition: 'background 0.15s ease',
                     flexShrink: 0,
                   }}
@@ -597,20 +629,29 @@ export default function KudosCreateForm({
                       'rgba(153,140,95,0.08)';
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.background = 'transparent';
+                    (e.currentTarget as HTMLButtonElement).style.background = '#FFF';
                   }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path
-                      d="M8 1v14M1 8h14"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                    />
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ flexShrink: 0, color: '#998C5F' }}>
+                    <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                   </svg>
-                  {t(lang, 'kudos.create.image.label')}
+                  <span
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      fontFamily: 'Montserrat, sans-serif',
+                    }}
+                  >
+                    {/* Line 1: prominent label (dark). Line 2: muted caption. */}
+                    <span style={{ fontSize: 14, fontWeight: 700, lineHeight: '20px', color: '#00101A', whiteSpace: 'nowrap' }}>
+                      {t(lang, 'kudos.create.image.label')}
+                    </span>
+                    <span style={{ fontSize: 11, fontWeight: 700, lineHeight: '16px', letterSpacing: '0.5px', color: '#999', whiteSpace: 'nowrap' }}>
+                      {t(lang, 'kudos.create.max5')}
+                    </span>
+                  </span>
                 </button>
-                <span style={{ ...HINT_STYLE, fontSize: 13 }}>{t(lang, 'kudos.create.max5')}</span>
               </>
             )}
           </div>
@@ -647,7 +688,9 @@ export default function KudosCreateForm({
         <label
           style={{ display: 'inline-flex', alignItems: 'center', gap: 16, cursor: 'pointer' }}
         >
-          {/* Custom checkbox — 24x24, border #999, border-radius 4px (from MCP) */}
+          {/* Custom checkbox — Figma node 520:14087/520:14088: 24x24 white box,
+              1px #998C5F border, radius 4; CHECKED = a 16x16 gold (#998C5F)
+              rounded (radius 2) inner square — not a checkmark. */}
           <span
             role="checkbox"
             aria-checked={isAnonymous}
@@ -664,34 +707,30 @@ export default function KudosCreateForm({
               height: 24,
               borderRadius: 4,
               border: `1px solid ${isAnonymous ? '#998C5F' : '#999'}`,
-              background: isAnonymous ? '#998C5F' : '#FFF',
+              background: '#FFF',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
               cursor: 'pointer',
-              transition: 'background 0.15s ease, border-color 0.15s ease',
+              transition: 'border-color 0.15s ease',
             }}
           >
             {isAnonymous && (
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path
-                  d="M2 7l4 4 6-7"
-                  stroke="#FFF"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <span
+                aria-hidden="true"
+                style={{ width: 16, height: 16, borderRadius: 2, background: '#998C5F' }}
+              />
             )}
           </span>
           <span
             style={{
+              // Figma node I662:9637;520:14099;520:14089: Montserrat 22/700, lh28.
               fontFamily: 'Montserrat, sans-serif',
-              fontSize: 16,
+              fontSize: 22,
               fontWeight: 700,
               color: '#00101A',
-              lineHeight: '24px',
+              lineHeight: '28px',
               userSelect: 'none',
             }}
           >
@@ -700,14 +739,27 @@ export default function KudosCreateForm({
         </label>
 
         {isAnonymous && (
-          <div style={{ marginTop: 12, paddingLeft: 40 }}>
+          // "Nickname ẩn danh *" label + input row (Figma node 520:14099 →
+          // Title 2009:12953 + input). Long label sizes to content, not the
+          // fixed 160px column the shorter field labels use.
+          <div
+            className="kudos-form-row"
+            style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 16 }}
+          >
+            <span style={{ ...LABEL_STYLE, display: 'inline-flex', alignItems: 'center' }}>
+              {t(lang, 'kudos.create.anonymous.nickname.label')}
+              <span style={REQUIRED_STAR} aria-label={t(lang, 'kudos.create.required')}>
+                *
+              </span>
+            </span>
             <input
               type="text"
               value={anonymousAlias}
               onChange={(e) => setAnonymousAlias(e.target.value)}
               placeholder={t(lang, 'kudos.create.anonymous.alias.placeholder')}
               aria-label={t(lang, 'kudos.create.anonymous.alias.aria')}
-              style={{ ...INPUT_STYLE, maxWidth: 400 }}
+              className="kudos-field"
+              style={{ ...INPUT_STYLE, flex: 1, maxWidth: 400 }}
               onFocus={(e) => {
                 (e.target as HTMLInputElement).style.borderColor = '#00101A';
               }}
@@ -786,12 +838,14 @@ export default function KudosCreateForm({
                 ? 'rgba(255,234,158,0.40)'
                 : 'rgba(255,234,158,1)',
             fontFamily: 'Montserrat, sans-serif',
-            fontSize: 18,
+            // Figma node I662:9637;520:9907;186:1568: Montserrat 22/700, lh28, ls0.
+            fontSize: 22,
             fontWeight: 700,
+            lineHeight: '28px',
             color: !isValid || submitting ? 'rgba(0,16,26,0.4)' : '#00101A',
             cursor: !isValid || submitting ? 'not-allowed' : 'pointer',
             transition: 'background 0.15s ease, color 0.15s ease',
-            letterSpacing: '0.5px',
+            letterSpacing: '0',
           }}
           onMouseEnter={(e) => {
             if (isValid && !submitting)
@@ -804,16 +858,18 @@ export default function KudosCreateForm({
         >
           {submitting ? t(lang, 'kudos.create.submitting') : t(lang, 'kudos.create.submit')}
           {!submitting && (
+            // Right-pointing send arrow (MM_MEDIA_Send, node 520:9907;186:1766) —
+            // horizontal, not the diagonal paper-plane.
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
-                d="M22 2L11 13"
+                d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z"
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
-                d="M22 2L15 22l-4-9-9-4 20-7z"
+                d="M6 12h16"
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
@@ -823,6 +879,16 @@ export default function KudosCreateForm({
           )}
         </button>
       </div>
+
+      {/* Placeholder color per Figma (#999). Size/weight inherit from each
+          field's own style, so the larger content field stays 22px. `opacity:1`
+          undoes Firefox's default placeholder dimming. */}
+      <style>{`
+        .kudos-field::placeholder {
+          color: #999;
+          opacity: 1;
+        }
+      `}</style>
     </form>
   );
 }
