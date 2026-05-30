@@ -18,11 +18,12 @@ DECLARE
   u8 uuid := '11111111-1111-1111-1111-111111110008';
   u9 uuid := '11111111-1111-1111-1111-111111110009';
   u10 uuid := '11111111-1111-1111-1111-11111111000a';
+  u11 uuid := '11111111-1111-1111-1111-11111111000b';
   uids uuid[];
   i int;
   k1 uuid; k2 uuid; k3 uuid; k4 uuid; k5 uuid;
 BEGIN
-  uids := ARRAY[u1, u2, u3, u4, u5, u6, u7, u8, u9, u10];
+  uids := ARRAY[u1, u2, u3, u4, u5, u6, u7, u8, u9, u10, u11];
 
   FOR i IN 1..array_length(uids, 1) LOOP
     INSERT INTO auth.users (
@@ -43,45 +44,49 @@ BEGIN
   END LOOP;
 
   UPDATE public.profiles SET
-    display_name = 'Huỳnh Dương Xuân Nhật', avatar_url = '/kudos-live-board/avatars/u1.png',
+    display_name = 'Huỳnh Dương Xuân Nhật', avatar_url = '/kudos/avatars/u1.png',
     department = 'CEVC10', title = 'Legend Hero', rank_stars = 3
   WHERE id = u1;
   UPDATE public.profiles SET
-    display_name = 'Nguyễn Bá Chức', avatar_url = '/kudos-live-board/avatars/u2.png',
+    display_name = 'Nguyễn Bá Chức', avatar_url = '/kudos/avatars/u2.png',
     department = 'CEVC10', title = 'Rising Hero', rank_stars = 2
   WHERE id = u2;
   UPDATE public.profiles SET
-    display_name = 'Trần Minh Anh', avatar_url = '/kudos-live-board/avatars/u3.png',
+    display_name = 'Trần Minh Anh', avatar_url = '/kudos/avatars/u3.png',
     department = 'Marketing', title = 'New Hero', rank_stars = 1
   WHERE id = u3;
   UPDATE public.profiles SET
-    display_name = 'Phạm Thu Hà', avatar_url = '/kudos-live-board/avatars/u4.png',
+    display_name = 'Phạm Thu Hà', avatar_url = '/kudos/avatars/u4.png',
     department = 'CEVC12', title = 'Legend Hero', rank_stars = 3
   WHERE id = u4;
   UPDATE public.profiles SET
-    display_name = 'Lê Văn Sơn', avatar_url = '/kudos-live-board/avatars/u5.png',
+    display_name = 'Lê Văn Sơn', avatar_url = '/kudos/avatars/u5.png',
     department = 'CEVC10', title = 'Rising Hero', rank_stars = 2
   WHERE id = u5;
   UPDATE public.profiles SET
-    display_name = 'Hoàng Mai Linh', avatar_url = '/kudos-live-board/avatars/u6.png',
+    display_name = 'Hoàng Mai Linh', avatar_url = '/kudos/avatars/u6.png',
     department = 'HR', title = 'New Hero', rank_stars = 1
   WHERE id = u6;
   UPDATE public.profiles SET
-    display_name = 'Đỗ Thanh Tùng', avatar_url = '/kudos-live-board/avatars/u7.png',
+    display_name = 'Đỗ Thanh Tùng', avatar_url = '/kudos/avatars/u7.png',
     department = 'CEVC15', title = 'Rising Hero', rank_stars = 2
   WHERE id = u7;
   UPDATE public.profiles SET
-    display_name = 'Bùi Khánh Linh', avatar_url = '/kudos-live-board/avatars/u8.png',
+    display_name = 'Bùi Khánh Linh', avatar_url = '/kudos/avatars/u8.png',
     department = 'Marketing', title = 'Legend Hero', rank_stars = 3
   WHERE id = u8;
   UPDATE public.profiles SET
-    display_name = 'Vũ Quang Huy', avatar_url = '/kudos-live-board/avatars/u9.png',
+    display_name = 'Vũ Quang Huy', avatar_url = '/kudos/avatars/u9.png',
     department = 'CEVC11', title = 'New Hero', rank_stars = 1
   WHERE id = u9;
   UPDATE public.profiles SET
-    display_name = 'Trịnh Phương Thảo', avatar_url = '/kudos-live-board/avatars/u10.png',
+    display_name = 'Trịnh Phương Thảo', avatar_url = '/kudos/avatars/u10.png',
     department = 'CEVC10', title = 'Rising Hero', rank_stars = 2
   WHERE id = u10;
+  UPDATE public.profiles SET
+    display_name = 'Đặng Quốc Cường', avatar_url = '/kudos/avatars/u3.png',
+    department = 'CEVC10', title = 'Super Hero', rank_stars = 3
+  WHERE id = u11;
 
   INSERT INTO public.kudos (id, sender_id, receiver_id, title, content, image_urls, created_at)
   VALUES
@@ -175,6 +180,24 @@ BEGIN
     ('22222222-2222-2222-2222-222222220008', 'Dedicated')
   ON CONFLICT DO NOTHING;
 
+  -- "Super Hero" demo (u11): 12 received Kudos (the 10–20 range that the
+  -- "Super Hero" title + hover describe), one very recent so the card surfaces
+  -- at the top of the All-Kudos feed, plus a couple sent by u11.
+  INSERT INTO public.kudos (id, sender_id, receiver_id, title, content, image_urls, created_at)
+  SELECT gen_random_uuid(), uids[1 + (g % 10)], u11, 'NGƯỜI HÙNG CỦA TEAM',
+    'Cảm ơn anh đã luôn là chỗ dựa vững chắc và truyền cảm hứng cho cả team!',
+    '{}', now() - (g * interval '30 minutes')
+  FROM generate_series(1, 12) AS g;
+
+  INSERT INTO public.kudos (id, sender_id, receiver_id, title, content, image_urls, created_at)
+  VALUES
+    (gen_random_uuid(), u11, u2, 'TINH THẦN TRÁCH NHIỆM',
+     'Cảm ơn em đã chủ động gánh vác phần khó nhất của dự án. Rất đáng nể!',
+     '{}', now() - interval '40 minutes'),
+    (gen_random_uuid(), u11, u4, 'SẺ CHIA TẬN TÂM',
+     'Cảm ơn chị đã kiên nhẫn hướng dẫn cả nhóm. Học được rất nhiều từ chị!',
+     '{}', now() - interval '50 minutes');
+
   INSERT INTO public.gift_recipients (user_id, prize_description, awarded_at) VALUES
     (u1, 'Nhận được 1 áo phông SAA', now() - interval '1 hour'),
     (u2, 'Nhận được 1 áo phông SAA', now() - interval '3 hours'),
@@ -185,7 +208,8 @@ BEGIN
     (u7, 'Nhận được 1 ba lô SAA',    now() - interval '1 day 2 hours'),
     (u8, 'Nhận được 1 áo phông SAA', now() - interval '1 day 5 hours'),
     (u9, 'Nhận được 1 mũ SAA',       now() - interval '2 days'),
-    (u10,'Nhận được 1 áo phông SAA', now() - interval '2 days 4 hours');
+    (u10,'Nhận được 1 áo phông SAA', now() - interval '2 days 4 hours'),
+    (u11,'Nhận được 1 áo hoodie SAA', now() - interval '30 minutes');
 
   FOR i IN 1..array_length(uids, 1) LOOP
     INSERT INTO public.secret_boxes (user_id, opened) VALUES (uids[i], true);
