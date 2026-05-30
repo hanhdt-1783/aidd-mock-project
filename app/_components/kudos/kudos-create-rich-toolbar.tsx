@@ -3,16 +3,20 @@
 // Toolbar button IDs match the design: C.1 Bold, C.2 Italic, C.3 Strike, C.4 NumberList, C.5 Link, C.6 Quote
 // All icons are inline SVG to allow CSS color control (fills match design #00101A / currentColor)
 
+import { t, type Language } from '@/lib/i18n/dictionary';
+
 type ToolbarAction = 'bold' | 'italic' | 'strike' | 'list' | 'link' | 'quote';
 
 type Props = {
   onAction: (action: ToolbarAction) => void;
+  lang: Language;
 };
 
-const TOOLBAR_ITEMS: { id: ToolbarAction; label: string; icon: React.ReactNode }[] = [
+function getToolbarItems(lang: Language): { id: ToolbarAction; label: string; icon: React.ReactNode }[] {
+  return [
   {
     id: 'bold',
-    label: 'Đậm',
+    label: t(lang, 'kudos.create.toolbar.bold'),
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M6 4h8a4 4 0 0 1 0 8H6z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -22,7 +26,7 @@ const TOOLBAR_ITEMS: { id: ToolbarAction; label: string; icon: React.ReactNode }
   },
   {
     id: 'italic',
-    label: 'Nghiêng',
+    label: t(lang, 'kudos.create.toolbar.italic'),
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <line x1="19" y1="4" x2="10" y2="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -33,7 +37,7 @@ const TOOLBAR_ITEMS: { id: ToolbarAction; label: string; icon: React.ReactNode }
   },
   {
     id: 'strike',
-    label: 'Gạch ngang',
+    label: t(lang, 'kudos.create.toolbar.strike'),
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -43,7 +47,7 @@ const TOOLBAR_ITEMS: { id: ToolbarAction; label: string; icon: React.ReactNode }
   },
   {
     id: 'list',
-    label: 'Danh sách',
+    label: t(lang, 'kudos.create.toolbar.list'),
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <line x1="9" y1="6" x2="20" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -57,7 +61,7 @@ const TOOLBAR_ITEMS: { id: ToolbarAction; label: string; icon: React.ReactNode }
   },
   {
     id: 'link',
-    label: 'Liên kết',
+    label: t(lang, 'kudos.create.toolbar.link'),
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -67,7 +71,7 @@ const TOOLBAR_ITEMS: { id: ToolbarAction; label: string; icon: React.ReactNode }
   },
   {
     id: 'quote',
-    label: 'Trích dẫn',
+    label: t(lang, 'kudos.create.toolbar.quote'),
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" stroke="currentColor" strokeWidth="2" />
@@ -75,7 +79,8 @@ const TOOLBAR_ITEMS: { id: ToolbarAction; label: string; icon: React.ReactNode }
       </svg>
     ),
   },
-];
+  ];
+}
 
 // Border radius per position: leftmost = top-left rounded, rightmost = top-right rounded, middle = square
 function getRadius(index: number, total: number): string {
@@ -84,7 +89,8 @@ function getRadius(index: number, total: number): string {
   return '0';
 }
 
-export default function KudosCreateRichToolbar({ onAction }: Props) {
+export default function KudosCreateRichToolbar({ onAction, lang }: Props) {
+  const TOOLBAR_ITEMS = getToolbarItems(lang);
   return (
     <div
       style={{
@@ -151,7 +157,7 @@ export default function KudosCreateRichToolbar({ onAction }: Props) {
           marginLeft: 8,
         }}
       >
-        Tiêu chuẩn cộng đồng
+        {t(lang, 'kudos.create.toolbar.communityStandards')}
       </a>
     </div>
   );

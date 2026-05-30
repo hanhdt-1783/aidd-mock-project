@@ -1,6 +1,8 @@
 import type { SpotlightName, SpotlightActivity } from './types';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 type KudosSpotlightBoardProps = {
+  lang: Language;
   names: SpotlightName[];
   totalKudos: number;
   activity?: SpotlightActivity[];
@@ -23,6 +25,7 @@ function pseudoRandom(seed: string, offset: number): number {
 }
 
 export default function KudosSpotlightBoard({
+  lang,
   names,
   totalKudos,
   activity = [],
@@ -53,7 +56,7 @@ export default function KudosSpotlightBoard({
             color: '#FFFFFF',
           }}
         >
-          Sun* Annual Awards 2025
+          {t(lang, 'kudos.subtitle')}
         </p>
 
         {/* Divider — Figma node 2940:13478 (Rectangle 26): 1px #2E3940 */}
@@ -82,7 +85,7 @@ export default function KudosSpotlightBoard({
               color: '#FFEA9E',
             }}
           >
-            SPOTLIGHT BOARD
+            {t(lang, 'kudos.spotlight.title')}
           </h2>
         </div>
       </div>
@@ -151,7 +154,7 @@ export default function KudosSpotlightBoard({
               userSelect: 'none',
             }}
           >
-            Tìm kiếm
+            {t(lang, 'kudos.spotlight.search.placeholder')}
           </span>
         </div>
 
@@ -172,13 +175,13 @@ export default function KudosSpotlightBoard({
             whiteSpace: 'nowrap',
           }}
         >
-          {totalKudos.toLocaleString('vi-VN')} KUDOS
+          {totalKudos.toLocaleString('vi-VN')} {t(lang, 'kudos.spotlight.count.suffix')}
         </p>
 
         {/* Name cloud — absolute positioned spans */}
         <div
           style={{ position: 'absolute', inset: 0 }}
-          aria-label="Danh sách Sunner đã nhận Kudos"
+          aria-label={t(lang, 'kudos.spotlight.names.aria')}
         >
           {names.map((item) => {
             // Reserve the top band (y < 16%) for the count + search field so
@@ -259,7 +262,7 @@ export default function KudosSpotlightBoard({
         {/* Activity ticker — Figma nodes 3004:15995–2940:14230 (bottom-left, fading) */}
         {activity.length > 0 && (
           <div
-            aria-label="Kudos vừa được trao gần đây"
+            aria-label={t(lang, 'kudos.spotlight.activity.aria')}
             style={{
               position: 'absolute',
               left: 32,
@@ -288,8 +291,8 @@ export default function KudosSpotlightBoard({
                   }}
                 >
                   {/* Time is faded relative to the bright white name (Figma) */}
-                  <span style={{ opacity: 0.5 }}>{a.time}</span> {a.name} đã nhận
-                  được một Kudos mới
+                  <span style={{ opacity: 0.5 }}>{a.time}</span>{' '}
+                  {t(lang, 'kudos.spotlight.activity.item').replace('{name}', a.name)}
                 </p>
               );
             })}

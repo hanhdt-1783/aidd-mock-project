@@ -4,15 +4,17 @@ import type { KudosCard } from './types';
 import { HERO_BADGE } from './kudos-hero-badge';
 import KudosAvatarHover from './kudos-avatar-hover';
 import KudosHeroTag from './kudos-hero-tag';
+import type { Language } from '@/lib/i18n/dictionary';
 
 type UserInfoBlockProps = {
   user: KudosCard['sender'];
+  lang: Language;
 };
 
 // Sender / receiver identity block — avatar + name + (department · hero badge).
 // Shared by the Highlight carousel card and the All-Kudos list card so the
 // avatar treatment stays identical in both (Figma B.3.* / C.3.* "Infor").
-export default function UserInfoBlock({ user }: UserInfoBlockProps) {
+export default function UserInfoBlock({ user, lang }: UserInfoBlockProps) {
   const badgeSrc = user.title ? HERO_BADGE[user.title] : undefined;
   return (
     <div
@@ -26,7 +28,7 @@ export default function UserInfoBlock({ user }: UserInfoBlockProps) {
       }}
     >
       {/* Avatar — gold ring + profile preview on hover (Figma "Hover Avatar"). */}
-      <KudosAvatarHover user={user} size={64} />
+      <KudosAvatarHover user={user} size={64} lang={lang} />
       {/* Name — Figma node 256:4735: 16/700, dark on cream, centered.
           Always one line, never wraps (whiteSpace: nowrap). */}
       <span
@@ -80,7 +82,7 @@ export default function UserInfoBlock({ user }: UserInfoBlockProps) {
             }}
           />
         )}
-        {user.title && badgeSrc && <KudosHeroTag title={user.title} height={20} />}
+        {user.title && badgeSrc && <KudosHeroTag title={user.title} height={20} lang={lang} />}
       </div>
     </div>
   );

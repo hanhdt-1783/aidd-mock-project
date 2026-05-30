@@ -5,8 +5,10 @@ import { useCallback, useTransition } from 'react';
 import type { KudosCard } from './types';
 import KudosFilterButton from './kudos-filter-button';
 import KudosHighlightCarousel from './kudos-highlight-carousel';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 type KudosHighlightSectionProps = {
+  lang: Language;
   cards: KudosCard[];
   hashtags: string[];
   departments: string[];
@@ -17,6 +19,7 @@ type KudosHighlightSectionProps = {
 };
 
 export default function KudosHighlightSection({
+  lang,
   cards,
   hashtags,
   departments,
@@ -76,7 +79,7 @@ export default function KudosHighlightSection({
             color: '#FFFFFF',
           }}
         >
-          Sun* Annual Awards 2025
+          {t(lang, 'kudos.subtitle')}
         </p>
 
         {/* Divider — Figma node 2940:13455 (Rectangle 26): 1px #2E3940 */}
@@ -105,19 +108,21 @@ export default function KudosHighlightSection({
               color: '#FFEA9E',
             }}
           >
-            HIGHLIGHT KUDOS
+            {t(lang, 'kudos.highlight.title')}
           </h2>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <KudosFilterButton
-              label="Hashtag"
+              lang={lang}
+              label={t(lang, 'kudos.filter.hashtag')}
               prefix="#"
               options={hashtags}
               selected={selectedHashtag}
               onSelect={(v) => updateFilter('hashtag', v)}
             />
             <KudosFilterButton
-              label="Phòng ban"
+              lang={lang}
+              label={t(lang, 'kudos.filter.department')}
               options={departments}
               selected={selectedDepartment}
               onSelect={(v) => updateFilter('department', v)}
@@ -127,6 +132,7 @@ export default function KudosHighlightSection({
       </div>
 
       <KudosHighlightCarousel
+        lang={lang}
         cards={cards}
         onLike={onLike}
         onCopyLink={onCopyLink}

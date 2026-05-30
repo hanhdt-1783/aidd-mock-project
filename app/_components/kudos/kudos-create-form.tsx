@@ -5,6 +5,7 @@ import type { RecipientOption, KudoCreatePayload } from './kudos-create-form-typ
 import KudosCreateRecipientInput from './kudos-create-recipient-input';
 import KudosCreateRichToolbar from './kudos-create-rich-toolbar';
 import KudosCreateHashtagInput from './kudos-create-hashtag-input';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 // ── Design tokens (from MCP) ──────────────────────────────────────────────────
 const LABEL_STYLE: React.CSSProperties = {
@@ -59,6 +60,7 @@ type Props = {
   currentUserId: string;
   onSubmit: (payload: KudoCreatePayload) => Promise<void>;
   onCancel: () => void;
+  lang: Language;
 };
 
 // Reusable label cell that matches the fixed LABEL_COL width
@@ -66,10 +68,12 @@ function LabelCell({
   children,
   required,
   alignTop,
+  requiredLabel,
 }: {
   children: React.ReactNode;
   required?: boolean;
   alignTop?: boolean;
+  requiredLabel?: string;
 }) {
   return (
     <div
@@ -84,7 +88,7 @@ function LabelCell({
     >
       <span style={LABEL_STYLE}>{children}</span>
       {required && (
-        <span style={REQUIRED_STAR} aria-label="bắt buộc">
+        <span style={REQUIRED_STAR} aria-label={requiredLabel}>
           *
         </span>
       )}
@@ -98,6 +102,7 @@ export default function KudosCreateForm({
   currentUserId,
   onSubmit,
   onCancel,
+  lang,
 }: Props) {
   // ── State ─────────────────────────────────────────────────────────────────
   const [recipient, setRecipient] = useState<RecipientOption | null>(null);
@@ -138,13 +143,13 @@ export default function KudosCreateForm({
 
       switch (action) {
         case 'bold':
-          replacement = `**${selected || 'văn bản'}**`;
+          replacement = `**${selected || t(lang, 'kudos.create.editor.placeholder.text')}**`;
           break;
         case 'italic':
-          replacement = `*${selected || 'văn bản'}*`;
+          replacement = `*${selected || t(lang, 'kudos.create.editor.placeholder.text')}*`;
           break;
         case 'strike':
-          replacement = `~~${selected || 'văn bản'}~~`;
+          replacement = `~~${selected || t(lang, 'kudos.create.editor.placeholder.text')}~~`;
           break;
         case 'list': {
           const lineStart = content.lastIndexOf('\n', start - 1) + 1;
@@ -158,7 +163,7 @@ export default function KudosCreateForm({
         }
         case 'link': {
           const url = selected.startsWith('http') ? selected : 'https://';
-          replacement = `[${selected || 'tiêu đề'}](${url})`;
+          replacement = `[${selected || t(lang, 'kudos.create.editor.placeholder.title')}](${url})`;
           break;
         }
         case 'quote': {
@@ -181,7 +186,7 @@ export default function KudosCreateForm({
         el.focus();
       });
     },
-    [content]
+    [content, lang]
   );
 
   // ── @mention handling ─────────────────────────────────────────────────────
@@ -234,7 +239,7 @@ export default function KudosCreateForm({
     if (!files.length) return;
     const invalid = files.filter((f) => !['image/jpeg', 'image/png'].includes(f.type));
     if (invalid.length) {
-      setImageError('Chỉ hỗ trợ định dạng JPEG và PNG.');
+      setImageError(t(lang, 'kudos.create.image.typeError'));
       e.target.value = '';
       return;
     }
@@ -288,18 +293,19 @@ export default function KudosCreateForm({
           letterSpacing: '0.15px',
         }}
       >
-        Gửi lời cám ơn và ghi nhận đến đồng đội
+        {t(lang, 'kudos.create.title')}
       </h2>
 
       {/* ── B: Người nhận ────────────────────────────────────────────────── */}
       <div
         style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: SECTION_GAP }}
       >
-        <LabelCell required>Người nhận</LabelCell>
+        <LabelCell required requiredLabel={t(lang, 'kudos.create.required')}>{t(lang, 'kudos.create.recipient.label')}</LabelCell>
         <KudosCreateRecipientInput
           value={recipient}
           onChange={setRecipient}
           recipients={recipients}
+          lang={lang}
         />
       </div>
 
@@ -319,17 +325,17 @@ export default function KudosCreateForm({
           alignItems: 'center',
         }}
       >
-        <LabelCell required>Danh hiệu</LabelCell>
+        <LabelCell required requiredLabel={t(lang, 'kudos.create.required')}>{t(lang, 'kudos.create.title.label')}</LabelCell>
         <input
           type="text"
           value={title}
           onChange={(e) => {
             if (e.target.value.length <= MAX_TITLE) setTitle(e.target.value);
           }}
-          placeholder="Dành tặng một danh hiệu cho đồng đội"
+          placeholder={t(lang, 'kudos.create.title.placeholder')}
           maxLength={MAX_TITLE}
           required
-          aria-label="Danh hiệu"
+          aria-label={t(lang, 'kudos.create.title.label')}
           style={{ ...INPUT_STYLE, height: 56 }}
           onFocus={(e) => {
             (e.target as HTMLInputElement).style.borderColor = '#00101A';
@@ -341,15 +347,15 @@ export default function KudosCreateForm({
         {/* Empty cell to push hint to input column */}
         <div aria-hidden="true" />
         <p style={{ ...HINT_STYLE, margin: 0, fontSize: 16 }}>
-          Ví dụ: Người truyền động lực cho tôi.
+          {t(lang, 'kudos.create.title.hint1')}
           <br />
-          Danh hiệu sẽ hiển thị làm tiêu đề Kudos của bạn.
+          {t(lang, 'kudos.create.title.hint2')}
         </p>
       </div>
 
       {/* ── C + D: Rich text editor ──────────────────────────────────────── */}
       <div style={{ marginBottom: SECTION_GAP, position: 'relative' }}>
-        <KudosCreateRichToolbar onAction={handleToolbarAction} />
+        <KudosCreateRichToolbar onAction={handleToolbarAction} lang={lang} />
 
         <div style={{ position: 'relative' }}>
           <textarea
@@ -359,9 +365,9 @@ export default function KudosCreateForm({
             onKeyDown={(e) => {
               if (e.key === 'Escape') setMentionOpen(false);
             }}
-            placeholder="Hãy gửi gắm lời cám ơn và ghi nhận đến đồng đội tại đây nhé!"
+            placeholder={t(lang, 'kudos.create.content.placeholder')}
             required
-            aria-label="Nội dung Kudo"
+            aria-label={t(lang, 'kudos.create.content.aria')}
             rows={8}
             style={{
               ...INPUT_STYLE,
@@ -385,7 +391,7 @@ export default function KudosCreateForm({
           {mentionOpen && mentionSuggestions.length > 0 && (
             <ul
               role="listbox"
-              aria-label="Nhắc tới đồng nghiệp"
+              aria-label={t(lang, 'kudos.create.content.mention.aria')}
               style={{
                 position: 'absolute',
                 bottom: 'calc(100% + 4px)',
@@ -446,7 +452,7 @@ export default function KudosCreateForm({
           }}
         >
           <span style={{ ...HINT_STYLE, fontSize: 16, color: '#00101A' }}>
-            Bạn có thể &ldquo;@ + tên&rdquo; để nhắc tới đồng nghiệp khác
+            {t(lang, 'kudos.create.content.mentionHint')}
           </span>
           <span
             style={{
@@ -471,7 +477,7 @@ export default function KudosCreateForm({
           marginBottom: SECTION_GAP,
         }}
       >
-        <LabelCell required alignTop>
+        <LabelCell required alignTop requiredLabel={t(lang, 'kudos.create.required')}>
           Hashtag
         </LabelCell>
         <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -480,8 +486,9 @@ export default function KudosCreateForm({
             onChange={setHashtags}
             existingHashtags={existingHashtags}
             maxTags={5}
+            lang={lang}
           />
-          <span style={{ ...HINT_STYLE, fontSize: 13 }}>Tối đa 5</span>
+          <span style={{ ...HINT_STYLE, fontSize: 13 }}>{t(lang, 'kudos.create.max5')}</span>
         </div>
       </div>
 
@@ -494,7 +501,7 @@ export default function KudosCreateForm({
           marginBottom: SECTION_GAP,
         }}
       >
-        <LabelCell alignTop>Image</LabelCell>
+        <LabelCell alignTop>{t(lang, 'kudos.create.image.label')}</LabelCell>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div
             style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}
@@ -517,12 +524,12 @@ export default function KudosCreateForm({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={src}
-                  alt={`Ảnh ${idx + 1}`}
+                  alt={`${t(lang, 'kudos.create.image.alt')} ${idx + 1}`}
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
                 <button
                   type="button"
-                  aria-label={`Xóa ảnh ${idx + 1}`}
+                  aria-label={`${t(lang, 'kudos.create.image.remove')} ${idx + 1}`}
                   onClick={() => removeImage(idx)}
                   style={{
                     position: 'absolute',
@@ -596,9 +603,9 @@ export default function KudosCreateForm({
                       strokeLinecap="round"
                     />
                   </svg>
-                  Image
+                  {t(lang, 'kudos.create.image.label')}
                 </button>
-                <span style={{ ...HINT_STYLE, fontSize: 13 }}>Tối đa 5</span>
+                <span style={{ ...HINT_STYLE, fontSize: 13 }}>{t(lang, 'kudos.create.max5')}</span>
               </>
             )}
           </div>
@@ -683,7 +690,7 @@ export default function KudosCreateForm({
               userSelect: 'none',
             }}
           >
-            Gửi lời cám ơn và ghi nhận ẩn danh
+            {t(lang, 'kudos.create.anonymous.label')}
           </span>
         </label>
 
@@ -693,8 +700,8 @@ export default function KudosCreateForm({
               type="text"
               value={anonymousAlias}
               onChange={(e) => setAnonymousAlias(e.target.value)}
-              placeholder="Tên hiển thị ẩn danh"
-              aria-label="Tên ẩn danh"
+              placeholder={t(lang, 'kudos.create.anonymous.alias.placeholder')}
+              aria-label={t(lang, 'kudos.create.anonymous.alias.aria')}
               style={{ ...INPUT_STYLE, maxWidth: 400 }}
               onFocus={(e) => {
                 (e.target as HTMLInputElement).style.borderColor = '#00101A';
@@ -743,7 +750,7 @@ export default function KudosCreateForm({
               'rgba(255,234,158,0.10)';
           }}
         >
-          Hủy
+          {t(lang, 'kudos.create.cancel')}
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
               d="M18 6L6 18M6 6l12 12"
@@ -790,7 +797,7 @@ export default function KudosCreateForm({
               (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,234,158,1)';
           }}
         >
-          {submitting ? 'Đang gửi...' : 'Gửi'}
+          {submitting ? t(lang, 'kudos.create.submitting') : t(lang, 'kudos.create.submit')}
           {!submitting && (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path

@@ -257,6 +257,7 @@ export default function HomeWidgetButton({
       )}
 
       <KudosCreateModal
+        lang={lang}
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}

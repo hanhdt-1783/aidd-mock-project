@@ -2,14 +2,16 @@
 
 import { useState, useRef, useEffect } from 'react';
 import type { RecipientOption } from './kudos-create-form-types';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 type Props = {
   value: RecipientOption | null;
   onChange: (recipient: RecipientOption | null) => void;
   recipients: RecipientOption[];
+  lang: Language;
 };
 
-export default function KudosCreateRecipientInput({ value, onChange, recipients }: Props) {
+export default function KudosCreateRecipientInput({ value, onChange, recipients, lang }: Props) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -107,7 +109,7 @@ export default function KudosCreateRecipientInput({ value, onChange, recipients 
             </div>
             <button
               type="button"
-              aria-label="Xóa người nhận"
+              aria-label={t(lang, 'kudos.create.recipient.clear')}
               onClick={(e) => { e.stopPropagation(); clear(); }}
               style={{
                 display: 'flex',
@@ -135,8 +137,8 @@ export default function KudosCreateRecipientInput({ value, onChange, recipients 
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Escape') setOpen(false); }}
-            placeholder="Tìm kiếm..."
-            aria-label="Tìm người nhận"
+            placeholder={t(lang, 'kudos.create.recipient.search')}
+            aria-label={t(lang, 'kudos.create.recipient.search.aria')}
             style={{
               flex: 1,
               border: 'none',
@@ -159,7 +161,7 @@ export default function KudosCreateRecipientInput({ value, onChange, recipients 
               flex: 1,
             }}
           >
-            Tìm kiếm...
+            {t(lang, 'kudos.create.recipient.search')}
           </span>
         )}
 
@@ -188,7 +190,7 @@ export default function KudosCreateRecipientInput({ value, onChange, recipients 
         <ul
           id="recipient-listbox"
           role="listbox"
-          aria-label="Danh sách người nhận"
+          aria-label={t(lang, 'kudos.create.recipient.listbox.aria')}
           style={{
             position: 'absolute',
             top: 'calc(100% + 4px)',
@@ -215,7 +217,7 @@ export default function KudosCreateRecipientInput({ value, onChange, recipients 
                 color: '#999',
               }}
             >
-              Không tìm thấy
+              {t(lang, 'kudos.create.notFound')}
             </li>
           ) : (
             filtered.map((r) => (

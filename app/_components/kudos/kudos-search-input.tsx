@@ -1,6 +1,9 @@
 'use client';
 
+import { t, type Language } from '@/lib/i18n/dictionary';
+
 type KudosSearchInputProps = {
+  lang: Language;
   /** Optional handler — wired when profile search lands. Presentational for now. */
   onAction?: () => void;
 };
@@ -10,7 +13,9 @@ type KudosSearchInputProps = {
  * Figma node 2940:13450 (Tìm kiếm sunner): 381px, search icon + label,
  * same secondary-button styling as the entry pill.
  */
-export default function KudosSearchInput({ onAction }: KudosSearchInputProps) {
+export default function KudosSearchInput({ lang, onAction }: KudosSearchInputProps) {
+  const placeholder = t(lang, 'kudos.hero.search.placeholder');
+
   return (
     <div
       style={{
@@ -29,7 +34,7 @@ export default function KudosSearchInput({ onAction }: KudosSearchInputProps) {
       }}
       role="button"
       tabIndex={0}
-      aria-label="Tìm kiếm profile Sunner"
+      aria-label={placeholder}
       onClick={onAction}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -77,7 +82,7 @@ export default function KudosSearchInput({ onAction }: KudosSearchInputProps) {
           userSelect: 'none',
         }}
       >
-        Tìm kiếm profile Sunner
+        {placeholder}
       </span>
     </div>
   );

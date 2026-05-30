@@ -1,10 +1,10 @@
+import { t, type Language } from '@/lib/i18n/dictionary';
+
 type KudosEmptyStateProps = {
-  message?: string;
+  lang: Language;
 };
 
-export default function KudosEmptyState({
-  message = 'Hiện tại chưa có Kudos nào.',
-}: KudosEmptyStateProps) {
+export default function KudosEmptyState({ lang }: KudosEmptyStateProps) {
   return (
     <div
       style={{
@@ -41,7 +41,7 @@ export default function KudosEmptyState({
         <circle cx="18" cy="22" r="2" fill="#FFEA9E" />
         <circle cx="30" cy="22" r="2" fill="#FFEA9E" />
       </svg>
-      <p style={{ margin: 0 }}>{message}</p>
+      <p style={{ margin: 0 }}>{t(lang, 'kudos.empty.list')}</p>
     </div>
   );
 }

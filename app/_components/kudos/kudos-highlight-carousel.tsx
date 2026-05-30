@@ -4,8 +4,10 @@ import { useState, useCallback, type CSSProperties } from 'react';
 import type { KudosCard } from './types';
 import KudosCardHighlight from './kudos-card-highlight';
 import KudosEmptyState from './kudos-empty-state';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 type KudosHighlightCarouselProps = {
+  lang: Language;
   cards: KudosCard[];
   onLike: (id: string) => void;
   onCopyLink: (id: string) => void;
@@ -19,12 +21,14 @@ const CHEVRON = {
 };
 
 function NavButton({
+  lang,
   direction,
   onClick,
   size,
   iconSize,
   style,
 }: {
+  lang: Language;
   direction: 'prev' | 'next';
   onClick: () => void;
   size: number;
@@ -35,7 +39,7 @@ function NavButton({
     <button
       type="button"
       onClick={onClick}
-      aria-label={direction === 'prev' ? 'Kudos trước' : 'Kudos tiếp theo'}
+      aria-label={direction === 'prev' ? t(lang, 'kudos.carousel.prev') : t(lang, 'kudos.carousel.next')}
       style={{
         width: size,
         height: size,
@@ -74,6 +78,7 @@ function NavButton({
 }
 
 export default function KudosHighlightCarousel({
+  lang,
   cards,
   onLike,
   onCopyLink,
@@ -94,7 +99,7 @@ export default function KudosHighlightCarousel({
   if (total === 0) {
     return (
       <div className="px-page">
-        <KudosEmptyState />
+        <KudosEmptyState lang={lang} />
       </div>
     );
   }
@@ -137,11 +142,12 @@ export default function KudosHighlightCarousel({
             paddingBottom: 16,
             boxSizing: 'border-box',
           }}
-          aria-label="Highlight kudos carousel"
+          aria-label={t(lang, 'kudos.highlight.title')}
         >
           {visibleIndices.map((cardIdx, pos) => (
             <KudosCardHighlight
               key={`${cards[cardIdx].id}-${pos}`}
+              lang={lang}
               card={cards[cardIdx]}
               onLike={onLike}
               onCopyLink={onCopyLink}
@@ -182,6 +188,7 @@ export default function KudosHighlightCarousel({
           {/* Side nav buttons (Figma B.2.1/B.2.2) — overlaid on the edge fades,
               vertically centered on the cards. */}
           <NavButton
+            lang={lang}
             direction="prev"
             onClick={prev}
             size={80}
@@ -195,6 +202,7 @@ export default function KudosHighlightCarousel({
             }}
           />
           <NavButton
+            lang={lang}
             direction="next"
             onClick={next}
             size={80}
@@ -220,7 +228,7 @@ export default function KudosHighlightCarousel({
           gap: 32,
         }}
       >
-        <NavButton direction="prev" onClick={prev} size={48} iconSize={28} />
+        <NavButton lang={lang} direction="prev" onClick={prev} size={48} iconSize={28} />
         {/* Page indicator (Figma B.5.2): active page is larger + white, the
             "/total" is smaller + muted grey. */}
         <span
@@ -255,7 +263,7 @@ export default function KudosHighlightCarousel({
             /{total}
           </span>
         </span>
-        <NavButton direction="next" onClick={next} size={48} iconSize={28} />
+        <NavButton lang={lang} direction="next" onClick={next} size={48} iconSize={28} />
       </div>
     </div>
   );

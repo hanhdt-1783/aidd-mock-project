@@ -2,12 +2,14 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { sanitizeTag } from '@/lib/kudos/sanitize-tag';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 type Props = {
   value: string[];
   onChange: (tags: string[]) => void;
   existingHashtags: string[];
   maxTags?: number;
+  lang: Language;
 };
 
 const MAX = 5;
@@ -17,6 +19,7 @@ export default function KudosCreateHashtagInput({
   onChange,
   existingHashtags,
   maxTags = MAX,
+  lang,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -89,7 +92,7 @@ export default function KudosCreateHashtagInput({
             #{tag}
             <button
               type="button"
-              aria-label={`Xóa hashtag ${tag}`}
+              aria-label={`${t(lang, 'kudos.create.hashtag.remove')} ${tag}`}
               onClick={() => removeTag(tag)}
               style={{
                 display: 'flex',
@@ -170,7 +173,7 @@ export default function KudosCreateHashtagInput({
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Tìm hoặc tạo hashtag..."
+                  placeholder={t(lang, 'kudos.create.hashtag.search')}
                   style={{
                     width: '100%',
                     boxSizing: 'border-box',
@@ -238,7 +241,7 @@ export default function KudosCreateHashtagInput({
                         (e.currentTarget as HTMLLIElement).style.background = 'transparent';
                       }}
                     >
-                      + Tạo &ldquo;#{newTag}&rdquo;
+                      + {t(lang, 'kudos.create.hashtag.create')} &ldquo;#{newTag}&rdquo;
                     </li>
                   )}
                   {suggestions.length === 0 && !canCreate && (
@@ -250,7 +253,7 @@ export default function KudosCreateHashtagInput({
                         color: '#999',
                       }}
                     >
-                      Không tìm thấy
+                      {t(lang, 'kudos.create.notFound')}
                     </li>
                   )}
                 </ul>

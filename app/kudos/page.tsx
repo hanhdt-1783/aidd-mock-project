@@ -117,6 +117,7 @@ export default async function KudosRoute({
 
       <main className="flex-1 w-full">
         <KudosPage
+          lang={lang}
           highlightCards={safeHighlightCards}
           allCards={safeAllCards}
           hashtags={safeHashtags}

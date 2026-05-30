@@ -2,11 +2,13 @@
 
 import type { KudosCard as KudosCardType } from './types';
 import UserInfoBlock from './kudos-card-user-info';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 type KudosCardProps = {
   card: KudosCardType;
   onLike: (id: string) => void;
   onCopyLink: (id: string) => void;
+  lang: Language;
 };
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -14,7 +16,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 // All-Kudos list card (Figma "C.3_KUDO Post"). Same cream visual language as the
 // Highlight carousel card, adapted for the feed: full width, no outer border,
 // 24px radius, and an attachment gallery between the message and hashtags.
-export default function KudosCard({ card, onLike, onCopyLink }: KudosCardProps) {
+export default function KudosCard({ card, onLike, onCopyLink, lang }: KudosCardProps) {
   // Absolute timestamp "HH:mm - MM/DD/YYYY" (Figma C.3.4_Time). UTC getters keep
   // the server and client render identical (no hydration drift).
   const dt = new Date(card.createdAt);
@@ -49,7 +51,7 @@ export default function KudosCard({ card, onLike, onCopyLink }: KudosCardProps) 
     >
       {/* Sender → Receiver row (Figma "Info user") */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 24 }}>
-        <UserInfoBlock user={card.sender} />
+        <UserInfoBlock user={card.sender} lang={lang} />
 
         {/* Send icon — Figma MM_MEDIA_Send (filled paper-plane), centered with
             the avatars. Dark fill so it reads on the cream card. */}
@@ -70,7 +72,7 @@ export default function KudosCard({ card, onLike, onCopyLink }: KudosCardProps) 
           </svg>
         </div>
 
-        <UserInfoBlock user={card.receiver} />
+        <UserInfoBlock user={card.receiver} lang={lang} />
       </div>
 
       {goldDivider}
@@ -121,7 +123,7 @@ export default function KudosCard({ card, onLike, onCopyLink }: KudosCardProps) 
           )}
           <a
             href={`/kudos/${card.id}/edit`}
-            aria-label="Chỉnh sửa Kudo"
+            aria-label={t(lang, 'kudos.card.edit.aria')}
             style={{
               position: 'absolute',
               right: 0,
@@ -186,7 +188,7 @@ export default function KudosCard({ card, onLike, onCopyLink }: KudosCardProps) 
               <img
                 key={idx}
                 src={src}
-                alt={`Ảnh đính kèm ${idx + 1}`}
+                alt={`${t(lang, 'kudos.card.attachment.alt')} ${idx + 1}`}
                 style={{
                   width: 88,
                   height: 88,
@@ -237,7 +239,7 @@ export default function KudosCard({ card, onLike, onCopyLink }: KudosCardProps) 
           type="button"
           disabled={!card.canLike}
           onClick={() => onLike(card.id)}
-          aria-label={card.likedByMe ? 'Bỏ thích' : 'Thích'}
+          aria-label={card.likedByMe ? t(lang, 'kudos.card.unlike.aria') : t(lang, 'kudos.card.like.aria')}
           aria-pressed={card.likedByMe}
           style={{
             display: 'flex',
@@ -283,7 +285,7 @@ export default function KudosCard({ card, onLike, onCopyLink }: KudosCardProps) 
         <button
           type="button"
           onClick={() => onCopyLink(card.id)}
-          aria-label="Copy Link"
+          aria-label={t(lang, 'kudos.card.copyLink')}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -308,7 +310,7 @@ export default function KudosCard({ card, onLike, onCopyLink }: KudosCardProps) 
             (e.currentTarget as HTMLButtonElement).style.background = 'none';
           }}
         >
-          Copy Link
+          {t(lang, 'kudos.card.copyLink')}
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
               d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"

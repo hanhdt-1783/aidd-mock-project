@@ -2,13 +2,13 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { getLang } from '@/lib/i18n/get-lang';
+import { t } from '@/lib/i18n/dictionary';
 import SiteHeader from '@/app/_components/shared/site-header';
 
-export const metadata: Metadata = {
-  title: 'Chỉnh sửa Kudo — Sun* Annual Awards 2025',
-};
-
-const COMING_SOON = { vi: 'Sắp ra mắt', en: 'Coming Soon' } as const;
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  return { title: t(lang, 'kudos.edit.meta.title') };
+}
 
 // Edit Kudo — placeholder until the editor is built. Mirrors the profile
 // "Coming Soon" pattern so the per-card pencil link lands somewhere consistent.
@@ -38,8 +38,8 @@ export default async function EditKudoPage() {
         style={{ paddingTop: 80 }}
       >
         <div className="text-center">
-          <h1 className="text-4xl font-semibold">Chỉnh sửa Kudo</h1>
-          <p className="mt-4 text-lg text-zinc-300">{COMING_SOON[lang]}</p>
+          <h1 className="text-4xl font-semibold">{t(lang, 'kudos.edit.title')}</h1>
+          <p className="mt-4 text-lg text-zinc-300">{t(lang, 'kudos.comingSoon')}</p>
         </div>
       </main>
     </div>

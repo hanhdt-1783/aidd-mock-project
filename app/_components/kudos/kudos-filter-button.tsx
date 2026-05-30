@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 type KudosFilterButtonProps = {
+  lang: Language;
   label: string;
   options: string[];
   selected: string | null;
@@ -13,6 +15,7 @@ type KudosFilterButtonProps = {
 };
 
 export default function KudosFilterButton({
+  lang,
   label,
   options,
   selected,
@@ -152,7 +155,7 @@ export default function KudosFilterButton({
                 }
               }}
             >
-              Tất cả
+              {t(lang, 'kudos.filter.clear')}
             </button>
           </li>
 

@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import type { SidebarStats } from './types';
+import { t, type Language } from '@/lib/i18n/dictionary';
 import KudosDoubleHeartsBadge from './kudos-double-hearts-badge';
 
 type StatRowProps = {
@@ -58,11 +59,12 @@ function StatRow({ label, value, badge }: StatRowProps) {
 }
 
 type KudosSidebarStatsProps = {
+  lang: Language;
   stats: SidebarStats;
   onOpenGift: () => void;
 };
 
-export default function KudosSidebarStats({ stats, onOpenGift }: KudosSidebarStatsProps) {
+export default function KudosSidebarStats({ lang, stats, onOpenGift }: KudosSidebarStatsProps) {
   return (
     <div
       style={{
@@ -78,12 +80,12 @@ export default function KudosSidebarStats({ stats, onOpenGift }: KudosSidebarSta
       }}
     >
       {/* D.1.2 / D.1.3 / D.1.4 */}
-      <StatRow label="Số Kudos bạn nhận được:" value={stats.kudosReceived} />
-      <StatRow label="Số Kudos bạn đã gửi:" value={stats.kudosSent} />
+      <StatRow label={t(lang, 'kudos.sidebar.stats.received')} value={stats.kudosReceived} />
+      <StatRow label={t(lang, 'kudos.sidebar.stats.sent')} value={stats.kudosSent} />
       <StatRow
-        label="Số tim bạn nhận được:"
+        label={t(lang, 'kudos.sidebar.stats.hearts')}
         value={stats.heartsReceived}
-        badge={<KudosDoubleHeartsBadge />}
+        badge={<KudosDoubleHeartsBadge lang={lang} />}
       />
 
       {/* D.1.5 Divider */}
@@ -97,13 +99,14 @@ export default function KudosSidebarStats({ stats, onOpenGift }: KudosSidebarSta
       />
 
       {/* D.1.6 / D.1.7 */}
-      <StatRow label="Số Secret Box bạn đã mở:" value={stats.secretBoxesOpened} />
-      <StatRow label="Số Secret Box chưa mở:" value={stats.secretBoxesUnopened} />
+      <StatRow label={t(lang, 'kudos.sidebar.stats.boxesOpened')} value={stats.secretBoxesOpened} />
+      <StatRow label={t(lang, 'kudos.sidebar.stats.boxesUnopened')} value={stats.secretBoxesUnopened} />
 
       {/* D.1.8 "Mở Secret Box" button — text left, gift icon right */}
       <button
         type="button"
         onClick={onOpenGift}
+        title={t(lang, 'kudos.sidebar.openGift.coming.soon')}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -136,7 +139,7 @@ export default function KudosSidebarStats({ stats, onOpenGift }: KudosSidebarSta
           (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
         }}
       >
-        Mở Secret Box
+        {t(lang, 'kudos.sidebar.openGift')}
         {/* Gift icon (MM_MEDIA_Open Gift, Figma I2940:13497;186:1766) */}
         <svg
           width="24"

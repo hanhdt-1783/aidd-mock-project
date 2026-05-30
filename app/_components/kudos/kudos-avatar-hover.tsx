@@ -5,8 +5,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { KudosUser } from './types';
 import { HERO_BADGE } from './kudos-hero-badge';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 type KudosAvatarHoverProps = {
+  lang: Language;
   user: KudosUser;
   /** Avatar diameter in px (default 64, matching the card). */
   size?: number;
@@ -39,7 +41,7 @@ function initialsOf(name: string): string {
 // The popover renders in a PORTAL so it escapes the Highlight carousel's
 // `overflow: hidden` and sits above the fixed header (z-index), and it flips
 // below the avatar when there isn't room above the header.
-export default function KudosAvatarHover({ user, size = 64 }: KudosAvatarHoverProps) {
+export default function KudosAvatarHover({ lang, user, size = 64 }: KudosAvatarHoverProps) {
   const triggerRef = useRef<HTMLSpanElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [anchor, setAnchor] = useState<Anchor | null>(null);
@@ -175,7 +177,7 @@ export default function KudosAvatarHover({ user, size = 64 }: KudosAvatarHoverPr
                   color: '#999999',
                 }}
               >
-                Tên đơn vị: {user.department}
+                {t(lang, 'kudos.avatar.department.label')}: {user.department}
               </span>
             )}
 
@@ -207,7 +209,7 @@ export default function KudosAvatarHover({ user, size = 64 }: KudosAvatarHoverPr
                 color: '#FFFFFF',
               }}
             >
-              Số Kudos nhận được: <span style={{ color: '#FFEA9E' }}>{user.kudosReceived}</span>
+              {t(lang, 'kudos.sidebar.stats.received')} <span style={{ color: '#FFEA9E' }}>{user.kudosReceived}</span>
             </span>
             <span
               style={{
@@ -218,7 +220,7 @@ export default function KudosAvatarHover({ user, size = 64 }: KudosAvatarHoverPr
                 color: '#FFFFFF',
               }}
             >
-              Số Kudos đã gửi: <span style={{ color: '#FFEA9E' }}>{user.kudosSent}</span>
+              {t(lang, 'kudos.sidebar.stats.sent')} <span style={{ color: '#FFEA9E' }}>{user.kudosSent}</span>
             </span>
 
             {/* "Gửi KUDO" — same style as the "Mở Secret Box" button, pencil left */}
@@ -258,7 +260,7 @@ export default function KudosAvatarHover({ user, size = 64 }: KudosAvatarHoverPr
                   fill="currentColor"
                 />
               </svg>
-              Gửi KUDO
+              {t(lang, 'kudos.avatar.send-kudo')}
             </button>
           </div>,
           document.body,

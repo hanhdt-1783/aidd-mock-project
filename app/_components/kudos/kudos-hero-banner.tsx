@@ -11,14 +11,17 @@ import type { RecipientOption } from './types';
 import { useKudosToast, KudosToast } from './kudos-toast';
 import { createKudo } from '@/lib/kudos/actions';
 import { deleteKudoImages, uploadKudoImage } from '@/lib/kudos/upload-kudo-image';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 type KudosHeroBannerProps = {
+  lang: Language;
   recipients: RecipientOption[];
   existingHashtags: string[];
   currentUserId: string;
 };
 
 export default function KudosHeroBanner({
+  lang,
   recipients,
   existingHashtags,
   currentUserId,
@@ -69,10 +72,10 @@ export default function KudosHeroBanner({
       }
 
       setModalOpen(false);
-      showToast('Đã gửi Kudo của bạn — cảm ơn bạn đã ghi nhận đồng đội!');
+      showToast(t(lang, 'kudos.hero.toast.sent'));
       router.refresh();
     },
-    [currentUserId, router, showToast],
+    [currentUserId, router, showToast, lang],
   );
 
   return (
@@ -82,7 +85,7 @@ export default function KudosHeroBanner({
           both sit ON TOP of the keyvisual (design y≈184–480 within the 512px
           hero), not below it. */}
       <section
-        aria-label="Kudos hero banner"
+        aria-label={t(lang, 'kudos.hero.title')}
         className="px-page"
         style={{
           position: 'relative',
@@ -143,7 +146,7 @@ export default function KudosHeroBanner({
                 color: '#FFEA9E',
               }}
             >
-              Hệ thống ghi nhận và cảm ơn
+              {t(lang, 'kudos.hero.title')}
             </p>
 
             <div style={{ height: 104, display: 'flex', alignItems: 'center' }}>
@@ -174,13 +177,14 @@ export default function KudosHeroBanner({
               gap: 32,
             }}
           >
-            <KudosEntryInput onAction={() => setModalOpen(true)} />
-            <KudosSearchInput />
+            <KudosEntryInput lang={lang} onAction={() => setModalOpen(true)} />
+            <KudosSearchInput lang={lang} />
           </div>
         </div>
       </section>
 
       <KudosCreateModal
+        lang={lang}
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}

@@ -1,10 +1,15 @@
 'use client';
 
+import { t, type Language } from '@/lib/i18n/dictionary';
+
 type KudosEntryInputProps = {
+  lang: Language;
   onAction: () => void;
 };
 
-export default function KudosEntryInput({ onAction }: KudosEntryInputProps) {
+export default function KudosEntryInput({ lang, onAction }: KudosEntryInputProps) {
+  const placeholder = t(lang, 'kudos.hero.input.placeholder');
+
   return (
     <div
       style={{
@@ -24,7 +29,7 @@ export default function KudosEntryInput({ onAction }: KudosEntryInputProps) {
       }}
       role="button"
       tabIndex={0}
-      aria-label="Viết lời cảm ơn đồng nghiệp"
+      aria-label={placeholder}
       onClick={onAction}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -75,7 +80,7 @@ export default function KudosEntryInput({ onAction }: KudosEntryInputProps) {
           userSelect: 'none',
         }}
       >
-        Hôm nay, bạn muốn gửi lời cảm ơn và ghi nhận đến ai?
+        {placeholder}
       </span>
     </div>
   );

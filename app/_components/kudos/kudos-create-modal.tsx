@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import type { RecipientOption, KudoCreatePayload } from './kudos-create-form-types';
 import KudosCreateForm from './kudos-create-form';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 type Props = {
   open: boolean;
@@ -11,6 +12,7 @@ type Props = {
   recipients: RecipientOption[];
   existingHashtags: string[];
   currentUserId: string;
+  lang: Language;
 };
 
 export default function KudosCreateModal({
@@ -20,6 +22,7 @@ export default function KudosCreateModal({
   recipients,
   existingHashtags,
   currentUserId,
+  lang,
 }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -64,7 +67,7 @@ export default function KudosCreateModal({
       ref={dialogRef}
       onClick={handleDialogClick}
       aria-modal="true"
-      aria-label="Viết Kudo"
+      aria-label={t(lang, 'kudos.create.modal.aria')}
       style={{
         // Reset browser dialog defaults
         padding: 0,
@@ -138,6 +141,7 @@ export default function KudosCreateModal({
             currentUserId={currentUserId}
             onSubmit={onSubmit}
             onCancel={onClose}
+            lang={lang}
           />
         </div>
       </div>

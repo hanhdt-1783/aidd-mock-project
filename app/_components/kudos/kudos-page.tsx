@@ -17,6 +17,7 @@ import KudosCardItem from './kudos-card';
 import KudosEmptyState from './kudos-empty-state';
 import { KudosToast, useKudosToast } from './kudos-toast';
 import { toggleKudosLike } from '@/lib/kudos/actions';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 type KudosPageProps = {
   highlightCards: KudosCardType[];
@@ -31,6 +32,7 @@ type KudosPageProps = {
   totalKudos: number;
   recipients: RecipientOption[];
   currentUserId: string;
+  lang: Language;
 };
 
 type LikePatch = { id: string; liked: boolean; likeCount: number };
@@ -70,6 +72,7 @@ export default function KudosPage({
   totalKudos,
   recipients,
   currentUserId,
+  lang,
 }: KudosPageProps) {
   const router = useRouter();
   const [, startTransition] = useTransition();
@@ -115,7 +118,7 @@ export default function KudosPage({
 
         const result = await toggleKudosLike(id);
         if (!result.ok) {
-          showToast(result.error ?? 'Không thể cập nhật lượt thích');
+          showToast(result.error ?? t(lang, 'kudos.feed.like.error'));
           router.refresh(); // reconcile from server
           return;
         }
@@ -137,6 +140,7 @@ export default function KudosPage({
       setOptimisticAll,
       setOptimisticHighlight,
       showToast,
+      lang,
     ],
   );
 
@@ -146,9 +150,9 @@ export default function KudosPage({
         const url = `${window.location.origin}/kudos/${id}`;
         navigator.clipboard.writeText(url).catch(() => {});
       }
-      showToast('Link đã được sao chép — sẵn sàng chia sẻ!');
+      showToast(t(lang, 'kudos.card.copied.toast'));
     },
-    [showToast],
+    [showToast, lang],
   );
 
   return (
@@ -167,6 +171,7 @@ export default function KudosPage({
         recipients={recipients}
         existingHashtags={hashtags}
         currentUserId={currentUserId}
+        lang={lang}
       />
 
       <div
@@ -186,6 +191,7 @@ export default function KudosPage({
             selectedDepartment={selectedDepartment}
             onLike={handleLike}
             onCopyLink={handleCopyLink}
+            lang={lang}
           />
         </div>
 
@@ -197,6 +203,7 @@ export default function KudosPage({
             name: c.receiver.name,
             time: formatTickerTime(c.createdAt),
           }))}
+          lang={lang}
         />
 
         <section
@@ -222,7 +229,7 @@ export default function KudosPage({
                 color: '#FFFFFF',
               }}
             >
-              Sun* Annual Awards 2025
+              {t(lang, 'kudos.subtitle')}
             </p>
 
             {/* Divider — 1px #2E3940 (Rectangle 26), matches HIGHLIGHT KUDOS */}
@@ -243,7 +250,7 @@ export default function KudosPage({
                 color: '#FFEA9E',
               }}
             >
-              ALL KUDOS
+              {t(lang, 'kudos.all.title')}
             </h2>
           </div>
 
@@ -265,7 +272,7 @@ export default function KudosPage({
               }}
             >
               {optimisticAll.length === 0 ? (
-                <KudosEmptyState />
+                <KudosEmptyState lang={lang} />
               ) : (
                 <>
                   {optimisticAll.slice(0, visibleCount).map((card) => (
@@ -274,6 +281,7 @@ export default function KudosPage({
                       card={card}
                       onLike={handleLike}
                       onCopyLink={handleCopyLink}
+                      lang={lang}
                     />
                   ))}
                   {optimisticAll.length > visibleCount && (
@@ -305,14 +313,14 @@ export default function KudosPage({
                           '#FFEA9E';
                       }}
                     >
-                      Xem thêm
+                      {t(lang, 'kudos.feed.loadMore')}
                     </button>
                   )}
                 </>
               )}
             </div>
 
-            <KudosSidebar stats={sidebarStats} giftRecipients={giftRecipients} />
+            <KudosSidebar stats={sidebarStats} giftRecipients={giftRecipients} lang={lang} />
           </div>
         </section>
       </div>

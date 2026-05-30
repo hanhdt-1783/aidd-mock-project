@@ -2,11 +2,13 @@
 
 import type { KudosCard } from './types';
 import UserInfoBlock from './kudos-card-user-info';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
 type KudosCardHighlightProps = {
   card: KudosCard;
   onLike: (id: string) => void;
   onCopyLink: (id: string) => void;
+  lang: Language;
 };
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -15,6 +17,7 @@ export default function KudosCardHighlight({
   card,
   onLike,
   onCopyLink,
+  lang,
 }: KudosCardHighlightProps) {
   // Absolute timestamp "HH:mm - MM/DD/YYYY" (Figma node 335:9449). UTC getters
   // keep the server and client render identical (no hydration drift).
@@ -50,7 +53,7 @@ export default function KudosCardHighlight({
     >
       {/* Sender → Receiver row (Frame 482) */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 24 }}>
-        <UserInfoBlock user={card.sender} />
+        <UserInfoBlock user={card.sender} lang={lang} />
 
         {/* Send icon — Figma MM_MEDIA_Send (filled paper-plane), centered with
             the avatars. Dark fill so it reads on the cream card. */}
@@ -77,7 +80,7 @@ export default function KudosCardHighlight({
           </svg>
         </div>
 
-        <UserInfoBlock user={card.receiver} />
+        <UserInfoBlock user={card.receiver} lang={lang} />
       </div>
 
       {goldDivider}
@@ -184,7 +187,7 @@ export default function KudosCardHighlight({
           type="button"
           disabled={!card.canLike}
           onClick={() => onLike(card.id)}
-          aria-label={card.likedByMe ? 'Bỏ thích' : 'Thích'}
+          aria-label={card.likedByMe ? t(lang, 'kudos.card.unlike.aria') : t(lang, 'kudos.card.like.aria')}
           aria-pressed={card.likedByMe}
           style={{
             display: 'flex',
@@ -231,7 +234,7 @@ export default function KudosCardHighlight({
           <button
             type="button"
             onClick={() => onCopyLink(card.id)}
-            aria-label="Copy Link"
+            aria-label={t(lang, 'kudos.card.copyLink')}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -257,7 +260,7 @@ export default function KudosCardHighlight({
               (e.currentTarget as HTMLButtonElement).style.background = 'none';
             }}
           >
-            Copy Link
+            {t(lang, 'kudos.card.copyLink')}
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
                 d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"
@@ -302,7 +305,7 @@ export default function KudosCardHighlight({
               (e.currentTarget as HTMLAnchorElement).style.background = 'none';
             }}
           >
-            Xem chi tiết
+            {t(lang, 'kudos.card.viewDetails')}
             {/* Arrow up-right ↗ (Figma IC 186:2691) — matches home CTA pattern */}
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path

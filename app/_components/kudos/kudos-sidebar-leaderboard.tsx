@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react';
 import type { GiftRecipient } from './types';
+import { t, type Language } from '@/lib/i18n/dictionary';
 import KudosAvatarHover from './kudos-avatar-hover';
 
 type KudosSidebarLeaderboardProps = {
+  lang: Language;
   title: ReactNode;
   recipients: GiftRecipient[];
 };
@@ -10,6 +12,7 @@ type KudosSidebarLeaderboardProps = {
 // "10 SUNNER NHẬN QUÀ MỚI NHẤT" sidebar list (Figma D.3).
 // Row = 64px avatar (white border) + gold name (22/700) + white prize (16/700).
 export default function KudosSidebarLeaderboard({
+  lang,
   title,
   recipients,
 }: KudosSidebarLeaderboardProps) {
@@ -55,66 +58,82 @@ export default function KudosSidebarLeaderboard({
           overflowY: 'auto',
         }}
       >
-        {recipients.map((recipient) => (
-          <li key={recipient.id}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                width: '100%',
-                height: 64,
-              }}
-            >
-              {/* D.3.x Avatar — 64px, gold ring + profile preview on hover */}
-              <KudosAvatarHover user={recipient.user} size={64} />
-
-              {/* Name + prize */}
+        {recipients.length === 0 ? (
+          <li
+            style={{
+              fontFamily: 'Montserrat, sans-serif',
+              fontSize: 16,
+              fontWeight: 700,
+              lineHeight: '24px',
+              color: '#FFFFFF',
+              textAlign: 'center',
+              padding: '16px 0',
+            }}
+          >
+            {t(lang, 'kudos.empty.sidebar')}
+          </li>
+        ) : (
+          recipients.map((recipient) => (
+            <li key={recipient.id}>
               <div
                 style={{
                   display: 'flex',
-                  flexDirection: 'column',
-                  gap: 2,
-                  flex: 1,
-                  minWidth: 0,
+                  alignItems: 'center',
+                  gap: 8,
+                  width: '100%',
+                  height: 64,
                 }}
               >
-                <a
-                  href={`/profile/${recipient.id}`}
+                {/* D.3.x Avatar — 64px, gold ring + profile preview on hover */}
+                <KudosAvatarHover lang={lang} user={recipient.user} size={64} />
+
+                {/* Name + prize */}
+                <div
                   style={{
-                    fontFamily: 'Montserrat, sans-serif',
-                    fontSize: 22,
-                    fontWeight: 700,
-                    lineHeight: '28px',
-                    color: '#FFEA9E',
-                    textDecoration: 'none',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    display: 'block',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    flex: 1,
+                    minWidth: 0,
                   }}
                 >
-                  {recipient.name}
-                </a>
-                <span
-                  style={{
-                    fontFamily: 'Montserrat, sans-serif',
-                    fontSize: 16,
-                    fontWeight: 700,
-                    lineHeight: '24px',
-                    letterSpacing: '0.15px',
-                    color: '#FFFFFF',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {recipient.prizeDescription}
-                </span>
+                  <a
+                    href={`/profile/${recipient.id}`}
+                    style={{
+                      fontFamily: 'Montserrat, sans-serif',
+                      fontSize: 22,
+                      fontWeight: 700,
+                      lineHeight: '28px',
+                      color: '#FFEA9E',
+                      textDecoration: 'none',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      display: 'block',
+                    }}
+                  >
+                    {recipient.name}
+                  </a>
+                  <span
+                    style={{
+                      fontFamily: 'Montserrat, sans-serif',
+                      fontSize: 16,
+                      fontWeight: 700,
+                      lineHeight: '24px',
+                      letterSpacing: '0.15px',
+                      color: '#FFFFFF',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {recipient.prizeDescription}
+                  </span>
+                </div>
               </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          ))
+        )}
       </ul>
     </div>
   );

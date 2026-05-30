@@ -4,24 +4,25 @@ import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { HERO_BADGE } from './kudos-hero-badge';
+import { t, type Language } from '@/lib/i18n/dictionary';
 
-// Per-title hover copy (Figma "Hover danh hiệu *" frames).
-const HERO_TOOLTIP: Record<string, { count: string; body: string }> = {
+// Per-title tooltip key pairs (Figma "Hover danh hiệu *" frames).
+const HERO_TOOLTIP_KEYS: Record<string, { countKey: Parameters<typeof t>[1]; bodyKey: Parameters<typeof t>[1] }> = {
   'New Hero': {
-    count: 'Có 1–4 người gửi Kudos cho bạn',
-    body: 'Hành trình lan tỏa điều tốt đẹp bắt đầu – những lời cảm ơn và ghi nhận đầu tiên đã tìm đến.',
+    countKey: 'kudos.hero.tag.new-hero.count',
+    bodyKey: 'kudos.hero.tag.new-hero.body',
   },
   'Rising Hero': {
-    count: 'Có 5-9 người gửi Kudos cho bạn',
-    body: 'Hình ảnh bạn đang lớn dần trong trái tim đồng đội bằng sự tử tế và cống hiến của mình.',
+    countKey: 'kudos.hero.tag.rising-hero.count',
+    bodyKey: 'kudos.hero.tag.rising-hero.body',
   },
   'Super Hero': {
-    count: 'Có 10–20 người gửi Kudos cho bạn',
-    body: 'Bạn đã trở thành biểu tượng được tin tưởng và yêu quý, người luôn sẵn sàng hỗ trợ và được nhiều đồng đội nhớ đến.',
+    countKey: 'kudos.hero.tag.super-hero.count',
+    bodyKey: 'kudos.hero.tag.super-hero.body',
   },
   'Legend Hero': {
-    count: 'Có hơn 20 người gửi Kudos cho bạn',
-    body: 'Bạn đã trở thành huyền thoại – người để lại dấu ấn khó quên trong tập thể bằng trái tim và hành động của mình.',
+    countKey: 'kudos.hero.tag.legend-hero.count',
+    bodyKey: 'kudos.hero.tag.legend-hero.body',
   },
 };
 
@@ -34,6 +35,7 @@ const HEADER_H = 80;
 const MARGIN = 8;
 
 type KudosHeroTagProps = {
+  lang: Language;
   title: string;
   /** Rendered badge height in px (default 20, matching the card). */
   height?: number;
@@ -42,9 +44,9 @@ type KudosHeroTagProps = {
 // Hero rank badge that reveals a description tooltip on hover/focus.
 // The tooltip renders in a portal so it escapes the carousel `overflow:hidden`
 // and the fixed header, flipping below when there's no room above.
-export default function KudosHeroTag({ title, height = 20 }: KudosHeroTagProps) {
+export default function KudosHeroTag({ lang, title, height = 20 }: KudosHeroTagProps) {
   const src = HERO_BADGE[title];
-  const copy = HERO_TOOLTIP[title];
+  const keys = HERO_TOOLTIP_KEYS[title];
   const triggerRef = useRef<HTMLSpanElement>(null);
   const [anchor, setAnchor] = useState<Anchor | null>(null);
 
@@ -89,7 +91,7 @@ export default function KudosHeroTag({ title, height = 20 }: KudosHeroTagProps) 
       <Image src={src} alt={title} width={110} height={20} style={{ width: 'auto', height, display: 'block' }} />
 
       {anchor &&
-        copy &&
+        keys &&
         typeof document !== 'undefined' &&
         createPortal(
           <div
@@ -125,7 +127,7 @@ export default function KudosHeroTag({ title, height = 20 }: KudosHeroTagProps) 
                 color: '#FFFFFF',
               }}
             >
-              {copy.count}
+              {t(lang, keys.countKey)}
             </span>
             <span
               style={{
@@ -136,7 +138,7 @@ export default function KudosHeroTag({ title, height = 20 }: KudosHeroTagProps) 
                 color: '#999999',
               }}
             >
-              {copy.body}
+              {t(lang, keys.bodyKey)}
             </span>
           </div>,
           document.body,
