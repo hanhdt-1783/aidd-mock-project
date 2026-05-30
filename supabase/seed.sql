@@ -134,6 +134,47 @@ BEGIN
     (k5, u2, 1)
   ON CONFLICT DO NOTHING;
 
+  -- Extra demo kudos (fixed IDs) so the All-Kudos feed exceeds one page (5)
+  -- and the "Xem thêm" button appears. Older timestamps → they sort below k1..k5.
+  INSERT INTO public.kudos (id, sender_id, receiver_id, title, content, image_urls, created_at)
+  VALUES
+    ('22222222-2222-2222-2222-222222220001', u2, u3, 'ĐỒNG ĐỘI TUYỆT VỜI',
+     'Cảm ơn em đã luôn sẵn sàng hỗ trợ cả nhóm mỗi khi cần. Có em, team yên tâm hẳn!',
+     '{}', now() - interval '5 days'),
+    ('22222222-2222-2222-2222-222222220002', u4, u5, 'TƯ DUY SÁNG TẠO',
+     'Ý tưởng của anh trong buổi brainstorm vừa rồi thật sự đột phá. Cảm ơn anh nhiều!',
+     ARRAY['/kudos/samples/img1.jpg'], now() - interval '6 days'),
+    ('22222222-2222-2222-2222-222222220003', u7, u8, 'LUÔN ĐÚNG DEADLINE',
+     'Cảm ơn em vì sự kỷ luật và đúng hẹn trong mọi task. Rất đáng để học hỏi!',
+     '{}', now() - interval '7 days'),
+    ('22222222-2222-2222-2222-222222220004', u9, u10, 'NĂNG LƯỢNG TÍCH CỰC',
+     'Mỗi ngày đi làm có chị là cả team thấy vui hơn hẳn. Cảm ơn chị nhiều nhé!',
+     '{}', now() - interval '8 days'),
+    ('22222222-2222-2222-2222-222222220005', u10, u1, 'TỈ MỈ TỪNG CHI TIẾT',
+     'Cảm ơn anh đã review kỹ càng giúp em tránh được bao nhiêu lỗi. Biết ơn anh!',
+     ARRAY['/kudos/samples/img2.jpg','/kudos/samples/img3.jpg'], now() - interval '9 days'),
+    ('22222222-2222-2222-2222-222222220006', u3, u6, 'NGƯỜI HÙNG THẦM LẶNG',
+     'Những việc anh làm tuy âm thầm nhưng cả team đều thấy và rất trân trọng!',
+     '{}', now() - interval '10 days'),
+    ('22222222-2222-2222-2222-222222220007', u5, u8, 'SẺ CHIA KIẾN THỨC',
+     'Cảm ơn chị đã không ngại chia sẻ kinh nghiệm cho các bạn junior. Tuyệt vời!',
+     '{}', now() - interval '11 days'),
+    ('22222222-2222-2222-2222-222222220008', u6, u2, 'BỀN BỈ VƯỢT KHÓ',
+     'Khâm phục sự kiên trì của em qua giai đoạn dự án căng thẳng vừa rồi. Cố lên!',
+     '{}', now() - interval '12 days')
+  ON CONFLICT (id) DO NOTHING;
+
+  INSERT INTO public.kudos_hashtags (kudos_id, tag) VALUES
+    ('22222222-2222-2222-2222-222222220001', 'TeamPlayer'),
+    ('22222222-2222-2222-2222-222222220002', 'Inspiring'),
+    ('22222222-2222-2222-2222-222222220003', 'Dedicated'),
+    ('22222222-2222-2222-2222-222222220004', 'Inspiring'),
+    ('22222222-2222-2222-2222-222222220005', 'Dedicated'),
+    ('22222222-2222-2222-2222-222222220006', 'Supportive'),
+    ('22222222-2222-2222-2222-222222220007', 'Mentor'),
+    ('22222222-2222-2222-2222-222222220008', 'Dedicated')
+  ON CONFLICT DO NOTHING;
+
   INSERT INTO public.gift_recipients (user_id, prize_description, awarded_at) VALUES
     (u1, 'Nhận được 1 áo phông SAA', now() - interval '1 hour'),
     (u2, 'Nhận được 1 áo phông SAA', now() - interval '3 hours'),

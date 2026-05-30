@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useOptimistic, useTransition } from 'react';
+import { useCallback, useOptimistic, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import type {
   GiftRecipient,
@@ -34,6 +34,9 @@ type KudosPageProps = {
 };
 
 type LikePatch = { id: string; liked: boolean; likeCount: number };
+
+// All-Kudos feed reveals this many cards at a time; "Xem thêm" loads another page.
+const ALL_KUDOS_PAGE_SIZE = 5;
 
 // Fixed timezone → identical SSR/client output (no hydration mismatch). "08:30PM"
 const TICKER_TIME_FMT = new Intl.DateTimeFormat('en-US', {
@@ -83,6 +86,17 @@ export default function KudosPage({
     LikePatch
   >(allCards, applyPatch);
 
+  // All-Kudos pagination: show 5, reveal more via "Xem thêm". Reset paging when
+  // the active filter changes (render-time adjustment, not on every data refresh
+  // — a like triggers router.refresh() and must NOT collapse the list).
+  const [visibleCount, setVisibleCount] = useState(ALL_KUDOS_PAGE_SIZE);
+  const filterKey = `${selectedHashtag ?? ''}|${selectedDepartment ?? ''}`;
+  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
+  if (filterKey !== prevFilterKey) {
+    setPrevFilterKey(filterKey);
+    setVisibleCount(ALL_KUDOS_PAGE_SIZE);
+  }
+
   const handleLike = useCallback(
     (id: string) => {
       const target =
@@ -129,7 +143,7 @@ export default function KudosPage({
   const handleCopyLink = useCallback(
     (id: string) => {
       if (typeof window !== 'undefined') {
-        const url = `${window.location.origin}/kudos#kudos/${id}`;
+        const url = `${window.location.origin}/kudos/${id}`;
         navigator.clipboard.writeText(url).catch(() => {});
       }
       showToast('Link đã được sao chép — sẵn sàng chia sẻ!');
@@ -229,7 +243,7 @@ export default function KudosPage({
                 color: '#FFEA9E',
               }}
             >
-              TẤT CẢ KUDOS
+              ALL KUDOS
             </h2>
           </div>
 
@@ -253,14 +267,48 @@ export default function KudosPage({
               {optimisticAll.length === 0 ? (
                 <KudosEmptyState />
               ) : (
-                optimisticAll.map((card) => (
-                  <KudosCardItem
-                    key={card.id}
-                    card={card}
-                    onLike={handleLike}
-                    onCopyLink={handleCopyLink}
-                  />
-                ))
+                <>
+                  {optimisticAll.slice(0, visibleCount).map((card) => (
+                    <KudosCardItem
+                      key={card.id}
+                      card={card}
+                      onLike={handleLike}
+                      onCopyLink={handleCopyLink}
+                    />
+                  ))}
+                  {optimisticAll.length > visibleCount && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setVisibleCount((c) => c + ALL_KUDOS_PAGE_SIZE)
+                      }
+                      style={{
+                        alignSelf: 'center',
+                        marginTop: 8,
+                        padding: '12px 32px',
+                        borderRadius: 8,
+                        border: '1px solid #FFEA9E',
+                        background: 'transparent',
+                        color: '#FFEA9E',
+                        fontFamily: 'Montserrat, sans-serif',
+                        fontSize: 16,
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        transition: 'background 0.15s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLButtonElement).style.background =
+                          'rgba(255,234,158,0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLButtonElement).style.background =
+                          'transparent';
+                      }}
+                    >
+                      Xem thêm
+                    </button>
+                  )}
+                </>
               )}
             </div>
 
