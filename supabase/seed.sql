@@ -180,6 +180,34 @@ BEGIN
     ('22222222-2222-2222-2222-222222220008', 'Dedicated')
   ON CONFLICT DO NOTHING;
 
+  -- Extra distinct hashtags so the create-form dropdown has a long, scrollable,
+  -- searchable list. Tags are stored already-sanitized (no spaces/diacritics —
+  -- matching kudo_sanitize_tag / sanitizeTag) so they display cleanly as #Tag.
+  -- Attached to one existing kudos; only the distinct `tag` values matter for
+  -- the dropdown (listHashtags dedupes). ON CONFLICT keeps re-seeds idempotent.
+  INSERT INTO public.kudos_hashtags (kudos_id, tag) VALUES
+    ('22222222-2222-2222-2222-222222220001', 'BeProfessional'),
+    ('22222222-2222-2222-2222-222222220001', 'BeOptimistic'),
+    ('22222222-2222-2222-2222-222222220001', 'BeATeam'),
+    ('22222222-2222-2222-2222-222222220001', 'ThinkOutsideTheBox'),
+    ('22222222-2222-2222-2222-222222220001', 'GetRisky'),
+    ('22222222-2222-2222-2222-222222220001', 'GoFast'),
+    ('22222222-2222-2222-2222-222222220001', 'Wasshoi'),
+    ('22222222-2222-2222-2222-222222220001', 'HighPerforming'),
+    ('22222222-2222-2222-2222-222222220001', 'AimHigh'),
+    ('22222222-2222-2222-2222-222222220001', 'BeAgile'),
+    ('22222222-2222-2222-2222-222222220001', 'GoalOriented'),
+    ('22222222-2222-2222-2222-222222220001', 'CustomerFirst'),
+    ('22222222-2222-2222-2222-222222220001', 'ProcessDriven'),
+    ('22222222-2222-2222-2222-222222220001', 'CreativeSolution'),
+    ('22222222-2222-2222-2222-222222220001', 'GreatLeadership'),
+    ('22222222-2222-2222-2222-222222220001', 'Comprehensive'),
+    ('22222222-2222-2222-2222-222222220001', 'Reliable'),
+    ('22222222-2222-2222-2222-222222220001', 'Proactive'),
+    ('22222222-2222-2222-2222-222222220001', 'Innovative'),
+    ('22222222-2222-2222-2222-222222220001', 'Ownership')
+  ON CONFLICT DO NOTHING;
+
   -- "Super Hero" demo (u11): 12 received Kudos (the 10–20 range that the
   -- "Super Hero" title + hover describe), one very recent so the card surfaces
   -- at the top of the All-Kudos feed, plus a couple sent by u11.
