@@ -39,6 +39,7 @@ export default function KudosCardHighlight({
 
   return (
     <article
+      className="kudos-card-highlight"
       style={{
         display: 'flex',
         flexDirection: 'column',

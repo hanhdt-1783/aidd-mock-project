@@ -75,6 +75,7 @@ export default function KudosSpotlightBoard({
         >
           <h2
             id="spotlight-board-heading"
+            className="kudos-section-heading"
             style={{
               margin: 0,
               fontFamily: 'Montserrat, sans-serif',
@@ -92,6 +93,7 @@ export default function KudosSpotlightBoard({
 
       {/* B.7 Spotlight canvas */}
       <div
+        className="kudos-spotlight-canvas"
         style={{
           position: 'relative',
           width: '100%',

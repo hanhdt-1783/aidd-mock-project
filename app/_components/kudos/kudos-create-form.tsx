@@ -77,6 +77,7 @@ function LabelCell({
 }) {
   return (
     <div
+      className="kudos-form-label-col"
       style={{
         width: LABEL_COL,
         minWidth: LABEL_COL,
@@ -298,6 +299,7 @@ export default function KudosCreateForm({
 
       {/* ── B: Người nhận ────────────────────────────────────────────────── */}
       <div
+        className="kudos-form-row"
         style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: SECTION_GAP }}
       >
         <LabelCell required requiredLabel={t(lang, 'kudos.create.required')}>{t(lang, 'kudos.create.recipient.label')}</LabelCell>
@@ -316,6 +318,7 @@ export default function KudosCreateForm({
         Grid: [label col] [input/hint col]
       */}
       <div
+        className="kudos-form-grid"
         style={{
           display: 'grid',
           gridTemplateColumns: `${LABEL_COL} 1fr`,
@@ -470,6 +473,7 @@ export default function KudosCreateForm({
 
       {/* ── E: Hashtag ───────────────────────────────────────────────────── */}
       <div
+        className="kudos-form-row"
         style={{
           display: 'flex',
           alignItems: 'flex-start',
@@ -494,6 +498,7 @@ export default function KudosCreateForm({
 
       {/* ── F: Image ─────────────────────────────────────────────────────── */}
       <div
+        className="kudos-form-row"
         style={{
           display: 'flex',
           alignItems: 'flex-start',

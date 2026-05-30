@@ -175,6 +175,7 @@ export default function KudosPage({
       />
 
       <div
+        className="kudos-sections-gap"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -182,7 +183,7 @@ export default function KudosPage({
           paddingBottom: 120,
         }}
       >
-        <div style={{ paddingTop: 64 }}>
+        <div className="kudos-first-section-pad" style={{ paddingTop: 64 }}>
           <KudosHighlightSection
             cards={optimisticHighlight}
             hashtags={hashtags}
@@ -240,6 +241,7 @@ export default function KudosPage({
 
             <h2
               id="all-kudos-heading"
+              className="kudos-section-heading"
               style={{
                 margin: 0,
                 fontFamily: 'Montserrat, sans-serif',
@@ -255,7 +257,7 @@ export default function KudosPage({
           </div>
 
           <div
-            className="px-page"
+            className="px-page kudos-feed-row"
             style={{
               display: 'flex',
               alignItems: 'flex-start',

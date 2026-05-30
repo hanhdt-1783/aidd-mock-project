@@ -130,6 +130,7 @@ export default function KudosHighlightCarousel({
           section's edges. */}
       <div className="px-page" style={{ width: '100%', boxSizing: 'border-box' }}>
         <div
+          className="kudos-carousel-track"
           style={{
             position: 'relative',
             display: 'flex',

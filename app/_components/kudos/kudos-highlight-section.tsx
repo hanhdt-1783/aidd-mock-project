@@ -89,6 +89,7 @@ export default function KudosHighlightSection({
         />
 
         <div
+          className="kudos-highlight-header-row"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -98,6 +99,7 @@ export default function KudosHighlightSection({
         >
           <h2
             id="highlight-kudos-heading"
+            className="kudos-section-heading"
             style={{
               margin: 0,
               fontFamily: 'Montserrat, sans-serif',

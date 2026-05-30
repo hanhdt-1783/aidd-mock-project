@@ -18,6 +18,7 @@ export default function KudosSidebar({ lang, stats, giftRecipients }: KudosSideb
   return (
     <aside
       aria-label={t(lang, 'kudos.sidebar.stats.received')}
+      className="kudos-sidebar-wrapper"
       style={{
         width: 422,
         flexShrink: 0,

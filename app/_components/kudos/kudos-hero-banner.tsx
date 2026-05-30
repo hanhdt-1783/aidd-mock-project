@@ -122,6 +122,7 @@ export default function KudosHeroBanner({
         {/* Content over the keyvisual — title block (A_KV Kudos) + button row
             (Button chuc nang). 64px gap matches Frame 532 spacing. */}
         <div
+          className="kudos-hero-content"
           style={{
             position: 'relative',
             zIndex: 2,
@@ -137,6 +138,7 @@ export default function KudosHeroBanner({
           {/* A_KV Kudos: eyebrow + Kudos logo (10px gap, Figma node 2940:13437) */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <p
+              className="kudos-hero-eyebrow"
               style={{
                 margin: 0,
                 fontFamily: 'Montserrat, sans-serif',
@@ -149,7 +151,10 @@ export default function KudosHeroBanner({
               {t(lang, 'kudos.hero.title')}
             </p>
 
-            <div style={{ height: 104, display: 'flex', alignItems: 'center' }}>
+            <div
+              className="kudos-hero-logo-wrap"
+              style={{ height: 104, display: 'flex', alignItems: 'center' }}
+            >
               <Image
                 src="/kudos/MM_MEDIA_Kudos logo.svg"
                 alt="Sun* Kudos"
@@ -169,8 +174,9 @@ export default function KudosHeroBanner({
 
           {/* Button chuc nang: entry pill (738) + search pill (381), 32px gap.
               Single row (no wrap) per design — both pills shrink to fit when
-              the content area is narrower than 738+32+381. */}
+              the content area is narrower than 738+32+381. On mobile: stack. */}
           <div
+            className="kudos-hero-actions"
             style={{
               display: 'flex',
               alignItems: 'center',

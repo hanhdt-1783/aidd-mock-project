@@ -54,6 +54,12 @@ body {
   }
 }
 
+@media (max-width: 767px) {
+  .kudos-hero-content {
+    gap: 32px !important;
+  }
+}
+
 /* Themed thin scrollbar for the Hashtag/Phòng ban filter dropdowns —
    replaces the chunky default scrollbar on the dark #00070C panel. */
 .kudos-dropdown-scroll {
@@ -98,4 +104,233 @@ body {
   border-radius: 8px;
   border: 3px solid transparent;
   background-clip: padding-box;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Kudos page — responsive helpers (Phase 4 polish)
+   Desktop ≥1024px: unchanged (no rules here touch that breakpoint).
+   Tablet 768–1023px: moderate reduction in gaps and sidebar width.
+   Mobile <768px: single-column layout, scaled-down text, scrollable carousel.
+   All classes are prefixed `kudos-` to avoid collisions.
+───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Page-level section gap container (the outer flex column in kudos-page.tsx)
+   Desktop: gap 120px. Tablet: 72px. Mobile: 48px.
+   NOTE: !important is required because the container also sets these via
+   inline style={{}} — CSS classes cannot override inline without it. */
+.kudos-sections-gap {
+  gap: 120px !important;
+  padding-bottom: 120px !important;
+}
+
+/* ── All-Kudos feed+sidebar row: flex-row on desktop → stacks on mobile ──── */
+/* Applied to the px-page div wrapping feed + sidebar (kudos-page.tsx ~L258) */
+.kudos-feed-row {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 80px !important;
+}
+
+/* ── Sidebar: fixed 422px on desktop → fluid on tablet, full-width on mobile */
+.kudos-sidebar-wrapper {
+  width: 422px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── Highlight section: header + filter row — allow wrap on narrow viewports */
+.kudos-highlight-header-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 32px !important;
+}
+
+/* ── Section heading (57px gold) → scales down on smaller screens ─────────── */
+.kudos-section-heading {
+  font-size: 57px !important;
+  line-height: 64px !important;
+}
+
+/* ── Hero title (36px eyebrow) → scales down on mobile ─────────────────── */
+.kudos-hero-eyebrow {
+  font-size: 36px !important;
+  line-height: 44px !important;
+}
+
+/* ── Hero logo container (104px tall) → shorter on mobile ───────────────── */
+.kudos-hero-logo-wrap {
+  height: 104px !important;
+}
+
+/* ── Spotlight board canvas: fixed height 548px → shorter on mobile ──────── */
+.kudos-spotlight-canvas {
+  height: 548px !important;
+}
+
+/* ── Highlight carousel cards row: overflow hidden → scrollable on mobile ── */
+.kudos-carousel-track {
+  /* No change at desktop — overflow:hidden is set inline */
+}
+
+/* ── Highlight card (fixed 528px) → fluid on mobile ────────────────────── */
+.kudos-card-highlight {
+  width: 528px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── Create-form label column: fixed 160px → full-width stack on mobile ──── */
+.kudos-form-label-col {
+  width: 160px !important;
+  min-width: 160px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── Tablet (768px – 1023px) ─────────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .kudos-first-section-pad {
+    padding-top: 40px !important;
+  }
+
+  .kudos-sections-gap {
+    gap: 72px !important;
+    padding-bottom: 72px !important;
+  }
+
+  .kudos-feed-row {
+    gap: 40px !important;
+  }
+
+  .kudos-sidebar-wrapper {
+    width: 320px !important;
+  }
+
+  .kudos-section-heading {
+    font-size: 40px !important;
+    line-height: 48px !important;
+  }
+
+  .kudos-hero-eyebrow {
+    font-size: 28px !important;
+    line-height: 36px !important;
+  }
+
+  .kudos-hero-logo-wrap {
+    height: 80px !important;
+  }
+
+  .kudos-spotlight-canvas {
+    height: 420px !important;
+  }
+
+  .kudos-highlight-header-row {
+    flex-wrap: wrap !important;
+    gap: 16px !important;
+  }
+}
+
+/* ── Mobile (<768px) ─────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .kudos-first-section-pad {
+    padding-top: 32px !important;
+  }
+
+  .kudos-sections-gap {
+    gap: 48px !important;
+    padding-bottom: 48px !important;
+  }
+
+  /* Feed + sidebar stack vertically: feed on top, sidebar below */
+  .kudos-feed-row {
+    flex-direction: column !important;
+    gap: 40px !important;
+  }
+
+  /* Sidebar goes full width when stacked */
+  .kudos-sidebar-wrapper {
+    width: 100% !important;
+    /* Remove sticky positioning on mobile — sidebar is at the bottom, not beside */
+    position: static !important;
+    align-self: auto !important;
+  }
+
+  .kudos-section-heading {
+    font-size: 32px !important;
+    line-height: 40px !important;
+    letter-spacing: 0 !important;
+  }
+
+  .kudos-hero-eyebrow {
+    font-size: 22px !important;
+    line-height: 30px !important;
+  }
+
+  .kudos-hero-logo-wrap {
+    height: 60px !important;
+  }
+
+  .kudos-spotlight-canvas {
+    height: 320px !important;
+  }
+
+  /* Highlight header: stack filters below the title */
+  .kudos-highlight-header-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  /* Carousel track: switch from overflow:hidden to horizontal scroll on mobile */
+  .kudos-carousel-track {
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px; /* space for scrollbar */
+    /* Keep the edge fades from clipping scroll */
+    padding-left: 0;
+    padding-right: 0;
+  }
+  /* Snap each card */
+  .kudos-carousel-track > * {
+    scroll-snap-align: center;
+  }
+
+  /* Highlight cards: full width instead of fixed 528px on mobile */
+  .kudos-card-highlight {
+    width: calc(100vw - 48px);
+    max-width: 480px;
+    flex-shrink: 0;
+  }
+
+  /* Hero action row (entry pill + search pill): stack on mobile */
+  .kudos-hero-actions {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 16px !important;
+  }
+
+  /* Create form: stack label above input on mobile */
+  .kudos-form-row {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+
+  .kudos-form-label-col {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Grid-based form rows (Danh hiệu): single column on mobile */
+  .kudos-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Respect prefers-reduced-motion (from polish-rules.md §3) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
