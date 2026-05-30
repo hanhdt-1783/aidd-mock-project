@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import type { ReactNode } from 'react';
 import type { GiftRecipient } from './types';
+import KudosAvatarHover from './kudos-avatar-hover';
 
 type KudosSidebarLeaderboardProps = {
   title: ReactNode;
@@ -66,26 +66,8 @@ export default function KudosSidebarLeaderboard({
                 height: 64,
               }}
             >
-              {/* D.3.x Avatar — 64px circle, white border */}
-              <div
-                style={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: '50%',
-                  overflow: 'hidden',
-                  border: '1.87px solid #FFFFFF',
-                  backgroundColor: '#1A2430',
-                  flexShrink: 0,
-                }}
-              >
-                <Image
-                  src={recipient.avatarUrl}
-                  alt={recipient.name}
-                  width={64}
-                  height={64}
-                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                />
-              </div>
+              {/* D.3.x Avatar — 64px, gold ring + profile preview on hover */}
+              <KudosAvatarHover user={recipient.user} size={64} />
 
               {/* Name + prize */}
               <div

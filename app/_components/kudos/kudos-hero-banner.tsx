@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import KudosEntryInput from './kudos-entry-input';
@@ -26,6 +26,13 @@ export default function KudosHeroBanner({
   const router = useRouter();
   const { toast, showToast, dismissToast } = useKudosToast();
   const [modalOpen, setModalOpen] = useState(false);
+
+  // Avatar hover popovers ("Gửi KUDO") open the compose modal via this event.
+  useEffect(() => {
+    const onOpen = () => setModalOpen(true);
+    window.addEventListener('kudos:open-compose', onOpen);
+    return () => window.removeEventListener('kudos:open-compose', onOpen);
+  }, []);
 
   const handleSubmit = useCallback(
     async (payload: KudoCreatePayload) => {

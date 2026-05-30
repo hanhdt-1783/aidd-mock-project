@@ -34,7 +34,11 @@ type KudosRow = {
   like_count: number;
 };
 
-function toUser(row: ProfileRow): KudosUser {
+function toUser(
+  row: ProfileRow,
+  received: number,
+  sent: number,
+): KudosUser {
   return {
     id: row.id,
     name: row.display_name ?? 'Sunner',
@@ -42,6 +46,8 @@ function toUser(row: ProfileRow): KudosUser {
     department: row.department ?? '',
     title: row.title,
     rankStars: ((row.rank_stars ?? 0) as RankStars),
+    kudosReceived: received,
+    kudosSent: sent,
   };
 }
 
@@ -53,20 +59,55 @@ function fallbackUser(id: string): KudosUser {
     department: '',
     title: null,
     rankStars: 0,
+    kudosReceived: 0,
+    kudosSent: 0,
   };
+}
+
+// Count kudos sent/received per user in a single query (no N+1). Only rows
+// touching the requested ids are pulled; counts are tallied in memory.
+async function fetchKudosCountsByUser(
+  ids: string[],
+): Promise<{ received: Map<string, number>; sent: Map<string, number> }> {
+  const received = new Map<string, number>();
+  const sent = new Map<string, number>();
+  if (ids.length === 0) return { received, sent };
+
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('kudos')
+    .select('sender_id, receiver_id')
+    .or(`sender_id.in.(${ids.join(',')}),receiver_id.in.(${ids.join(',')})`);
+
+  const idSet = new Set(ids);
+  for (const r of (data ?? []) as { sender_id: string; receiver_id: string }[]) {
+    if (idSet.has(r.receiver_id)) {
+      received.set(r.receiver_id, (received.get(r.receiver_id) ?? 0) + 1);
+    }
+    if (idSet.has(r.sender_id)) {
+      sent.set(r.sender_id, (sent.get(r.sender_id) ?? 0) + 1);
+    }
+  }
+  return { received, sent };
 }
 
 async function fetchProfilesByIds(ids: string[]): Promise<Map<string, KudosUser>> {
   if (ids.length === 0) return new Map();
   const supabase = await createClient();
-  const { data } = await supabase
-    .from('profiles')
-    .select('id, display_name, avatar_url, department, title, rank_stars')
-    .in('id', ids);
+  const [{ data }, counts] = await Promise.all([
+    supabase
+      .from('profiles')
+      .select('id, display_name, avatar_url, department, title, rank_stars')
+      .in('id', ids),
+    fetchKudosCountsByUser(ids),
+  ]);
 
   const map = new Map<string, KudosUser>();
   for (const row of (data ?? []) as ProfileRow[]) {
-    map.set(row.id, toUser(row));
+    map.set(
+      row.id,
+      toUser(row, counts.received.get(row.id) ?? 0, counts.sent.get(row.id) ?? 0),
+    );
   }
   return map;
 }
@@ -318,12 +359,13 @@ export async function listGiftRecipients(limit = 10): Promise<GiftRecipient[]> {
     const profiles = await fetchProfilesByIds(rows.map((r) => r.user_id));
 
     return rows.map<GiftRecipient>((r) => {
-      const u = profiles.get(r.user_id);
+      const u = profiles.get(r.user_id) ?? fallbackUser(r.user_id);
       return {
         id: r.id,
-        name: u?.name ?? 'Sunner',
-        avatarUrl: u?.avatarUrl ?? '',
+        name: u.name,
+        avatarUrl: u.avatarUrl,
         prizeDescription: r.prize_description,
+        user: u,
       };
     });
   } catch (err) {

@@ -7,6 +7,9 @@ export type KudosUser = {
   department: string;
   rankStars: 0 | 1 | 2 | 3;
   title: string | null;
+  // Lifetime totals shown in the avatar hover preview.
+  kudosReceived: number;
+  kudosSent: number;
 };
 
 export type KudosCard = {
@@ -36,6 +39,8 @@ export type GiftRecipient = {
   name: string;
   avatarUrl: string;
   prizeDescription: string;
+  // Full profile for the avatar hover preview.
+  user: KudosUser;
 };
 
 export type SpotlightName = {

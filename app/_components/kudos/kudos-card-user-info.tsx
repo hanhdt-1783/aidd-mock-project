@@ -2,15 +2,8 @@
 
 import Image from 'next/image';
 import type { KudosCard } from './types';
-
-// Hero rank badge artwork (Figma MM_MEDIA_*Hero, 110×20, text baked in).
-// Keyed by profiles.title (see supabase/seed.sql).
-const HERO_BADGE: Record<string, string> = {
-  'New Hero': '/kudos/badge-new-hero.png',
-  'Rising Hero': '/kudos/badge-rising-hero.png',
-  'Legend Hero': '/kudos/badge-legend-hero.png',
-  'Super Hero': '/kudos/badge-super-hero.png',
-};
+import { HERO_BADGE } from './kudos-hero-badge';
+import KudosAvatarHover from './kudos-avatar-hover';
 
 type UserInfoBlockProps = {
   user: KudosCard['sender'];
@@ -21,14 +14,6 @@ type UserInfoBlockProps = {
 // avatar treatment stays identical in both (Figma B.3.* / C.3.* "Infor").
 export default function UserInfoBlock({ user }: UserInfoBlockProps) {
   const badgeSrc = user.title ? HERO_BADGE[user.title] : undefined;
-  const initials =
-    user.name
-      ?.trim()
-      .split(/\s+/)
-      .slice(-2)
-      .map((w) => w[0] ?? '')
-      .join('')
-      .toUpperCase() || '?';
   return (
     <div
       style={{
@@ -40,49 +25,8 @@ export default function UserInfoBlock({ user }: UserInfoBlockProps) {
         minWidth: 0,
       }}
     >
-      {/* Avatar — Figma: 1.87px white ring, no solid background. The fill is the
-          photo over a neutral #EEE placeholder (Figma MM_MEDIA_Avatar). Initials
-          show behind as a fallback so a missing avatar isn't an empty circle. */}
-      <div
-        style={{
-          position: 'relative',
-          width: 64,
-          height: 64,
-          borderRadius: '50%',
-          overflow: 'hidden',
-          border: '2px solid #FFFFFF',
-          flexShrink: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#EEEEEE',
-          color: '#999999',
-          fontFamily: 'Montserrat, sans-serif',
-          fontSize: 22,
-          fontWeight: 700,
-          userSelect: 'none',
-        }}
-      >
-        <span aria-hidden="true">{initials}</span>
-        {user.avatarUrl && (
-          <Image
-            src={user.avatarUrl}
-            alt={user.name}
-            width={64}
-            height={64}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = 'none';
-            }}
-          />
-        )}
-      </div>
+      {/* Avatar — gold ring + profile preview on hover (Figma "Hover Avatar"). */}
+      <KudosAvatarHover user={user} size={64} />
       {/* Name — Figma node 256:4735: 16/700, dark on cream, centered.
           Always one line, never wraps (whiteSpace: nowrap). */}
       <span
