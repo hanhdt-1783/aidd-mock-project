@@ -179,8 +179,8 @@ export default function KudosCard({ card, onLike, onCopyLink, lang }: KudosCardP
           </p>
         </div>
 
-        {/* Attachments — Figma "C.3.6_Image đính kèm": 88×88, no border,
-            no radius, 16px gap. */}
+        {/* Attachments — Figma "C.3.6_Image đính kèm" (node I3127:21871;256:5177):
+            88×88, 1px #998C5F border, radius 18, 16px gap. */}
         {card.images.length > 0 && (
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
             {card.images.map((src, idx) => (
@@ -193,6 +193,9 @@ export default function KudosCard({ card, onLike, onCopyLink, lang }: KudosCardP
                   width: 88,
                   height: 88,
                   objectFit: 'cover',
+                  border: '1px solid #998C5F',
+                  borderRadius: 18,
+                  boxSizing: 'border-box',
                   background: '#FFFFFF',
                   flexShrink: 0,
                 }}
