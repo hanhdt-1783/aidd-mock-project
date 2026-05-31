@@ -47,3 +47,9 @@ next-env.d.ts
 .claude/agent-memory
 .claude/hooks/.logs/
 .playwright-mcp/
+
+# playwright
+/test-results/
+/playwright-report/
+/playwright/.auth/
+.env.test.local
