@@ -30,7 +30,15 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  INSERT INTO public.profiles (id) VALUES (NEW.id)
+  -- Seed display_name + avatar from the OAuth provider metadata (Google returns
+  -- full_name/name and avatar_url/picture). NULLIF('') keeps blanks as NULL so the
+  -- profile-setup flow can still prompt when the provider gives nothing.
+  INSERT INTO public.profiles (id, display_name, avatar_url)
+  VALUES (
+    NEW.id,
+    NULLIF(COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name'), ''),
+    NULLIF(COALESCE(NEW.raw_user_meta_data->>'avatar_url', NEW.raw_user_meta_data->>'picture'), '')
+  )
   ON CONFLICT (id) DO NOTHING;
   RETURN NEW;
 END;
