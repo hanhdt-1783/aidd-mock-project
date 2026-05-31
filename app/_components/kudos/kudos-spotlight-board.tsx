@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
 import type { SpotlightName, SpotlightActivity } from './types';
 import { t, type Language } from '@/lib/i18n/dictionary';
 
@@ -30,6 +33,25 @@ export default function KudosSpotlightBoard({
   totalKudos,
   activity = [],
 }: KudosSpotlightBoardProps) {
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Sync state with the browser's fullscreen status so ESC / system exit
+  // updates the toggle button label too (Fullscreen API).
+  useEffect(() => {
+    const onChange = () => setIsFullscreen(document.fullscreenElement === canvasRef.current);
+    document.addEventListener('fullscreenchange', onChange);
+    return () => document.removeEventListener('fullscreenchange', onChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (document.fullscreenElement) {
+      void document.exitFullscreen();
+    } else {
+      void canvasRef.current?.requestFullscreen();
+    }
+  };
+
   return (
     <section
       className="px-page"
@@ -93,14 +115,17 @@ export default function KudosSpotlightBoard({
 
       {/* B.7 Spotlight canvas */}
       <div
+        ref={canvasRef}
         className="kudos-spotlight-canvas"
         style={{
           position: 'relative',
           width: '100%',
-          maxWidth: 1157,
-          height: 548,
-          borderRadius: 47,
-          border: '1px solid #998C5F',
+          // In fullscreen the UA sizes the element to the viewport; drop the
+          // fixed frame so the canvas fills the whole screen edge-to-edge.
+          maxWidth: isFullscreen ? 'none' : 1157,
+          height: isFullscreen ? '100vh' : 548,
+          borderRadius: isFullscreen ? 0 : 47,
+          border: isFullscreen ? 'none' : '1px solid #998C5F',
           // Decorative background — Figma "Root further mo rong 1" aurora ribbon (spotlight-bg.png)
           // with the constellation network (spotlight-bg.svg) layered on top.
           backgroundColor: '#00101A',
@@ -185,52 +210,134 @@ export default function KudosSpotlightBoard({
           style={{ position: 'absolute', inset: 0 }}
           aria-label={t(lang, 'kudos.spotlight.names.aria')}
         >
-          {names.map((item) => {
-            // Reserve the top band (y < 16%) for the count + search field so
-            // cloud names never overlap them. Cloud fills 16%–90% vertically.
-            // The single highlighted name is pinned centre (Figma node 2940:14198).
-            let x = item.highlighted ? 50 : pseudoRandom(item.id, 1) * 84 + 8; // 8-92%
-            const y = item.highlighted ? 30 : pseudoRandom(item.id, 2) * 74 + 16; // 16-90%
-            // Keep cloud names out of the bottom-left activity-ticker zone
-            // (x < 56%, y > 70%) by shifting them into the free bottom-right area.
-            if (!item.highlighted && y > 70 && x < 56) {
-              x = 58 + pseudoRandom(item.id, 3) * 34; // 58-92%
-            }
-            const { fontSize, fontWeight, opacity } = SIZE_STYLES[item.size];
+          {(() => {
+            // Deterministic GRID placement so names never overlap each other, AND
+            // never land on the four overlays (search input, total-kudos count,
+            // recent-kudos ticker, fullscreen icon). Cells whose centre falls inside a
+            // reserved overlay zone are dropped; names fill only the free cells. Each
+            // name owns one cell + small jitter for the organic cloud feel. The
+            // highlighted name is pinned centre (always outside the reserved zones).
+            const cloud = names.filter((n) => !n.highlighted);
 
-            return (
-              <span
-                key={item.id}
-                title={item.name}
-                style={{
-                  position: 'absolute',
-                  left: `${x}%`,
-                  top: `${y}%`,
-                  zIndex: item.highlighted ? 5 : 1,
-                  transform: 'translate(-50%, -50%)',
-                  fontFamily: 'Montserrat, sans-serif',
-                  fontSize,
-                  fontWeight,
-                  // Single most-prominent name in red (Figma node 2940:14198: #F17676)
-                  color: item.highlighted ? '#F17676' : 'rgba(255,255,255,0.8)',
-                  opacity,
-                  whiteSpace: 'nowrap',
-                  cursor: 'default',
-                  textShadow: item.highlighted
-                    ? '0 0 16px rgba(241,118,118,0.45)'
-                    : 'none',
-                  transition: 'opacity 0.2s ease',
-                }}
-              >
-                {item.name}
-              </span>
-            );
-          })}
+            // Reserved overlay rectangles in % of the canvas [x0, x1, y0, y1],
+            // padded so a name's whole text box stays clear of each overlay.
+            const RESERVED: [number, number, number, number][] = [
+              [0, 28, 0, 16], // search input — top-left
+              [30, 70, 0, 16], // total kudos count — top-centre
+              [0, 46, 66, 100], // recent-kudos ticker — bottom-left
+              [84, 100, 78, 100], // fullscreen icon — bottom-right
+            ];
+
+            // Keep names off the canvas edges; the cloud lives inside this padded box.
+            const PAD_X = 4;
+            const PAD_Y = 7;
+            const INNER_W = 100 - 2 * PAD_X;
+            const INNER_H = 100 - 2 * PAD_Y;
+            const NAME_H = 3.6; // ≈ name line-height as % of canvas height
+            const GAP = 0.8; // min breathing gap between two names (%)
+
+            // Estimated rendered width of a name (% of canvas width). 0.62 ≈ average
+            // Montserrat glyph width relative to font size.
+            const nameWidthPct = (n: SpotlightName) =>
+              Math.min(INNER_W, ((n.name.length * SIZE_STYLES[n.size].fontSize * 0.62) / 1157) * 100);
+
+            type Box = { l: number; r: number; t: number; b: number };
+            const hitsReserved = (box: Box) =>
+              RESERVED.some(([x0, x1, y0, y1]) => box.l < x1 && x0 < box.r && box.t < y1 && y0 < box.b);
+            // Intersection area of two boxes inflated by the breathing gap (0 = clear).
+            const overlap = (a: Box, b: Box) => {
+              const ox = Math.min(a.r, b.r + GAP) - Math.max(a.l, b.l - GAP);
+              const oy = Math.min(a.b, b.b + GAP) - Math.max(a.t, b.t - GAP);
+              return ox > 0 && oy > 0 ? ox * oy : 0;
+            };
+
+            // Organic (non-grid) placement via deterministic dart-throwing: try up to
+            // ATTEMPTS pseudo-random spots per name, take the first that clears the
+            // overlays and every name already placed; if none is perfectly clear, keep
+            // the least-overlapping one. Result is scattered (not row-aligned) with
+            // overlap minimised. Deterministic (hash of id) → SSR and client agree.
+            const ATTEMPTS = 60;
+            const pos = ((): Map<string, { x: number; y: number }> => {
+              const placed: Box[] = [];
+              const hl = names.find((n) => n.highlighted);
+              if (hl) {
+                const w = nameWidthPct(hl);
+                placed.push({ l: 50 - w / 2, r: 50 + w / 2, t: 32 - NAME_H / 2, b: 32 + NAME_H / 2 });
+              }
+              const out = new Map<string, { x: number; y: number }>();
+              for (const n of cloud) {
+                const w = nameWidthPct(n);
+                let best: { x: number; y: number; box: Box } | null = null;
+                let bestScore = Infinity;
+                for (let k = 0; k < ATTEMPTS; k += 1) {
+                  const x = PAD_X + w / 2 + pseudoRandom(n.id, k * 2 + 1) * (INNER_W - w);
+                  const y = PAD_Y + NAME_H / 2 + pseudoRandom(n.id, k * 2 + 2) * (INNER_H - NAME_H);
+                  const box: Box = { l: x - w / 2, r: x + w / 2, t: y - NAME_H / 2, b: y + NAME_H / 2 };
+                  if (hitsReserved(box)) continue;
+                  const score = placed.reduce((s, p) => s + overlap(box, p), 0);
+                  if (score === 0) {
+                    best = { x, y, box };
+                    break;
+                  }
+                  if (score < bestScore) {
+                    bestScore = score;
+                    best = { x, y, box };
+                  }
+                }
+                const chosen = best ?? { x: 50, y: 50, box: { l: 50, r: 50, t: 50, b: 50 } };
+                placed.push(chosen.box);
+                out.set(n.id, { x: chosen.x, y: chosen.y });
+              }
+              return out;
+            })();
+
+            return names.map((item) => {
+              const p = item.highlighted ? { x: 50, y: 32 } : pos.get(item.id) ?? { x: 50, y: 50 };
+              const x = p.x;
+              const y = p.y;
+              const { fontSize, fontWeight, opacity } = SIZE_STYLES[item.size];
+
+              return (
+                <span
+                  key={item.id}
+                  title={item.name}
+                  style={{
+                    position: 'absolute',
+                    left: `${x}%`,
+                    top: `${y}%`,
+                    zIndex: item.highlighted ? 5 : 1,
+                    transform: 'translate(-50%, -50%)',
+                    fontFamily: 'Montserrat, sans-serif',
+                    fontSize,
+                    fontWeight,
+                    // Single most-prominent name in red (Figma node 2940:14198: #F17676)
+                    color: item.highlighted ? '#F17676' : 'rgba(255,255,255,0.8)',
+                    opacity,
+                    whiteSpace: 'nowrap',
+                    cursor: 'default',
+                    textShadow: item.highlighted
+                      ? '0 0 16px rgba(241,118,118,0.45)'
+                      : 'none',
+                    transition: 'opacity 0.2s ease',
+                  }}
+                >
+                  {item.name}
+                </span>
+              );
+            });
+          })()}
         </div>
 
-        {/* B.7.2 Pan/zoom control — Figma node 3007:17479 (bottom-right, 30×30 expand icon) */}
-        <div
-          aria-hidden="true"
+        {/* B.7.2 Fullscreen toggle — Figma node 3007:17479 (bottom-right, 30×30 expand icon).
+            Toggles native fullscreen on the spotlight canvas. */}
+        <button
+          type="button"
+          onClick={toggleFullscreen}
+          aria-pressed={isFullscreen}
+          aria-label={t(
+            lang,
+            isFullscreen ? 'kudos.spotlight.fullscreen.exit' : 'kudos.spotlight.fullscreen.enter',
+          )}
           style={{
             position: 'absolute',
             right: 36,
@@ -238,9 +345,21 @@ export default function KudosSpotlightBoard({
             zIndex: 10,
             width: 30,
             height: 30,
+            padding: 0,
+            border: 'none',
+            background: 'transparent',
+            color: '#FFFFFF',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'color 0.15s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#FFEA9E';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = '#FFFFFF';
           }}
         >
           <svg
@@ -248,18 +367,31 @@ export default function KudosSpotlightBoard({
             height="24"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#FFFFFF"
+            stroke="currentColor"
             strokeWidth="2.25"
             strokeLinecap="round"
             strokeLinejoin="round"
+            aria-hidden="true"
           >
-            {/* Two detached diagonal arrows pointing outward (↗ / ↙) with a centre gap */}
-            <polyline points="14 4 20 4 20 10" />
-            <line x1="20" y1="4" x2="14.5" y2="9.5" />
-            <polyline points="10 20 4 20 4 14" />
-            <line x1="4" y1="20" x2="9.5" y2="14.5" />
+            {isFullscreen ? (
+              <>
+                {/* Two diagonal arrows pointing inward (↙ / ↗) — collapse */}
+                <polyline points="4 10 10 10 10 4" />
+                <line x1="10" y1="10" x2="4" y2="4" />
+                <polyline points="20 14 14 14 14 20" />
+                <line x1="14" y1="14" x2="20" y2="20" />
+              </>
+            ) : (
+              <>
+                {/* Two detached diagonal arrows pointing outward (↗ / ↙) with a centre gap */}
+                <polyline points="14 4 20 4 20 10" />
+                <line x1="20" y1="4" x2="14.5" y2="9.5" />
+                <polyline points="10 20 4 20 4 14" />
+                <line x1="4" y1="20" x2="9.5" y2="14.5" />
+              </>
+            )}
           </svg>
-        </div>
+        </button>
 
         {/* Activity ticker — Figma nodes 3004:15995–2940:14230 (bottom-left, fading) */}
         {activity.length > 0 && (
