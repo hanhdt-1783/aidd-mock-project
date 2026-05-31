@@ -83,3 +83,12 @@ The dictionary covers both the login page (`login.*` keys) and the homepage (`ho
 ## Roles (`profiles` table)
 
 After OAuth completes a `profiles` row is auto-created with `role = 'user'`. The homepage account menu shows an **Admin Dashboard** link only when `role = 'admin'`. See [homepage-saa.md](homepage-saa.md#profiles-table--rls) for the full schema and admin-promotion path.
+
+---
+
+## E2E Testing
+
+Playwright E2E tests bypass Google OAuth entirely. A global setup uses the
+`SUPABASE_SERVICE_ROLE_KEY` admin API to ensure a test user exists, signs in via
+password grant, and persists a `@supabase/ssr` storage-state cookie. The local
+Supabase stack must be running. See the [README E2E section](../README.md#end-to-end-tests) for prerequisites and run instructions.

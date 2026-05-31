@@ -103,6 +103,8 @@ Open <http://localhost:3000>. Editing files under `app/` hot-reloads the page.
 | `npm run lint`                  | Run ESLint.                                      |
 | `npm run test`                  | Run unit tests in watch mode (Vitest).           |
 | `npm run test:run`              | Run unit tests once and exit (CI-friendly).      |
+| `npm run test:e2e`              | Run Playwright E2E tests (headless, Chromium).   |
+| `npm run test:e2e:ui`           | Run Playwright E2E tests with the interactive UI.|
 | `npm run download-assets:home`  | One-shot fetch of Figma-exported home assets.\*  |
 | `npm run download-assets:prelaunch` | One-shot fetch of pre-launch assets.\*       |
 
@@ -119,9 +121,37 @@ proxy.ts        Next.js 16 middleware (session refresh) — formerly middleware.
 public/         Static assets (images, fonts, icons) — committed
 supabase/       migrations/ + seed.sql for the local stack
 scripts/        One-shot asset download helpers
+e2e/            Playwright E2E tests (support/, unauth/, authed/)
 docs/           Architecture, standards, changelog, journals
 plans/          Implementation plans, phase files, and agent reports
 ```
+
+## End-to-end Tests
+
+E2E tests use [Playwright](https://playwright.dev/) (Chromium). A global setup
+seeds a dedicated Supabase test user via the service-role admin API and writes a
+`@supabase/ssr` session cookie — no real Google OAuth is involved.
+
+**Prerequisites before running:**
+
+1. Local Supabase stack running (`npx supabase start`).
+2. `SUPABASE_SERVICE_ROLE_KEY` available to the test process. The easiest way is
+   a `.env.test.local` file (gitignored) at the repo root:
+
+   ```bash
+   SUPABASE_SERVICE_ROLE_KEY=<value printed by `npx supabase start`>
+   ```
+
+**Run:**
+
+```bash
+npm run test:e2e          # headless
+npm run test:e2e:ui       # interactive Playwright UI
+```
+
+The dev server (`npm run dev`) is started automatically by `playwright.config.ts`
+before tests run. Tests are in `e2e/unauth/` (anonymous paths) and
+`e2e/authed/` (authenticated paths).
 
 ## Deployment
 
