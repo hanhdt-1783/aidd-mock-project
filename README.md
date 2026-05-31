@@ -101,6 +101,8 @@ Open <http://localhost:3000>. Editing files under `app/` hot-reloads the page.
 | `npm run build`                 | Production build.                                |
 | `npm run start`                 | Serve the production build.                      |
 | `npm run lint`                  | Run ESLint.                                      |
+| `npm run test`                  | Run unit tests in watch mode (Vitest).           |
+| `npm run test:run`              | Run unit tests once and exit (CI-friendly).      |
 | `npm run download-assets:home`  | One-shot fetch of Figma-exported home assets.\*  |
 | `npm run download-assets:prelaunch` | One-shot fetch of pre-launch assets.\*       |
 
