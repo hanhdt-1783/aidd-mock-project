@@ -60,7 +60,8 @@ export default async function KudosRoute({
     department: pickSingle(params.department),
   };
 
-  // Resolve filter intersection once so both list fetchers share the result.
+  // Hashtag/department filters apply to the HIGHLIGHT KUDOS section only.
+  // Spotlight board and All Kudos always show the full, unfiltered dataset.
   const filteredIds = await resolveFilteredKudosIds(filters);
 
   const [
@@ -74,7 +75,7 @@ export default async function KudosRoute({
     totalKudos,
   ] = await Promise.all([
     listHighlightKudos(user.id, filteredIds, 5),
-    listAllKudos(user.id, filteredIds, 20),
+    listAllKudos(user.id, null, 20),
     listHashtags(),
     listDepartments(),
     getSidebarStats(user.id),

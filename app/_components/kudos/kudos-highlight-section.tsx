@@ -32,8 +32,10 @@ export default function KudosHighlightSection({
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
 
-  // Filtering is server-side via searchParams; the section pushes URL changes
-  // and the page re-fetches. This keeps highlight + all kudos in sync.
+  // Filtering is server-side via searchParams: push the URL change so the page
+  // re-fetches and HIGHLIGHT KUDOS re-filters. `scroll: false` keeps the viewport
+  // in place — without it Next 16 scrolls to the top on every navigation, which
+  // made the page "jump" each time a filter was picked.
   const updateFilter = useCallback(
     (key: 'hashtag' | 'department', value: string | null) => {
       const next = new URLSearchParams(searchParams.toString());
@@ -44,7 +46,7 @@ export default function KudosHighlightSection({
       }
       const qs = next.toString();
       startTransition(() => {
-        router.push(qs ? `/kudos?${qs}` : '/kudos');
+        router.push(qs ? `/kudos?${qs}` : '/kudos', { scroll: false });
       });
     },
     [router, searchParams],

@@ -25,10 +25,8 @@ export default function KudosSidebar({ lang, stats, giftRecipients }: KudosSideb
         display: 'flex',
         flexDirection: 'column',
         gap: 24,
-        // sticky so sidebar follows scroll
-        position: 'sticky',
-        top: 96, // below the 80px header + 16px breathing room
-        alignSelf: 'flex-start',
+        // Scrolls with the page (no sticky) — the stats + leaderboard panels
+        // move out of view as the user scrolls, like the rest of the feed.
       }}
     >
       {/* D.1 Stats + gift button → "Sắp ra mắt" page (like profile) */}

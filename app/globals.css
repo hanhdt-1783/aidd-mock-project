@@ -248,9 +248,6 @@ body {
   /* Sidebar goes full width when stacked */
   .kudos-sidebar-wrapper {
     width: 100% !important;
-    /* Remove sticky positioning on mobile — sidebar is at the bottom, not beside */
-    position: static !important;
-    align-self: auto !important;
   }
 
   .kudos-section-heading {

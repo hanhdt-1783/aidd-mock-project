@@ -84,16 +84,10 @@ export default function KudosPage({
     LikePatch
   >(allCards, applyPatch);
 
-  // All-Kudos pagination: show 5, reveal more via "Xem thêm". Reset paging when
-  // the active filter changes (render-time adjustment, not on every data refresh
-  // — a like triggers router.refresh() and must NOT collapse the list).
+  // All-Kudos pagination: show 5, reveal more via "Xem thêm". The hashtag/
+  // department filters target only HIGHLIGHT KUDOS, so this list is never
+  // filtered and its paging must not reset when the filter changes.
   const [visibleCount, setVisibleCount] = useState(ALL_KUDOS_PAGE_SIZE);
-  const filterKey = `${selectedHashtag ?? ''}|${selectedDepartment ?? ''}`;
-  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
-  if (filterKey !== prevFilterKey) {
-    setPrevFilterKey(filterKey);
-    setVisibleCount(ALL_KUDOS_PAGE_SIZE);
-  }
 
   const handleLike = useCallback(
     (id: string) => {
