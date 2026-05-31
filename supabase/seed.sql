@@ -43,48 +43,49 @@ BEGIN
     ON CONFLICT (id) DO NOTHING;
   END LOOP;
 
+  -- Vietnamese full names + avatars cycled across avatar0..avatar9 (11 users → u11 wraps to avatar0).
   UPDATE public.profiles SET
-    display_name = 'Huỳnh Dương Xuân Nhật', avatar_url = '/kudos/avatars/u1.png',
+    display_name = 'Nguyễn Hoàng Long', avatar_url = '/kudos/avatars/avatar0.png',
     department = 'CEVC10', title = 'Legend Hero', rank_stars = 3
   WHERE id = u1;
   UPDATE public.profiles SET
-    display_name = 'Nguyễn Bá Chức', avatar_url = '/kudos/avatars/u2.png',
+    display_name = 'Trần Thị Mỹ Duyên', avatar_url = '/kudos/avatars/avatar1.png',
     department = 'CEVC10', title = 'Rising Hero', rank_stars = 2
   WHERE id = u2;
   UPDATE public.profiles SET
-    display_name = 'Trần Minh Anh', avatar_url = '/kudos/avatars/u3.png',
+    display_name = 'Lê Quang Vinh', avatar_url = '/kudos/avatars/avatar2.png',
     department = 'Marketing', title = 'New Hero', rank_stars = 1
   WHERE id = u3;
   UPDATE public.profiles SET
-    display_name = 'Phạm Thu Hà', avatar_url = '/kudos/avatars/u4.png',
+    display_name = 'Phạm Ngọc Bích', avatar_url = '/kudos/avatars/avatar3.png',
     department = 'CEVC12', title = 'Legend Hero', rank_stars = 3
   WHERE id = u4;
   UPDATE public.profiles SET
-    display_name = 'Lê Văn Sơn', avatar_url = '/kudos/avatars/u5.png',
+    display_name = 'Vũ Đình Khôi', avatar_url = '/kudos/avatars/avatar4.png',
     department = 'CEVC10', title = 'Rising Hero', rank_stars = 2
   WHERE id = u5;
   UPDATE public.profiles SET
-    display_name = 'Hoàng Mai Linh', avatar_url = '/kudos/avatars/u6.png',
+    display_name = 'Đặng Thuỳ Trang', avatar_url = '/kudos/avatars/avatar5.png',
     department = 'HR', title = 'New Hero', rank_stars = 1
   WHERE id = u6;
   UPDATE public.profiles SET
-    display_name = 'Đỗ Thanh Tùng', avatar_url = '/kudos/avatars/u7.png',
+    display_name = 'Bùi Tiến Dũng', avatar_url = '/kudos/avatars/avatar6.png',
     department = 'CEVC15', title = 'Rising Hero', rank_stars = 2
   WHERE id = u7;
   UPDATE public.profiles SET
-    display_name = 'Bùi Khánh Linh', avatar_url = '/kudos/avatars/u8.png',
+    display_name = 'Hoàng Thị Lan Anh', avatar_url = '/kudos/avatars/avatar7.png',
     department = 'Marketing', title = 'Legend Hero', rank_stars = 3
   WHERE id = u8;
   UPDATE public.profiles SET
-    display_name = 'Vũ Quang Huy', avatar_url = '/kudos/avatars/u9.png',
+    display_name = 'Ngô Gia Bảo', avatar_url = '/kudos/avatars/avatar8.png',
     department = 'CEVC11', title = 'New Hero', rank_stars = 1
   WHERE id = u9;
   UPDATE public.profiles SET
-    display_name = 'Trịnh Phương Thảo', avatar_url = '/kudos/avatars/u10.png',
+    display_name = 'Dương Khánh Vy', avatar_url = '/kudos/avatars/avatar9.png',
     department = 'CEVC10', title = 'Rising Hero', rank_stars = 2
   WHERE id = u10;
   UPDATE public.profiles SET
-    display_name = 'Đặng Quốc Cường', avatar_url = '/kudos/avatars/u3.png',
+    display_name = 'Đỗ Mạnh Hùng', avatar_url = '/kudos/avatars/avatar0.png',
     department = 'CEVC10', title = 'Super Hero', rank_stars = 3
   WHERE id = u11;
 
@@ -99,7 +100,7 @@ BEGIN
   VALUES
     (gen_random_uuid(), u3, u4, 'NGƯỜI TRUYỀN CẢM HỨNG',
      'Cảm ơn chị đã luôn nhắc nhở mình luôn phải nỗ lực hơn nữa trong công việc. <3 và cuộc sống nữa nhé!',
-     ARRAY['/kudos/samples/img1.jpg','/kudos/samples/img2.jpg'], now() - interval '5 hours')
+     '{}', now() - interval '5 hours')
   RETURNING id INTO k2;
 
   INSERT INTO public.kudos (id, sender_id, receiver_id, title, content, image_urls, created_at)
@@ -120,7 +121,7 @@ BEGIN
   VALUES
     (gen_random_uuid(), u8, u9, 'TINH THẦN HỌC HỎI',
      'Em rất nể phục tinh thần học hỏi và chịu khó của anh. Mong anh giữ lửa nhé!',
-     ARRAY['/kudos/samples/img3.jpg'], now() - interval '4 days')
+     '{}', now() - interval '4 days')
   RETURNING id INTO k5;
 
   INSERT INTO public.kudos_hashtags (kudos_id, tag) VALUES
@@ -148,7 +149,7 @@ BEGIN
      '{}', now() - interval '5 days'),
     ('22222222-2222-2222-2222-222222220002', u4, u5, 'TƯ DUY SÁNG TẠO',
      'Ý tưởng của anh trong buổi brainstorm vừa rồi thật sự đột phá. Cảm ơn anh nhiều!',
-     ARRAY['/kudos/samples/img1.jpg'], now() - interval '6 days'),
+     '{}', now() - interval '6 days'),
     ('22222222-2222-2222-2222-222222220003', u7, u8, 'LUÔN ĐÚNG DEADLINE',
      'Cảm ơn em vì sự kỷ luật và đúng hẹn trong mọi task. Rất đáng để học hỏi!',
      '{}', now() - interval '7 days'),
@@ -157,7 +158,7 @@ BEGIN
      '{}', now() - interval '8 days'),
     ('22222222-2222-2222-2222-222222220005', u10, u1, 'TỈ MỈ TỪNG CHI TIẾT',
      'Cảm ơn anh đã review kỹ càng giúp em tránh được bao nhiêu lỗi. Biết ơn anh!',
-     ARRAY['/kudos/samples/img2.jpg','/kudos/samples/img3.jpg'], now() - interval '9 days'),
+     '{}', now() - interval '9 days'),
     ('22222222-2222-2222-2222-222222220006', u3, u6, 'NGƯỜI HÙNG THẦM LẶNG',
      'Những việc anh làm tuy âm thầm nhưng cả team đều thấy và rất trân trọng!',
      '{}', now() - interval '10 days'),
@@ -226,6 +227,53 @@ BEGIN
      'Cảm ơn chị đã kiên nhẫn hướng dẫn cả nhóm. Học được rất nhiều từ chị!',
      '{}', now() - interval '50 minutes');
 
+  -- Extra Sunners to populate the SPOTLIGHT BOARD name cloud. The board lists
+  -- DISTINCT recent kudos receivers, so with only 11 users it stayed sparse. Each
+  -- generated Sunner below receives one kudos so they surface in the cloud. Names
+  -- are composed deterministically from Vietnamese name parts; avatars cycle 0–9.
+  DECLARE
+    fam    text[] := ARRAY['Nguyễn','Trần','Lê','Phạm','Hoàng','Vũ','Đặng','Bùi','Đỗ','Hồ','Ngô','Dương','Lý','Phan','Võ','Đinh','Mai','Trịnh','Lương','Tạ'];
+    mid    text[] := ARRAY['Văn','Thị','Hữu','Đức','Quang','Minh','Thanh','Gia','Khánh','Ngọc','Thu','Bá','Đình','Xuân','Hải','Tuấn','Phương','Mạnh','Hoài','Kim'];
+    giv    text[] := ARRAY['An','Bình','Cường','Dũng','Hà','Hương','Khoa','Lan','Linh','Long','Mai','Nam','Nga','Nhung','Phúc','Quân','Sơn','Trang','Tú','Vy','Hùng','Thảo','Đạt','Yến','Hiếu'];
+    depts  text[] := ARRAY['CEVC10','CEVC11','CEVC12','CEVC15','Marketing','HR','Finance','QA','BrSE','Design'];
+    titles text[] := ARRAY['New Hero','Rising Hero','Legend Hero'];
+    g int;
+    nid uuid;
+  BEGIN
+    FOR g IN 12..60 LOOP
+      nid := gen_random_uuid();
+      INSERT INTO auth.users (
+        id, email, instance_id, aud, role,
+        raw_app_meta_data, raw_user_meta_data,
+        created_at, updated_at, email_confirmed_at
+      )
+      VALUES (
+        nid, format('demo%s@sun-asterisk.com', g),
+        '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated',
+        '{"provider":"seed","providers":["seed"]}'::jsonb, '{}'::jsonb,
+        now(), now(), now()
+      )
+      ON CONFLICT (id) DO NOTHING;
+
+      UPDATE public.profiles SET
+        display_name = fam[1 + (g % array_length(fam, 1))] || ' '
+                    || mid[1 + ((g * 3) % array_length(mid, 1))] || ' '
+                    || giv[1 + ((g * 7) % array_length(giv, 1))],
+        avatar_url   = '/kudos/avatars/avatar' || (g % 10) || '.png',
+        department   = depts[1 + (g % array_length(depts, 1))],
+        title        = titles[1 + (g % 3)],
+        rank_stars   = 1 + (g % 3)
+      WHERE id = nid;
+
+      INSERT INTO public.kudos (sender_id, receiver_id, title, content, created_at)
+      VALUES (
+        uids[1 + (g % 11)], nid, 'GHI NHẬN ĐÓNG GÓP',
+        'Cảm ơn bạn đã góp phần tạo nên một Sun* gắn kết và tích cực!',
+        now() - interval '13 days' - (g * interval '3 hours')
+      );
+    END LOOP;
+  END;
+
   INSERT INTO public.gift_recipients (user_id, prize_description, awarded_at) VALUES
     (u1, 'Nhận được 1 áo phông SAA', now() - interval '1 hour'),
     (u2, 'Nhận được 1 áo phông SAA', now() - interval '3 hours'),
@@ -244,4 +292,25 @@ BEGIN
     INSERT INTO public.secret_boxes (user_id, opened) VALUES (uids[i], false);
     INSERT INTO public.secret_boxes (user_id, opened) VALUES (uids[i], false);
   END LOOP;
+
+  -- Attach sample images to ~80% of kudos. Deterministic by created_at order:
+  -- every 5th kudos (rn % 5 = 4) is left bare → 20% without, 80% with.
+  -- Each attached kudos gets between 1 and 5 images (count = 1 + arn % 5), the
+  -- image indexes cycling across /kudos/samples/attachment0.png..attachment9.png.
+  WITH ranked AS (
+    SELECT id, (row_number() OVER (ORDER BY created_at, id) - 1) AS rn
+    FROM public.kudos
+  ),
+  attached AS (
+    SELECT id, (row_number() OVER (ORDER BY rn) - 1) AS arn
+    FROM ranked
+    WHERE rn % 5 <> 4
+  )
+  UPDATE public.kudos k
+  SET image_urls = (
+    SELECT array_agg('/kudos/samples/attachment' || ((a.arn + g) % 10) || '.png')
+    FROM generate_series(0, a.arn % 5) AS g
+  )
+  FROM attached a
+  WHERE k.id = a.id;
 END $$;
